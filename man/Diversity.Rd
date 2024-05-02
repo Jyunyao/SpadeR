@@ -4,8 +4,12 @@
 \alias{Diversity}
 \title{Estimation of species diversity (Hill numbers)}
 \usage{
-Diversity(data, datatype = c("abundance", "abundance_freq_count",
-  "incidence_freq", "incidence_freq_count", "incidence_raw"), q = NULL)
+Diversity(
+  data,
+  datatype = c("abundance", "abundance_freq_count", "incidence_freq",
+    "incidence_freq_count", "incidence_raw"),
+  q = NULL
+)
 }
 \arguments{
 \item{data}{a matrix/data.frame of species abundances/incidences.\cr}
@@ -53,4 +57,3 @@ Chao, A., and Chiu, C. H. (2012). Estimation of species richness and shared spec
 Chao, A. and Jost, L. (2015). Estimating diversity and entropy profiles via discovery rates of new species. Methods in Ecology and Evolution, 6, 873-882.\cr\cr
 Chao, A., Wang, Y. T. and Jost, L. (2013). Entropy and the species accumulation curve: a novel estimator of entropy via discovery rates of new species. Methods in Ecology and Evolution 4, 1091-1110.\cr\cr
 }
-

@@ -4,8 +4,12 @@
 \alias{SimilarityPair}
 \title{Estimation of two-assemblage similarity measures}
 \usage{
-SimilarityPair(X, datatype = c("abundance", "incidence_freq",
-  "incidence_raw"), units, nboot = 200)
+SimilarityPair(
+  X,
+  datatype = c("abundance", "incidence_freq", "incidence_raw"),
+  units,
+  nboot = 200
+)
 }
 \arguments{
 \item{X}{a matrix/data.frame of species abundances/incidences.\cr}
@@ -61,4 +65,3 @@ Chao, A., Jost, L., Hsieh, T. C., Ma, K. H., Sherwin, W. B. and Rollins, L. A. (
 Shannon entropy and Shannon differentiation between subpopulations for neutral genes under the finite island model. Plos One, 10:e0125471. \cr\cr
 Chiu, C. H., Jost, L. and Chao, A. (2014). Phylogenetic beta diversity, similarity, and differentiation measures based on Hill numbers. Ecological Monographs, 84, 21-44.\cr\cr
 }
-

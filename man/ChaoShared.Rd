@@ -4,8 +4,14 @@
 \alias{ChaoShared}
 \title{Estimation of the number of shared species between two communities/assemblages}
 \usage{
-ChaoShared(data, datatype = c("abundance", "incidence_freq", "incidence_raw"),
-  units, se = TRUE, nboot = 200, conf = 0.95)
+ChaoShared(
+  data,
+  datatype = c("abundance", "incidence_freq", "incidence_raw"),
+  units,
+  se = TRUE,
+  nboot = 200,
+  conf = 0.95
+)
 }
 \arguments{
 \item{data}{a matrix/data.frame of species abundances/incidences.\cr}
@@ -44,4 +50,3 @@ ChaoShared(ChaoSharedData$Inci_raw,"incidence_raw",units=c(16,17),se=TRUE,nboot=
 Chao, A., Hwang, W.-H., Chen, Y.-C. and Kuo. C.-Y. (2000). Estimating the  number of shared species in two communities. Statistica Sinica, 10, 227-246.\cr\cr
 Pan, H.-Y., Chao, A. and Foissner, W. (2009). A non-parametric lower bound for the number of species shared by multiple communities. Journal of Agricultural, Biological and Environmental Statistics, 14, 452-468.
 }
-

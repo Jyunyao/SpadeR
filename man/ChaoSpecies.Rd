@@ -4,9 +4,13 @@
 \alias{ChaoSpecies}
 \title{Estimation of species richness in a community}
 \usage{
-ChaoSpecies(data, datatype = c("abundance", "abundance_freq_count",
-  "incidence_freq", "incidence_freq_count", "incidence_raw"), k = 10,
-  conf = 0.95)
+ChaoSpecies(
+  data,
+  datatype = c("abundance", "abundance_freq_count", "incidence_freq",
+    "incidence_freq_count", "incidence_raw"),
+  k = 10,
+  conf = 0.95
+)
 }
 \arguments{
 \item{data}{a matrix/data.frame of species abundances/incidences.\cr}
@@ -50,4 +54,3 @@ Chao, A., and Chiu, C. H. (2016). Species richness: estimation and comparison. W
 Chiu, C. H., Wang Y. T., Walther B. A. and Chao A. (2014). An improved non-parametric lower bound of species richness via the Good-Turing frequency formulas. Biometrics, 70, 671-682. \cr\cr
 Gotelli, N. G. and Chao, A. (2013). Measuring and estimating species richness, species diver- sity, and biotic similarity from sampling data. Encyclopedia of Biodiversity, 2nd Edition, Vol. 5, 195-211, Waltham, MA. \cr\cr
 }
-

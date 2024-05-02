@@ -4,8 +4,14 @@
 \alias{SimilarityMult}
 \title{Estimation of multiple-community similarity measures}
 \usage{
-SimilarityMult(X, datatype = c("abundance", "incidence_freq",
-  "incidence_raw"), units, q = 2, nboot = 200, goal = "relative")
+SimilarityMult(
+  X,
+  datatype = c("abundance", "incidence_freq", "incidence_raw"),
+  units,
+  q = 2,
+  nboot = 200,
+  goal = "relative"
+)
 }
 \arguments{
 \item{X}{a matrix/data.frame of species abundances/incidences.\cr}
@@ -73,4 +79,3 @@ Chiu, C. H., Jost, L. and Chao, A. (2014). Phylogenetic beta diversity, similari
 Gotelli, N. G. and Chao, A. (2013). Measuring and estimating species richness, species diver- sity,
 and biotic similarity from sampling data. Encyclopedia of Biodiversity, 2nd Edition, Vol. 5, 195-211, Waltham, MA.
 }
-

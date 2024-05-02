@@ -51,4 +51,3 @@ Chao, A., and Chiu, C. H. (2016). Bridging the variance and diversity decomposit
 Chao, A., Jost, L., Hsieh, T. C., Ma, K. H., Sherwin, W. B. and Rollins, L. A. (2015). Expected Shannon entropy and Shannon differentiation between subpopulations for neutral genes under the finite island model. Plos One, 10:e0125471.\cr\cr
 Jost, L. (2008). \eqn{G_{ST}} and its relatives do not measure differentiation. Molecular Ecology, 17, 4015-4026.\cr\cr
 }
-

@@ -9,6 +9,6 @@ Description: Estimation of various biodiversity indices and related (dis)similar
 License: GPL (>= 3)
 Imports: stats
 Depends: R (>= 2.14)
-RoxygenNote: 5.0.1
+RoxygenNote: 7.2.3
 NeedsCompilation: no
 Packaged: 2016-09-06 05:40:30 UTC; USER
