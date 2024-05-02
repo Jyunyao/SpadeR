@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<meta name="date" content="2024-05-02" />
+
+<title>An Introduction to SpadeR via Examples</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">An Introduction to SpadeR via Examples</h1>
+<h4 class="date">2024-05-02</h4>
+
+
+
+<p><font color="#FF6600"> </font></p>
+<p><code>SpadeR</code> (Species-Richness Prediction and Diversity
+Estimation with R) is an updated R package from the original version of
+SPADE. <code>SpadeR</code> provides simple R functions to compute
+various biodiversity indices and related (dis)similarity measures based
+on individual-based (abundance) data or sampling-unit-based (incidence)
+data taken from one or multiple communities/assemblages. The
+<code>SpadeR</code> package is available in <a href="http://cran.r-project.org/web/packages/SpadeR/index.html">CRAN</a>.
+We have been updating <code>SpadeR</code> and you can download the
+latest version from Github (see below) or from <a href="http://chao.stat.nthu.edu.tw/wordpress/software_download/">Anne
+Chao’s website</a>.</p>
+<ul>
+<li>You need to acquire basic knowledge about R to use functions
+supplied by <code>SpadeR</code>.<br />
+</li>
+<li>For readers without R background, please try our <code>SpadeR</code>
+Online, an R-based online version via the link <a href="http://chao.stat.nthu.edu.tw/wordpress/software_download/">Anne
+Chao’s website</a> or <a href="https://chao.shinyapps.io/SpadeR/">https://chao.shinyapps.io/SpadeR/</a>.
+Users do not need to learn/understand R to run <code>SpadeR</code>
+Online.</li>
+</ul>
+<p>Both <code>SpadeR</code> (R package) and <code>SpadeR</code> Online
+include nearly all of the important features from the original program
+SPADE while also having the advantages of expanded output displays and
+simplified data input formats. See <a href="https://cran.r-project.org/web/packages/SpadeR/SpadeR.pdf">SpadeR
+Manual</a> for all details of the functions supplied in the package. For
+numerical examples with proper interpretations, see the detailed Online
+<a href="http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/SpadeR_UserGuide_2020May07.pdf">SpadeR
+User’s Guide</a>.</p>
+<div id="software-needed-to-run-spader-in-r" class="section level2">
+<h2>SOFTWARE NEEDED TO RUN SpadeR IN R</h2>
+<ul>
+<li>Required: <a href="https://cran.r-project.org/">R</a></li>
+<li>Suggested: <a href="https://www.rstudio.com/products/RStudio/#Desktop">RStudio
+IDE</a></li>
+</ul>
+</div>
+<div id="how-to-run-spader" class="section level2">
+<h2>HOW TO RUN SpadeR:</h2>
+<p>The <code>SpadeR</code> package can be downloaded from Anne Chao’s <a href="https://github.com/AnneChao/SpadeR">SpadeR_github</a> using the
+following commands. The <code>SpadeR</code> package is available on CRAN
+using the following commands. And the latest version can be downloaded
+from the github.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## install SpadeR package from CRAN</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;SpadeR&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">## install the latest SpadeR from github</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">&quot;AnneChao/SpadeR&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="do">## import packages</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SpadeR)</span></code></pre></div>
+<p>There are five main functions in this package:</p>
+<ul>
+<li><strong>ChaoSpecies</strong>: Estimates species richness for one
+community.<br />
+</li>
+<li><strong>Diversity</strong>: Estimates a continuous diversity profile
+and various diversity indices in one community including species
+richness, Shannon diversity and Simpson diversity. This function also
+features plots of empirical and estimated continuous diversity
+profiles.<br />
+</li>
+<li><strong>ChaoShared</strong>: Estimates the number of shared species
+between two communities.<br />
+</li>
+<li><strong>SimilartyPair</strong>: Estimates various similarity indices
+between two assemblages. Both richness and abundance-based two-community
+similarity indices are included.<br />
+</li>
+<li><strong>SimilarityMult</strong>: Estimates various similarity
+indices among N communities. Both richness and abundance-based
+N-community similarity indices are included.</li>
+</ul>
+</div>
+<div id="data-input-format" class="section level2">
+<h2>DATA INPUT FORMAT</h2>
+<p>It is very important to prepare your data in correct format. Data are
+generally classified as abundance data and incidence data and there are
+five types of data input formats options (datatype=“abundance”,
+“abundance_freq_count”, “incidence_freq”, “incidence_freq_count”,
+“incidence_raw”).</p>
+<ul>
+<li>Individual-based abundance data when a sample of individuals is
+taken from each community.
+<ul>
+<li><strong>Type (1) abundance data</strong> (datatype = “abundance”):
+Input data consist of species (in rows) by community (in columns)
+matrix. The entries of each row are the observed abundances of a species
+in N communities.</li>
+<li><strong>Type (1A) abundance-frequency counts data</strong> (only for
+a single community, datatype = “abundance_freq_count”): input data are
+arranged as <span class="math inline">\((1~f_1~2~f_2...r~f_r)\)</span>
+(each number needs to be separated by at least one blank space or
+separated by rows), where <span class="math inline">\(r\)</span> denotes
+the maximum frequency and <span class="math inline">\(f_k\)</span>
+denotes the number of species represented by exactly <span class="math inline">\(k\)</span> individuals/times in the sample. Here
+the data <span class="math inline">\((f_1,f_2,...,f_r)\)</span> are
+referred to as “abundance-frequency counts”.</li>
+</ul></li>
+</ul>
+<ul>
+<li>Sampling-unit-based incidence data when a number of sampling units
+are randomly taken from each community. Only the incidence
+(detection/non-detection) of species is recorded in each sampling unit.
+There are three data formats options.
+<ul>
+<li><strong>Type (2) incidence-frequency data</strong>
+(datatype=“incidence_freq”): The first row of the input data must be the
+number of sampling units in each community. Beginning with the second
+row, input data consist of species (in rows) by community (in columns)
+matrix. The entries of each row are the observed incidence frequencies
+(the number of detections or the number of sampling units in which a
+species are detected) of a species in <span class="math inline">\(N\)</span> communities.</li>
+<li><strong>Type (2A) incidence-frequency counts data</strong> (only for
+a single community, datatype=“incidence_ freq_count”): input data are
+arranged as <span class="math inline">\((T~1~Q_1~2~Q_2...r~Q_r)\)</span>
+(each number needs to be separated by at least one blank space or
+separated by rows), where <span class="math inline">\(Q_k\)</span>
+denotes the number of species that were detected in exactly <span class="math inline">\(k\)</span> sampling units, while <span class="math inline">\(r\)</span> denotes the number of sampling units in
+which the most frequent species were found. The first entry must be the
+total number of sampling units, <span class="math inline">\(T\)</span>.
+The data <span class="math inline">\((Q_1, Q_2, ..., Q_r)\)</span> are
+referred to as “incidence frequency counts”.</li>
+<li><strong>Type (2B) incidence-raw data</strong>
+(datatype=“incidence_raw”): Data consist of a species-by-sampling-unit
+incidence (detection/non-detection) matrix; typically “1” means a
+detection and “0” means a non-detection. Each row refers to the
+detection/non-detection record of a species in <span class="math inline">\(T\)</span> sampling units. Users must specify the
+number of sampling units in the function argument “units”. The first
+<span class="math inline">\(T_1\)</span> columns of the input matrix
+denote species detection/non-detection data based on the <span class="math inline">\(T_1\)</span> sampling units from Community 1, and
+the next <span class="math inline">\(T_2\)</span> columns denote the
+detection/non-detection data based on the T2 sampling units from
+Community 2, and so on, and the last <span class="math inline">\(T_N\)</span> columns denote the
+detection/non-detection data based on <span class="math inline">\(T_N\)</span> sampling units from Community <span class="math inline">\(N\)</span>, <span class="math inline">\(T_1+T_2+⋯+T_N=T\)</span>.</li>
+</ul></li>
+</ul>
+<p>In the package, we have included many demo datasets for illustration.
+To gain familiarity with the program, we suggest that users first run
+the demo data sets included in SpadeR package, and check the detail of
+demo data and output with that given in the <a href="http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/SpadeR_UserGuide_2020May07.pdf">SpadeR
+User’s Guide</a>. Part of the output for following example is also
+interpreted in the guide to help users understand the statistical
+results. The formulas for estimators featured in SpadeR with relevant
+references are also provided in the SpadeR User’s Guide.</p>
+</div>
+<div id="main-function-1-chaospecies" class="section level2">
+<h2>MAIN FUNCTION 1: ChaoSpecies()</h2>
+<p>We first describe the main function <code>ChaoSpecies()</code> with
+default arguments:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ChaoSpecies</span>(data, datatype, <span class="at">k =</span> <span class="dv">10</span>,  <span class="at">conf =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<p>The arguments of this function are briefly described below, and will
+be explained in more details by illustrative examples in later text.</p>
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">
+Argument
+</th>
+<th align="left">
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">
+<code>data</code>
+</td>
+<td align="left">
+a matrix/data.frame of species abundances/incidences.
+</td>
+</tr>
+<tr class="even">
+<td align="center">
+<code>datatype</code>
+</td>
+<td align="left">
+type of input data, “abundance”, “abundance_freq_count”,
+“incidence_freq”, “incidence_freq_count” or “incidence_raw”.
+</td>
+</tr>
+<tr class="odd">
+<td align="center">
+<code>k</code>
+</td>
+<td align="left">
+the cut-off point (default = 10), which separates species into
+“abundant” and “rare” groups for abundance data for the estimator ACE;
+it separates species into “frequent” and “infrequent” groups for
+incidence data for the estimator ICE.
+</td>
+</tr>
+<tr class="even">
+<td align="center">
+<code>conf</code>
+</td>
+<td align="left">
+a positive number ≤ 1 specifying the level of confidence interval.
+</td>
+</tbody>
+</table>
+<p>Following codes show the examples for this function using on each
+datatype.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for Function ChaoSpecies(data, datatype, k = 10, conf = 0.95)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(ChaoSpeciesData)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (1) abundance data</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ChaoSpecies</span>(ChaoSpeciesData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>, <span class="at">k=</span><span class="dv">10</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (1A) abundance-frequency counts data</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ChaoSpecies</span>(ChaoSpeciesData<span class="sc">$</span>Abu_count, <span class="st">&quot;abundance_freq_count&quot;</span>, <span class="at">k=</span><span class="dv">10</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2) incidence-frequency data</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ChaoSpecies</span>(ChaoSpeciesData<span class="sc">$</span>Inci, <span class="st">&quot;incidence_freq&quot;</span>, <span class="at">k=</span><span class="dv">10</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2A) incidence-frequency counts data</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ChaoSpecies</span>(ChaoSpeciesData<span class="sc">$</span>Inci_count, <span class="st">&quot;incidence_freq_count&quot;</span>, <span class="at">k=</span><span class="dv">10</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2B) incidence-raw data</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ChaoSpecies</span>(ChaoSpeciesData<span class="sc">$</span>Inci_raw, <span class="st">&quot;incidence_raw&quot;</span>, <span class="at">k=</span><span class="dv">10</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<p>And following we only show the output of abundance data as
+example.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ChaoSpecies</span>(ChaoSpeciesData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>, <span class="at">k=</span><span class="dv">10</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; (1) BASIC DATA INFORMATION:
+#&gt; 
+#&gt;                                          Variable Value
+#&gt;     Sample size                                 n  1996
+#&gt;     Number of observed species                  D    25
+#&gt;     Coverage estimate for entire dataset        C 0.998
+#&gt;     CV for entire dataset                      CV 1.916
+#&gt; 
+#&gt;                                                       Variable Value
+#&gt;     Cut-off point                                            k    10
+#&gt;     Number of observed individuals for rare group       n_rare    53
+#&gt;     Number of observed species for rare group           D_rare    11
+#&gt;     Estimate of the sample coverage for rare group      C_rare 0.943
+#&gt;     Estimate of CV for rare group in ACE               CV_rare 0.629
+#&gt;     Estimate of CV1 for rare group in ACE-1           CV1_rare  0.74
+#&gt;     Number of observed individuals for abundant group   n_abun  1943
+#&gt;     Number of observed species for abundant group       D_abun    14
+#&gt; 
+#&gt;                      f1 f2 f3 f4 f5 f6 f7 f8 f9 f10
+#&gt;     Frequency counts  3  2  0  1  0  0  1  1  3   0
+#&gt; 
+#&gt; 
+#&gt; (2) SPECIES RICHNESS ESTIMATORS TABLE:
+#&gt; 
+#&gt;                               Estimate  s.e. 95%Lower 95%Upper
+#&gt;     Homogeneous Model           25.660 0.954   25.082   30.295
+#&gt;     Homogeneous (MLE)           25.000 0.975   25.000   28.500
+#&gt;     Chao1 (Chao, 1984)          27.249 3.394   25.266   44.030
+#&gt;     Chao1-bc                    25.999 1.817   25.094   35.673
+#&gt;     iChao1 (Chiu et al. 2014)   27.249 3.394   25.266   44.030
+#&gt;     ACE (Chao &amp; Lee, 1992)      26.920 2.367   25.292   37.639
+#&gt;     ACE-1 (Chao &amp; Lee, 1992)    27.399 3.163   25.336   42.153
+#&gt;     1st order jackknife         27.998 2.449   25.739   37.171
+#&gt;     2nd order jackknife         28.998 4.240   25.730   46.915
+#&gt; 
+#&gt; 
+#&gt; (3) DESCRIPTION OF ESTIMATORS/MODELS:
+#&gt; 
+#&gt; Homogeneous Model: This model assumes that all species have the same abundances or discovery probabilities. See Eq. (2.3) of Chao and Lee (1992) or Eq. (7a) of Chao and Chiu (2016b).
+#&gt; 
+#&gt; Homogeneous (MLE): An approximate maximum likelihood estimate under homogeneous model. See Eq. (1.1) and Eq. (1.2) of Chao and Lee (1992) or Eq. (3) of Chao and Chiu (2016b).
+#&gt; 
+#&gt; Chao1 (Chao, 1984): This approach uses the numbers of singletons and doubletons to estimate the number of undetected species because undetected species information is mostly concentrated on those low frequency counts; see Chao (1984), and Chao and Chiu (2012, 2016a,b).
+#&gt; 
+#&gt; Chao1-bc: A bias-corrected form for the Chao1 estimator; see Chao (2005) or Eq. (6b) of Chao and Chiu (2016b).
+#&gt; 
+#&gt; iChao1: An improved Chao1 estimtor; see Chiu et al. (2014).
+#&gt; 
+#&gt; ACE (Abundance-based Coverage Estimator): A non-parametric estimator proposed by Chao and Lee (1992) and Chao, Ma and Yang (1993). The observed species are separated as rare and abundant groups; only data in the rare group is used to estimate the number of undetected species. The estimated CV of the species in rare group characterizes the degree of heterogeneity among species discovery probabilities. See Eq. (2.14) in Chao and Lee (1992) or Eq. (7b) of Chao and Chiu (2016b).
+#&gt; 
+#&gt; ACE-1: A modified ACE for highly-heterogeneous communities when CV of the entire dataset &gt; 2 and species richness &gt; 1000. See Eq. (2.15) in Chao and Lee (1992).
+#&gt; 
+#&gt; 1st order jackknife: It uses the number of singletons to estimate the number of undetected species; see Burnham and Overton (1978).
+#&gt; 
+#&gt; 2nd order jackknife: It uses the numbers of singletons and doubletons to estimate the number of undetected species; see Burnham and Overton (1978).
+#&gt; 
+#&gt; 95% Confidence interval: A log-transformation is used for all estimators so that the lower bound of the resulting interval is at least the number of observed species. See Chao (1987).</code></pre>
+<p>The output shown above is divided into three parts.</p>
+<p>The <strong>first part Output(1)</strong> shows the basic data
+information for the whole data which including the total number of
+individuals, the observed number of species, the coverage estimate, the
+estimated coefficient of variation (CV) value (which is always ≥ 0) and
+some information about species in rare group.</p>
+<ul>
+<li><p>The coverage estimate is an objective measure of sample
+completeness. It represents the estimated fraction of the entire
+population of individuals in the community that belong to the species
+represented in the sample.</p></li>
+<li><p>The CV measure is used to characterize the degree of
+heterogeneity among species abundances or species discovery
+probabilities. CV = 0 would mean that all species are homogeneous (i.e.,
+they all have equal abundances or equal discovery probabilities in the
+community). Therefore, the larger the CV, the greater the degree of
+heterogeneity for species discovery probabilities.</p></li>
+</ul>
+<p>The <strong>second part Output(2)</strong> lists estimates, standard
+errors and confidence intervals for each model or estimator of species
+richness.</p>
+<p>The <strong>third part Output(3)</strong> provides a brief
+explanation of each model/estimator calculated in second part. For more
+details, refer to Colwell and Coddington (1994), Chao (2005) and Chao
+and Chiu (2012, 2016a, b).</p>
+</div>
+<div id="main-function-2-diversity" class="section level2">
+<h2>MAIN FUNCTION 2: Diversity()</h2>
+<p>Here we describe the main function <code>Diversity()</code> with
+default arguments:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Diversity</span>(data, datatype, <span class="at">q =</span> <span class="cn">NULL</span>)</span></code></pre></div>
+<p>The arguments of this function are briefly described below, and will
+be explained in more details by illustrative examples in later text.</p>
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">
+Argument
+</th>
+<th align="left">
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">
+<code>data</code>
+</td>
+<td align="left">
+a matrix/data.frame of species abundances/incidences.
+</td>
+</tr>
+<tr class="even">
+<td align="center">
+<code>datatype</code>
+</td>
+<td align="left">
+type of input data, “abundance”, “abundance_freq_count”,
+“incidence_freq”, “incidence_freq_count” or “incidence_raw”.
+</td>
+</tr>
+<tr class="odd">
+<td align="center">
+<code>q</code>
+</td>
+<td align="left">
+a vector of nonnegative numbers specifying the diversity orders for
+which Hill numbers will be estimated. If <code>NULL</code>, then Hill
+numbers will be estimated at order q from 0 to 3 with increments of
+0.25.
+</td>
+</tbody>
+</table>
+<p>Following codes show the examples for this function using on each
+datatype.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for Function Diversity(data, datatype, q = NULL) </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(DiversityData)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (1) abundance data</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>Diversity_output1 <span class="ot">&lt;-</span> <span class="fu">Diversity</span>(DiversityData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>, <span class="at">q=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (1A) abundance-frequency counts data</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>Diversity_output1A <span class="ot">&lt;-</span> <span class="fu">Diversity</span>(DiversityData<span class="sc">$</span>Abu_count,<span class="st">&quot;abundance_freq_count&quot;</span>, <span class="at">q =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="at">by =</span> <span class="fl">0.5</span>))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2) incidence-frequency data</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>Diversity_output2 <span class="ot">&lt;-</span> <span class="fu">Diversity</span>(DiversityData<span class="sc">$</span>Inci,<span class="st">&quot;incidence_freq&quot;</span>, <span class="at">q =</span> <span class="cn">NULL</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2A) incidence-frequency counts data</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>Diversity_output2A <span class="ot">&lt;-</span> <span class="fu">Diversity</span>(DiversityData<span class="sc">$</span>Inci_count, <span class="st">&quot;incidence_freq_count&quot;</span> , <span class="at">q =</span> <span class="cn">NULL</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2B) incidence-raw data</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>Diversity_output2B <span class="ot">&lt;-</span> <span class="fu">Diversity</span>(DiversityData<span class="sc">$</span>Inci_raw, <span class="st">&quot;incidence_raw&quot;</span>, <span class="at">q =</span> <span class="cn">NULL</span>)</span></code></pre></div>
+<p>And following we only show the output of abundance data as
+example.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Diversity</span>(DiversityData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>, <span class="at">q=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>))</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; (1) BASIC DATA INFORMATION:
+#&gt;                                Variable Value
+#&gt;     Sample size                       n   557
+#&gt;     Number of observed species        D    69
+#&gt;     Estimated sample coverage         C 0.957
+#&gt;     Estimated CV                     CV 2.237
+#&gt; 
+#&gt; (2) ESTIMATION OF SPECIES RICHNESS (DIVERSITY OF ORDER 0):
+#&gt; 
+#&gt;                              Estimate s.e. 95%Lower 95%Upper
+#&gt;     Chao1 (Chao, 1984)          104.9 20.3     81.8    169.9
+#&gt;     Chao1-bc                     99.6 16.9     80.1    153.2
+#&gt;     iChao1                      113.9 12.7     95.1    146.4
+#&gt;     ACE (Chao &amp; Lee, 1992)       92.1 10.2     79.1    121.8
+#&gt;     ACE-1 (Chao &amp; Lee, 1992)    100.4 15.7     81.4    148.1
+#&gt; 
+#&gt;         Descriptions of richness estimators (See Species Part)
+#&gt;        
+#&gt; (3a) SHANNON ENTROPY:
+#&gt; 
+#&gt;                         Estimate  s.e. 95%Lower 95%Upper
+#&gt;      MLE                   3.193 0.068    3.060    3.326
+#&gt;      Jackknife             3.280 0.070    3.143    3.416
+#&gt;      Chao &amp; Shen           3.308 0.068    3.175    3.440
+#&gt;      Chao et al. (2013)    3.293 0.070    3.155    3.431
+#&gt; 
+#&gt;         MLE: empirical or observed entropy.
+#&gt;         Jackknife: see Zahl (1977).
+#&gt;         Chao &amp; Shen: based on the Horvitz-Thompson estimator and sample coverage method; see Chao and Shen (2003).
+#&gt;         see Chao and Shen (2003).
+#&gt;          Chao et al. (2013): A nearly optimal estimator of Shannon entropy; see Chao et al. (2013).
+#&gt;          Estimated standard error is computed based on a bootstrap method.
+#&gt;         
+#&gt; (3b) SHANNON DIVERSITY (EXPONENTIAL OF SHANNON ENTROPY):
+#&gt; 
+#&gt;                         Estimate  s.e. 95%Lower 95%Upper
+#&gt;      MLE                  24.372 1.603   21.229   27.514
+#&gt;      Jackknife            26.573 1.792   23.060   30.086
+#&gt;      Chao &amp; Shen          27.320 1.800   23.793   30.847
+#&gt;      Chao et al. (2013)   26.917 1.825   23.340   30.494
+#&gt; 
+#&gt; (4a) SIMPSON CONCENTRATION INDEX:
+#&gt; 
+#&gt;           Estimate    s.e. 95%Lower 95%Upper
+#&gt;      MVUE  0.08328 0.00656  0.07043  0.09614
+#&gt;      MLE   0.08493 0.00655  0.07210  0.09776
+#&gt; 
+#&gt;         MVUE: minimum variance unbiased estimator; see Eq. (2.27) of Magurran (1988).
+#&gt;         MLE: maximum likelihood estimator or empirical index; see Eq. (2.26) of Magurran (1988).
+#&gt;        
+#&gt; (4b) SIMPSON DIVERSITY (INVERSE OF SIMPSON CONCENTRATION):
+#&gt; 
+#&gt;           Estimate    s.e. 95%Lower 95%Upper
+#&gt;      MVUE 12.00729 0.96365 10.11853 13.89604
+#&gt;      MLE  11.77460 0.92396  9.96364 13.58557
+#&gt; 
+#&gt; (5) CHAO AND JOST (2015) ESTIMATES OF HILL NUMBERS 
+#&gt; 
+#&gt;          q ChaoJost 95%Lower 95%Upper Empirical 95%Lower 95%Upper
+#&gt;      1 0.0  104.935   71.327  138.543    69.000   61.215   76.785
+#&gt;      2 0.5   53.093   44.200   61.986    41.565   37.214   45.916
+#&gt;      3 1.0   26.917   23.609   30.225    24.372   21.530   27.214
+#&gt;      4 1.5   16.411   13.998   18.824    15.806   13.542   18.070
+#&gt;      5 2.0   12.007   10.016   13.998    11.775    9.864   13.686
+#&gt; 
+#&gt;         ChaoJost: diversity profile estimator derived by Chao and Jost (2015).
+#&gt;          Empirical: maximum likelihood estimator (observed index).
+#&gt; </code></pre>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>The above output is divided into five parts:</p>
+<p>The <strong>first part Output(1)</strong> summarizes basic data
+information, including the sample size, observed species richness,
+estimated sample coverage and estimated CV value.</p>
+<p>The <strong>second part Output(2)</strong> provides species richness
+estimators (diversity of order 0).</p>
+<p>The <strong>third part Output(3a) and (3b)</strong> shows five
+estimates of the Shannon entropy index and its effective number of
+species (diversity of order 1).</p>
+<p>The <strong>fourth part Output(4a) and (4b)</strong> shows two
+estimates of the Simpson index and its effective number of species
+(diversity of order 2).</p>
+<p>The <strong>fifth part Output(5)</strong> provides empirical
+diversity values and Chao and Jost (2015) diversity profile estimates
+and their 95% confidence intervals based on the bootstrap method.</p>
+<p>And in the last of output, it shows the empirical diversity profile
+and Chao and Jost (2015) diversity estimates profile.</p>
+</div>
+<div id="main-function-3-chaoshared" class="section level2">
+<h2>MAIN FUNCTION 3: ChaoShared()</h2>
+<p>Here we describe the main function <code>ChaoShared()</code> with
+default arguments:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ChaoShared</span>(data, datatype, units, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">nboot =</span> <span class="dv">200</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<p>The arguments of this function are briefly described below, and will
+be explained in more details by illustrative examples in later text.</p>
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">
+Argument
+</th>
+<th align="left">
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">
+<code>data</code>
+</td>
+<td align="left">
+a matrix/data.frame of species abundances/incidences.
+</td>
+</tr>
+<tr class="even">
+<td align="center">
+<code>datatype</code>
+</td>
+<td align="left">
+type of input data, “abundance”, “incidence_freq” or “incidence_raw”.
+</td>
+</tr>
+<tr class="odd">
+<td align="center">
+<code>units</code>
+</td>
+<td align="left">
+number of sampling units in each community. For <code>datatype =
+“incidence_raw”</code>, users must specify the number of sampling units
+taken from each community. This argument is not needed for “abundance”
+and “incidence_freq” data.
+</td>
+</tr>
+<tr class="even">
+<td align="center">
+<code>se</code>
+</td>
+<td align="left">
+a logical variable to calculate the bootstrap standard error and the
+associated confidence interval. Default is <code>se = TRUE</code>
+</td>
+</tr>
+<tr class="odd">
+<td align="center">
+<code>nboot</code>
+</td>
+<td align="left">
+an integer specifying the number of bootstrap replications.Default is
+<code>nboot = 200</code>
+</td>
+</tr>
+<tr class="even">
+<td align="center">
+<code>conf</code>
+</td>
+<td align="left">
+a positive number ≤ 1 specifying the level of confidence interval.
+Default is <code>conf = 0.95</code>
+</td>
+</tbody>
+</table>
+<p>Following codes show the examples for this function using on each
+datatype.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for Function ChaoShared(data, datatype, units, se = TRUE, nboot = 200, conf = 0.95)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(ChaoSharedData)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (1) abundance data</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>Shared_output1 <span class="ot">&lt;-</span> <span class="fu">ChaoShared</span>(ChaoSharedData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">nboot =</span> <span class="dv">200</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2) incidence-frequency data</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>Shared_output2 <span class="ot">&lt;-</span> <span class="fu">ChaoShared</span>(ChaoSharedData<span class="sc">$</span>Inci,<span class="st">&quot;incidence_freq&quot;</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">nboot =</span> <span class="dv">200</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2B) incidence-raw data</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>Shared_output2B <span class="ot">&lt;-</span> <span class="fu">ChaoShared</span>(ChaoSharedData<span class="sc">$</span>Inci_raw,<span class="st">&quot;incidence_raw&quot;</span>, <span class="at">units =</span> <span class="fu">c</span>(<span class="dv">16</span>,<span class="dv">17</span>), <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">nboot =</span> <span class="dv">200</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<p>And following we only show the output of abundance data as example.
+(Notice that only “abundance”, “incidence_freq” or “incidence_raw” data
+can use function <code>ChaoShared</code>.)</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ChaoShared</span>(ChaoSharedData<span class="sc">$</span>Abu, <span class="st">&quot;abundance&quot;</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">nboot =</span> <span class="dv">200</span>, <span class="at">conf =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; (1) BASIC DATA INFORMATION:
+#&gt; 
+#&gt;     Sample size in Community 1                      n1  =  85867 
+#&gt;     Sample size in Community 2                      n2  =  59646 
+#&gt;     Number of observed species in Community 1       D1  =  155 
+#&gt;     Number of observed species in Community 2       D2  =  140 
+#&gt;     Number of observed shared species               D12 =  111 
+#&gt;     Bootstrap replications for s.e. estimate               200 
+#&gt; 
+#&gt;     &quot;Entire&quot; Shared Species Group: 
+#&gt;          Some statistics: 
+#&gt;          --------------------------------------------------------------------------- 
+#&gt;          f[11] = 4 ;  f[1+] = 10 ; f[+1] = 15 ;  f[2+] = 2 ;  f[+2] = 7 ; f[22] = 0 
+#&gt;          --------------------------------------------------------------------------- 
+#&gt; 
+#&gt;     &quot;Rare&quot; Shared Species Group: (Both frequencies can only up to 10) 
+#&gt;          Some statistics: 
+#&gt;          ------------------------------------------------------------------- 
+#&gt;          f[1+]_rare = 8 ; f[+1]_rare = 9 ;  f[2+]_rare = 1 ;  f[+2]_rare = 4 
+#&gt;          ------------------------------------------------------------------- 
+#&gt;     Number of observed individuals in Community 1     n1_rare   =  3358 
+#&gt;     Number of observed individuals in Community 2     n2_rare   =  558 
+#&gt;     Number of observed shared species                 D12_rare  =  21 
+#&gt;     Estimated sample coverage                         C12_rare  =  0.86 
+#&gt;     Estimated CCVs                                    CCV_1     =  0.733 
+#&gt;                                                       CCV_2     =  1.007 
+#&gt;                                                       CCV_12    =  0.457 
+#&gt; 
+#&gt; 
+#&gt; (2) ESTIMATION RESULTS OF THE NUMBER OF SHARED SPECIES:
+#&gt; 
+#&gt;                               Estimate   s.e. 95%Lower 95%Upper
+#&gt;     Homogeneous                114.429  6.071  110.590  143.235
+#&gt;     Heterogeneous(ACE-shared)  133.921 14.993  117.742  183.917
+#&gt;     Chao1-shared               142.125 18.364  121.329  201.090
+#&gt;     Chao1-shared-bc            142.125 18.364  121.329  201.090
+#&gt; 
+#&gt; 
+#&gt; (3) DESCRIPTION OF MODELS FOR ESTIMATING SHARED SPECIES RICHNESS:
+#&gt; 
+#&gt; Homogeneous: This model assumes that the shared species in each community have the same discovery probabilities; see the Eq. (3.11a) of Chao et al. (2000).
+#&gt; 
+#&gt; Heterogeneous (ACE-shared): This model allows for heterogeneous discovery probabilities among shared species; see Eq. (3.11b) of Chao et al. (2000). It is an extension of the ACE estimator to two communities. It is replaced by Chao1-shared when the estimated sample coverage for rare shared species group (C12_rare in the output) is zero.
+#&gt; 
+#&gt; Chao1-shared: An extension of the Chao1 estimator to estimate shared species richness between two communities. It provides a lower bound of shared species richness. See Eq. (3.6) of Pan et al. (2009). It is replaced by Chao1-shared-bc for the case f[2+]=0 or f[+2]=0.
+#&gt;    
+#&gt; Chao1-shared-bc: A bias-corrected form of Chao1-shared estimator; See Pan et al. (2009).
+#&gt;  </code></pre>
+<p>The above output is divided into three parts:</p>
+<p>The <strong>first part Output(1)</strong> shows basic data
+information for two communities which including the total number of
+individuals for both communities, the observed number of species for
+both communities and the number of observed shared species.</p>
+<p>The <strong>second part Output(2)</strong> lists four estimates of
+shared species richness, along with their standard errors and confidence
+intervals.</p>
+<p>The <strong>third part Output(3)</strong> provides a brief
+explanation of each model/estimator calculated in second part. For more
+details, please refer to Chao et al. (2000) and Chao and Chiu (2012) for
+reviews.</p>
+</div>
+<div id="main-function-4-similaritypair" class="section level2">
+<h2>MAIN FUNCTION 4: SimilarityPair()</h2>
+<p>Here we describe the main function <code>SimilarityPair()</code> with
+default arguments:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityPair</span>(X, datatype, units, <span class="at">nboot =</span> <span class="dv">200</span>)</span></code></pre></div>
+<p>The arguments of this function are briefly described below, and will
+be explained in more details by illustrative examples in later text.</p>
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">
+Argument
+</th>
+<th align="left">
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">
+<code>X</code>
+</td>
+<td align="left">
+a matrix/data.frame of species abundances/incidences.
+</td>
+</tr>
+<tr class="even">
+<td align="center">
+<code>datatype</code>
+</td>
+<td align="left">
+type of input data, “abundance”, “incidence_freq” or “incidence_raw”.
+</td>
+</tr>
+<tr class="odd">
+<td align="center">
+<code>units</code>
+</td>
+<td align="left">
+number of sampling units in each community. For <code>datatype =
+“incidence_raw”</code>, users must specify the number of sampling units
+taken from each community. This argument is not needed for “abundance”
+and “incidence_freq” data.
+</td>
+</tr>
+<tr class="odd">
+<td align="center">
+<code>nboot</code>
+</td>
+<td align="left">
+an integer specifying the number of bootstrap replications.Default is
+<code>nboot = 200</code>
+</td>
+</tbody>
+</table>
+<p>Following codes show the examples for this function using on each
+datatype.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for Function SimilarityPair(X, datatype, units, nboot = 200)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(SimilarityPairData)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (1) abundance data </span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityPair</span>(SimilarityPairData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>,<span class="at">nboot=</span><span class="dv">200</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2) incidence-frequency data </span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityPair</span>(SimilarityPairData<span class="sc">$</span>Inci,<span class="st">&quot;incidence_freq&quot;</span>,<span class="at">nboot=</span><span class="dv">200</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2B) incidence-raw data </span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityPair</span>(SimilarityPairData<span class="sc">$</span>Inci_raw,<span class="st">&quot;incidence_raw&quot;</span>,<span class="at">units=</span><span class="fu">c</span>(<span class="dv">19</span>,<span class="dv">17</span>),<span class="at">nboot=</span><span class="dv">200</span>)</span></code></pre></div>
+<p>And following we only show the output of abundance data as example.
+(Notice that only “abundance”, “incidence_freq” or “incidence_raw” data
+can use function <code>SimilarityPair</code>.)</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityPair</span>(SimilarityPairData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>,<span class="at">nboot=</span><span class="dv">200</span>)</span></code></pre></div>
+<pre><code>#&gt; (1) BASIC DATA INFORMATION:
+#&gt; 
+#&gt;     The loaded set includes abundance/incidence data from 2 communities
+#&gt;     and a total of 86 species.
+#&gt; 
+#&gt;     Samples size in Community 1                            n1  = 557 
+#&gt;     Samples size in Community 2                            n2  = 111 
+#&gt;     Number of observed species in Community 1              D1  = 69 
+#&gt;     Number of observed species in Community 2              D2  = 43 
+#&gt;     Number of observed shared species in two communities   D12 = 26 
+#&gt;     Number of bootstrap replications for s.e. estimate           200 
+#&gt; 
+#&gt;     Some statistics:
+#&gt;           f[11]= 4 ; f[1+]= 8 ; f[+1]= 10 ; f[2+]= 2 ; f[+2]= 8 ; f[22]= 0 
+#&gt; 
+#&gt; (2) EMPIRICAL SIMILARITY INDICES: 
+#&gt; 
+#&gt;                                        Estimate       s.e.       95%Lower     95%Upper
+#&gt;     (a) Classic richness-based similarity
+#&gt; 
+#&gt;         C02 (q=0, Sorensen)             0.4643       0.0386       0.3886       0.5400 
+#&gt;         U02 (q=0, Jaccard)              0.3023       0.0292       0.2451       0.3595 
+#&gt; 
+#&gt;     (b) Measures for comparing species relative abundances
+#&gt; 
+#&gt;         C12=U12 (q=1, Horn)             0.5502       0.0281       0.4951       0.6054 
+#&gt; 
+#&gt;         C22 (q=2, Morisita-Horn)        0.7442       0.0391       0.6675       0.8208 
+#&gt;         U22 (q=2, Regional overlap)     0.8533       0.0265       0.8014       0.9052 
+#&gt; 
+#&gt;         ChaoJaccard-abundance           0.4040       0.0239       0.3572       0.4508 
+#&gt;         ChaoSorensen-abundance          0.5755       0.0260       0.5245       0.6265 
+#&gt; 
+#&gt;     (c) Measures for comparing size-weighted species relative abundances
+#&gt; 
+#&gt;         Horn size-weighted (q=1)        0.6002       0.0320       0.5375       0.6628 
+#&gt; 
+#&gt;     (d) Measures for comparing species absolute abundances
+#&gt; 
+#&gt;         C12=U12 (q=1)                   0.3894       0.0320       0.3268       0.4521 
+#&gt; 
+#&gt;         C22 (Morisita-Horn)             0.3039       0.0371       0.2312       0.3765 
+#&gt;         U22 (Regional overlap)          0.4661       0.0444       0.3792       0.5531 
+#&gt; 
+#&gt;         Bray-Curtis                     0.2425       0.0165       0.2101       0.2749 
+#&gt; 
+#&gt; (3) ESTIMATED SIMILARITY INDICES: 
+#&gt; 
+#&gt;                                        Estimate       s.e.       95%Lower     95%Upper
+#&gt;     (a) Classic richness-based similarity:
+#&gt; 
+#&gt;         C02 (q=0, Sorensen)             0.4966       0.1274       0.2469       0.7463 
+#&gt;         U02 (q=0, Jaccard)              0.3303       0.1168       0.1014       0.5592 
+#&gt; 
+#&gt;     (b) Measures for comparing species relative abundances
+#&gt; 
+#&gt;         C12=U12 (q=1, Horn)             0.6763       0.0666       0.5458       0.8069 
+#&gt; 
+#&gt;         C22 (q=2, Morisita-Horn)        0.7868       0.0392       0.7099       0.8637 
+#&gt;         U22 (q=2, Regional overlap)     0.8807       0.0254       0.8310       0.9304 
+#&gt; 
+#&gt;         ChaoJaccard-abundance           0.4845       0.0794       0.3289       0.6401 
+#&gt;         ChaoSorensen-abundance          0.6527       0.0711       0.5133       0.7921 
+#&gt; 
+#&gt;     (c) Measures for comparing size-weighted species relative abundances
+#&gt; 
+#&gt;         Horn size-weighted (q=1)        0.7586       0.0823       0.5973       0.9199 
+#&gt; 
+#&gt;     (d) Measures for comparing species absolute abundances
+#&gt; 
+#&gt;         C12=U12 (q=1)                   0.4922       0.0823       0.3309       0.6535 
+#&gt; 
+#&gt;         C22 (q=2, Morisita-Horn)        0.3114       0.0380       0.2369       0.3859 
+#&gt;         U22 (q=2, Regional overlap)     0.4749       0.0450       0.3867       0.5632 
+#&gt; 
+#&gt;         Bray-Curtis                     0.2725       0.0384       0.1972       0.3477 
+#&gt; 
+#&gt;         NOTE: If an estimate is greater than 1, it is replaced by 1.</code></pre>
+<p>The above output is divided into three parts:</p>
+<p>The <strong>first part Output(1)</strong> shows basic data
+information for two communities which including the total number of
+individuals for both communities, the observed number of species for
+both communities and the number of observed shared species.</p>
+<p>The <strong>second part Output(2)</strong> lists observed value of
+similarity indices for four goals which including (a) Classic
+richness-based similarity, (b) Measures for comparing species relative
+abundances, (c) Measures for comparing size-weighted species relative
+abundances and (d) Measures for comparing species absolute abundances,
+along with their standard errors and confidence intervals.</p>
+<p>The <strong>third part Output(3)</strong> lists estimated value of
+similarity indices for four goals (which are the same as in part
+Output(2)), along with their standard errors and confidence
+intervals.</p>
+</div>
+<div id="main-function-5-similaritymult" class="section level2">
+<h2>MAIN FUNCTION 5: SimilarityMult()</h2>
+<p>Here we describe the main function <code>SimilarityMult()</code> with
+default arguments:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(X, datatype, units, <span class="at">q =</span> <span class="dv">2</span>, <span class="at">nboot =</span> <span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>)</span></code></pre></div>
+<p>The arguments of this function are briefly described below, and will
+be explained in more details by illustrative examples in later text.</p>
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">
+Argument
+</th>
+<th align="left">
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">
+<code>X</code>
+</td>
+<td align="left">
+a matrix/data.frame of species abundances/incidences.
+</td>
+</tr>
+<tr class="even">
+<td align="center">
+<code>datatype</code>
+</td>
+<td align="left">
+type of input data, “abundance”, “incidence_freq” or “incidence_raw”.
+</td>
+</tr>
+<tr class="odd">
+<td align="center">
+<code>units</code>
+</td>
+<td align="left">
+number of sampling units in each community. For <code>datatype =
+“incidence_raw”</code>, users must specify the number of sampling units
+taken from each community. This argument is not needed for “abundance”
+and “incidence_freq” data.
+</td>
+</tr>
+<tr class="odd">
+<td align="center">
+<code>q</code>
+</td>
+<td align="left">
+a specified order to use to compute pairwise similarity measures. If
+<code>q = 0</code>, this function computes the estimated pairwise
+richness-based Jaccard and Sorensen similarity indices.<br />
+If <code>q = 1</code> and <code>goal=relative</code>, this function
+computes the estimated pairwise equal-weighted and size-weighted Horn
+indices based on Shannon entropy; If <code>q = 1</code> and
+<code>goal=absolute</code>, this function computes the estimated
+pairwise Shannon-entropy-based measure for comparing absolute
+abundances. If <code>q = 2</code> and <code>goal=relative</code>, this
+function computes the estimated pairwise Morisita-Horn and regional
+species-overlap indices based on species relative abundances.<br />
+If <code>q = 2</code> and <code>goal=absolute</code>, this function
+computes the estimated pairwise Morisita-Horn and regional
+species-overlap indices based on species absolute abundances.
+</td>
+</tr>
+<tr class="odd">
+<td align="center">
+<code>nboot</code>
+</td>
+<td align="left">
+an integer specifying the number of bootstrap replications.Default is
+<code>nboot = 200</code>
+</td>
+</tr>
+<tr class="odd">
+<td align="center">
+<code>goal</code>
+</td>
+<td align="left">
+a specified estimating goal to use to compute pairwise similarity
+measures:comparing species relative abundances
+(<code>goal=relative</code>) or comparing species absolute abundances
+(<code>goal=absolute</code>).
+</td>
+</tbody>
+</table>
+<p>Following codes show the examples for this function using on each
+datatype.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for Function SimilarityMult(X, datatype, units, q = 2, nboot = 200, goal = &quot;relative&quot;)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(SimilarityMultData)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (1) abundance data </span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>,<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2) incidence-frequency data </span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Inci,<span class="st">&quot;incidence_freq&quot;</span>,<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2B) incidence-raw data </span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Inci_raw,<span class="st">&quot;incidence_raw&quot;</span>, <span class="at">units=</span><span class="fu">c</span>(<span class="dv">19</span>,<span class="dv">17</span>,<span class="dv">15</span>),<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>)</span></code></pre></div>
+<p>And following we only show the output of abundance data as example.
+(Notice that only “abundance”, “incidence_freq” or “incidence_raw” data
+can use function <code>SimilarityMult</code>.)</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>,<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>,<span class="st">&quot;relative&quot;</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; (1) BASIC DATA INFORMATION:
+#&gt; 
+#&gt;     The loaded set includes abundance/incidence data from 3 communities
+#&gt;     and a total of 120 species.
+#&gt; 
+#&gt;     Sample size in each community                            n1   = 557 
+#&gt;                                                              n2   = 729 
+#&gt;                                                              n3   = 111 
+#&gt; 
+#&gt;     Number of observed species in one community              D1   = 69 
+#&gt;                                                              D2   = 102 
+#&gt;                                                              D3   = 43 
+#&gt; 
+#&gt;     Number of observed shared species in two communities     D12  = 59 
+#&gt;                                                              D13  = 26
+#&gt;                                                              D23  = 32
+#&gt; 
+#&gt;     Number of observed shared species in three communities   D123 = 23 
+#&gt; 
+#&gt;     Number of bootstrap replications for s.e. estimate              200 
+#&gt; 
+#&gt; (2) EMPIRICAL SIMILARITY INDICES: 
+#&gt; 
+#&gt;                                        Estimate       s.e.       95%Lower     95%Upper
+#&gt;     (a) Classic richness-based similarity
+#&gt; 
+#&gt;         C03 (q=0, Sorensen)             0.6589       0.0238       0.6122       0.7055 
+#&gt;         U03 (q=0, Jaccard)              0.3917       0.0242       0.3442       0.4392 
+#&gt; 
+#&gt;     (b) Measures for comparing species relative abundances
+#&gt; 
+#&gt;         C13=U13 (q=1, Horn)             0.6521       0.0178       0.6173       0.6869 
+#&gt; 
+#&gt;         C23 (q=2, Morisita-Horn)        0.5802       0.0274       0.5264       0.6340 
+#&gt;         U23 (q=2, Regional overlap)     0.8057       0.0185       0.7695       0.8419 
+#&gt; 
+#&gt;     (c) Measures for comparing size-weighted species relative abundances
+#&gt; 
+#&gt;         Horn size-weighted (q=1)        0.6885       0.0155       0.6582       0.7188 
+#&gt; 
+#&gt;     (d) Measures for comparing species absolute abundances
+#&gt; 
+#&gt;         C13=U13 (q=1)                   0.5686       0.0155       0.5383       0.5989 
+#&gt; 
+#&gt;         C23 (Morisita-Horn)             0.4069       0.0252       0.3576       0.4562 
+#&gt;         U23 (Regional overlap)          0.6730       0.0237       0.6266       0.7194 
+#&gt; 
+#&gt;         Bray-Curtis                     0.3962       0.0141       0.3687       0.4238 
+#&gt; 
+#&gt; (3) ESTIMATED SIMILARITY INDICES: 
+#&gt; 
+#&gt;                                        Estimate       s.e.       95%Lower     95%Upper
+#&gt;     (a) Classic richness-based similarity
+#&gt; 
+#&gt;         C03 (q=0, Sorensen)             0.8235       0.0607       0.7044       0.9425 
+#&gt;         U03 (q=0, Jaccard)              0.6086       0.0918       0.4287       0.7886 
+#&gt; 
+#&gt;     (b) Measures for comparing species relative abundances
+#&gt; 
+#&gt;         C13=U13 (q=1, Horn)             0.7036       0.0245       0.6556       0.7516 
+#&gt; 
+#&gt;         C23 (q=2, Morisita-Horn)        0.6134       0.0298       0.5549       0.6719 
+#&gt;         U23 (q=2, Regional overlap)     0.8264       0.0190       0.7891       0.8636 
+#&gt; 
+#&gt;     (c) Measures for comparing size-weighted species relative abundances
+#&gt; 
+#&gt;         Horn size-weighted (q=1)        0.7430       0.0236       0.6968       0.7893 
+#&gt; 
+#&gt;     (d) Measures for comparing species absolute abundances
+#&gt; 
+#&gt;         C13=U13 (q=1)                   0.6136       0.0236       0.5673       0.6599 
+#&gt; 
+#&gt;         C23 (Morisita-Horn)             0.4213       0.0261       0.3701       0.4725 
+#&gt;         U23 (Regional overlap)          0.6859       0.0239       0.6392       0.7327 
+#&gt; 
+#&gt;         Bray-Curtis                     0.4287       0.0180       0.3934       0.4640 
+#&gt; 
+#&gt; (4) ESTIMATED PAIRWISE SIMILARITY:
+#&gt; 
+#&gt;     -------------------------Measure C22---------------------------
+#&gt; 
+#&gt;     Estimator      Estimate      s.e.        95% Confidence Interval
+#&gt; 
+#&gt;     C22(1,2)       0.471         0.042         ( 0.389 , 0.553 )
+#&gt;     C22(1,3)       0.787         0.039         ( 0.711 , 0.863 )
+#&gt;     C22(2,3)       0.483         0.069         ( 0.348 , 0.619 )
+#&gt; 
+#&gt;     Average pairwise similarity= 0.580 
+#&gt; 
+#&gt;     Pairwise similarity matrix: 
+#&gt; 
+#&gt;     C22(i,j)  1       2       3       
+#&gt;        1      1.000   0.471   0.787   
+#&gt;        2              1.000   0.483   
+#&gt;        3                      1.000   
+#&gt; 
+#&gt;     -------------------------Measure U22---------------------------
+#&gt; 
+#&gt;     Estimator      Estimate      s.e.        95% Confidence Interval
+#&gt; 
+#&gt;     U22(1,2)       0.641         0.039         ( 0.564 , 0.718 )
+#&gt;     U22(1,3)       0.881         0.025         ( 0.831 , 0.931 )
+#&gt;     U22(2,3)       0.652         0.066         ( 0.523 , 0.780 )
+#&gt; 
+#&gt;     Average pairwise similarity = 0.724 
+#&gt; 
+#&gt;     Pairwise similarity matrix: 
+#&gt; 
+#&gt;     U22(i,j)  1       2       3       
+#&gt;        1      1.000   0.641   0.881   
+#&gt;        2              1.000   0.652   
+#&gt;        3                      1.000   
+#&gt; 
+#&gt;     NOTE: Any estimate greater than 1 is replaced by 1; any estimate less than 0 is replaced by 0.</code></pre>
+<p>The above output is divided into four parts:</p>
+<p>The <strong>first part Output(1)</strong> shows basic data
+information for each communities.</p>
+<p>The <strong>second part Output(2)</strong> lists observed value of
+similarity indices for four goals, which including (a) Classic
+richness-based similarity, (b) Measures for comparing species relative
+abundances, (c) Measures for comparing size-weighted species relative
+abundances and (d) Measures for comparing species absolute abundances,
+along with their standard errors and confidence intervals.</p>
+<p>The <strong>third part Output(3)</strong> lists estimated value of
+similarity indices for four goals (which are the same as in part
+Output(2)), along with their standard errors and confidence
+intervals.</p>
+<p>The <strong>fourth part Output(4)</strong> lists estimated value of
+similarity indices for all pairs of communities and their average.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

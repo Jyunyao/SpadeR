@@ -1,0 +1,533 @@
+---
+title: "An Introduction to SpadeR via Examples"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{An Introduction to SpadeR via Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(SpadeR)
+```
+
+<font color=#FF6600>
+</font>
+
+`SpadeR` (Species-Richness Prediction and Diversity Estimation with R) is an updated R package from the original version of SPADE. `SpadeR` provides simple R functions to compute various biodiversity indices and related (dis)similarity measures based on individual-based (abundance) data or sampling-unit-based (incidence) data taken from one or multiple communities/assemblages. The `SpadeR` package is available in [CRAN](http://cran.r-project.org/web/packages/SpadeR/index.html). We have been updating `SpadeR` and you can download the latest version from Github (see below) or from [Anne Chao’s website](http://chao.stat.nthu.edu.tw/wordpress/software_download/).  
+
+* You need to acquire basic knowledge about R to use functions supplied by `SpadeR`.  
+* For readers without R background, please try our `SpadeR` Online, an R-based online version via the link [Anne Chao’s website](http://chao.stat.nthu.edu.tw/wordpress/software_download/) or [https://chao.shinyapps.io/SpadeR/](https://chao.shinyapps.io/SpadeR/). Users do not need to learn/understand R to run `SpadeR` Online.
+
+Both `SpadeR` (R package) and `SpadeR` Online include nearly all of the important features from the original program SPADE while also having the advantages of expanded output displays and simplified data input formats. See [SpadeR Manual](https://cran.r-project.org/web/packages/SpadeR/SpadeR.pdf) for all details of the functions supplied in the package. For numerical examples with proper interpretations, see the detailed Online [SpadeR User’s Guide](http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/SpadeR_UserGuide_2020May07.pdf). 
+
+
+## SOFTWARE NEEDED TO RUN SpadeR IN R
+- Required: [R](https://cran.r-project.org/)
+- Suggested: [RStudio IDE](https://www.rstudio.com/products/RStudio/#Desktop)
+
+
+## HOW TO RUN SpadeR:
+The `SpadeR` package can be downloaded from Anne Chao's [SpadeR_github](https://github.com/AnneChao/SpadeR) using the following commands. 
+The `SpadeR` package is available on CRAN using the following commands. And the latest version can be downloaded from the github. 
+
+```{r, eval=FALSE}
+## install SpadeR package from CRAN
+install.packages("SpadeR")
+
+## install the latest SpadeR from github
+install.packages("devtools")
+library(devtools)
+install_github("AnneChao/SpadeR")
+
+## import packages
+library(SpadeR)
+```
+
+
+There are five main functions in this package:
+
+- **ChaoSpecies**: Estimates species richness for one community.  
+- **Diversity**: Estimates a continuous diversity profile and various diversity indices in one community including species richness, Shannon diversity and Simpson diversity. This function also features plots of empirical and estimated continuous diversity profiles.  
+- **ChaoShared**: Estimates the number of shared species between two communities.  
+- **SimilartyPair**: Estimates various similarity indices between two assemblages. Both richness and abundance-based two-community similarity indices are included.  
+- **SimilarityMult**: Estimates various similarity indices among N communities. Both richness and abundance-based N-community similarity indices are included.   
+
+ 
+## DATA INPUT FORMAT
+
+It is very important to prepare your data in correct format. Data are generally classified as abundance data and incidence data and there are five types of data input formats options (datatype="abundance", "abundance_freq_count", "incidence_freq", "incidence_freq_count", "incidence_raw").  
+
+* Individual-based abundance data when a sample of individuals is taken from each community.  
+  - **Type (1) abundance data** (datatype = "abundance"): Input data consist of species (in rows) by community (in columns) matrix. The entries of each row are the observed abundances of a species in N communities. 
+  - **Type (1A) abundance-frequency counts data** (only for a single community, datatype = "abundance_freq_count"): input data are arranged as $(1~f_1~2~f_2...r~f_r)$ (each number needs to be separated by at least one blank space or separated by rows), where $r$ denotes the maximum frequency and $f_k$ denotes the number of species represented by exactly $k$ individuals/times in the sample. Here the data $(f_1,f_2,...,f_r)$ are referred to as "abundance-frequency counts".  
+  
+\vspace{15pt}
+
+* Sampling-unit-based incidence data when a number of sampling units are randomly taken from each community. Only the incidence (detection/non-detection) of species is recorded in each sampling unit. There are three data formats options.
+  - **Type (2) incidence-frequency data** (datatype="incidence_freq"): The first row of the input data must be the number of sampling units in each community. Beginning with the second row, input data consist of species (in rows) by community (in columns) matrix. The entries of each row are the observed incidence frequencies (the number of detections or the number of sampling units in which a species are detected) of a species in $N$ communities.
+  - **Type (2A) incidence-frequency counts data** (only for a single community, datatype="incidence_ freq_count"): input data are arranged as $(T~1~Q_1~2~Q_2...r~Q_r)$ (each number needs to be separated by at least one blank space or separated by rows), where $Q_k$ denotes the number of species that were detected in exactly $k$ sampling units, while $r$ denotes the number of sampling units in which the most frequent species were found. The first entry must be the total number of sampling units, $T$. The data $(Q_1, Q_2, ..., Q_r)$ are referred to as "incidence frequency counts".
+  - **Type (2B) incidence-raw data** (datatype="incidence_raw"): Data consist of a species-by-sampling-unit incidence (detection/non-detection) matrix; typically "1" means a detection and "0" means a non-detection. Each row refers to the detection/non-detection record of a species in $T$ sampling units. Users must specify the number of sampling units in the function argument "units". The first $T_1$ columns of the input matrix denote species detection/non-detection data based on the $T_1$ sampling units from Community 1, and the next $T_2$ columns denote the detection/non-detection data based on the T2 sampling units from Community 2, and so on, and the last $T_N$ columns denote the detection/non-detection data based on $T_N$ sampling units from Community $N$, $T_1+T_2+⋯+T_N=T$.  
+  
+
+In the package, we have included many demo datasets for illustration. To gain familiarity with the program, we suggest that users first run the demo data sets included in SpadeR package, and check the detail of demo data and output with that given in the [SpadeR User’s Guide](http://chao.stat.nthu.edu.tw/wordpress/wp-content/uploads/software/SpadeR_UserGuide_2020May07.pdf). Part of the output for following example is also interpreted in the guide to help users understand the statistical results. The formulas for estimators featured in SpadeR with relevant references are also provided in the SpadeR User’s Guide. 
+  
+
+## MAIN FUNCTION 1: ChaoSpecies()
+
+We first describe the main function `ChaoSpecies()` with default arguments: 
+
+```{r eval=FALSE}
+ChaoSpecies(data, datatype, k = 10,  conf = 0.95)
+```
+
+The arguments of this function are briefly described below, and will be explained in more details by illustrative examples in later text. 
+
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>data</code></td>
+<td align="left">
+a matrix/data.frame of species abundances/incidences. </td>
+
+</tr>
+<tr class="even">
+<td align="center"><code>datatype</code></td>
+<td align="left">type of input data, "abundance", "abundance_freq_count", "incidence_freq", "incidence_freq_count" or "incidence_raw".</td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>k</code></td>
+<td align="left">the cut-off point (default = 10), which separates species into "abundant" and "rare" groups for abundance data for the estimator ACE; it separates species into "frequent" and "infrequent" groups for incidence data for the estimator ICE.</td>
+
+</tr>
+<tr class="even">
+<td align="center"><code>conf</code></td>
+<td align="left">a positive number ≤ 1 specifying the level of confidence interval.</td>
+
+</tbody>
+</table>
+
+
+Following codes show the examples for this function using on each datatype. 
+
+```{r, eval=FALSE}
+# Data for Function ChaoSpecies(data, datatype, k = 10, conf = 0.95)
+data(ChaoSpeciesData)
+
+# Type (1) abundance data
+ChaoSpecies(ChaoSpeciesData$Abu,"abundance", k=10, conf = 0.95)
+
+# Type (1A) abundance-frequency counts data
+ChaoSpecies(ChaoSpeciesData$Abu_count, "abundance_freq_count", k=10, conf = 0.95)
+
+# Type (2) incidence-frequency data
+ChaoSpecies(ChaoSpeciesData$Inci, "incidence_freq", k=10, conf = 0.95)
+
+# Type (2A) incidence-frequency counts data
+ChaoSpecies(ChaoSpeciesData$Inci_count, "incidence_freq_count", k=10, conf = 0.95)
+
+# Type (2B) incidence-raw data
+ChaoSpecies(ChaoSpeciesData$Inci_raw, "incidence_raw", k=10, conf = 0.95)
+```
+
+And following we only show the output of abundance data as example.    
+
+```{r, eval=FALSE}
+ChaoSpecies(ChaoSpeciesData$Abu,"abundance", k=10, conf = 0.95)
+```
+
+```{r, echo=FALSE}
+data(ChaoSpeciesData)
+ChaoSpecies(ChaoSpeciesData$Abu,"abundance", k=10, conf = 0.95)
+```
+
+The output shown above is divided into three parts. 
+
+The **first part Output(1)** shows the basic data information for the whole data which including the total number of individuals, the observed number of species, the coverage estimate, the estimated coefficient of variation (CV) value (which is always ≥ 0) and some information about species in rare group.  
+
+-  The coverage estimate is an objective measure of sample completeness. It represents the estimated fraction of the entire population of individuals in the community that belong to the species represented in the sample.  
+
+-  The CV measure is used to characterize the degree of heterogeneity among species abundances or species discovery probabilities. CV = 0 would mean that all species are homogeneous (i.e., they all have equal abundances or equal discovery probabilities in the community). Therefore, the larger the CV, the greater the degree of heterogeneity for species discovery probabilities.  
+
+The **second part Output(2)** lists estimates, standard errors and confidence intervals for each model or estimator of species richness. 
+
+The **third part Output(3)** provides a brief explanation of each model/estimator calculated in second part. For more details, refer to Colwell and Coddington (1994), Chao (2005) and Chao and Chiu (2012, 2016a, b).
+
+
+
+## MAIN FUNCTION 2: Diversity()
+
+Here we describe the main function `Diversity()` with default arguments: 
+
+```{r eval=FALSE}
+Diversity(data, datatype, q = NULL)
+```
+
+The arguments of this function are briefly described below, and will be explained in more details by illustrative examples in later text. 
+
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>data</code></td>
+<td align="left">
+a matrix/data.frame of species abundances/incidences. </td>
+
+</tr>
+<tr class="even">
+<td align="center"><code>datatype</code></td>
+<td align="left">type of input data, "abundance", "abundance_freq_count", "incidence_freq", "incidence_freq_count" or "incidence_raw".</td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>q</code></td>
+<td align="left">a vector of nonnegative numbers specifying the diversity orders for which Hill numbers will be estimated. If <code>NULL</code>, then Hill numbers will be estimated at order q from 0 to 3 with increments of 0.25.</td>
+
+</tbody>
+</table>
+
+Following codes show the examples for this function using on each datatype. 
+
+```{r, eval=FALSE}
+# Data for Function Diversity(data, datatype, q = NULL) 
+data(DiversityData)
+
+# Type (1) abundance data
+Diversity_output1 <- Diversity(DiversityData$Abu,"abundance", q=c(0,0.5,1,1.5,2))
+
+# Type (1A) abundance-frequency counts data
+Diversity_output1A <- Diversity(DiversityData$Abu_count,"abundance_freq_count", q = seq(0, 3, by = 0.5))
+
+# Type (2) incidence-frequency data
+Diversity_output2 <- Diversity(DiversityData$Inci,"incidence_freq", q = NULL)
+
+# Type (2A) incidence-frequency counts data
+Diversity_output2A <- Diversity(DiversityData$Inci_count, "incidence_freq_count" , q = NULL)
+
+# Type (2B) incidence-raw data
+Diversity_output2B <- Diversity(DiversityData$Inci_raw, "incidence_raw", q = NULL)
+```
+
+And following we only show the output of abundance data as example.  
+
+```{r, eval=FALSE}
+Diversity(DiversityData$Abu,"abundance", q=c(0,0.5,1,1.5,2))
+``` 
+ 
+```{r, echo=FALSE, fig.width = 5, fig.height = 4, fig.align = 'center'}
+data(DiversityData)
+Diversity(DiversityData$Abu,"abundance", q=c(0,0.5,1,1.5,2))
+```
+
+The above output is divided into five parts: 
+
+The **first part Output(1)**  summarizes basic data information, including the sample size, observed species richness, estimated sample coverage and estimated CV value. 
+
+The **second part Output(2)**  provides species richness estimators (diversity of order 0).
+
+The **third part Output(3a) and (3b)**  shows five estimates of the Shannon entropy index and its effective number of species (diversity of order 1). 
+
+The **fourth part Output(4a) and (4b)** shows two estimates of the Simpson index and its effective number of species (diversity of order 2). 
+
+The **fifth part Output(5)**  provides empirical diversity values and Chao and Jost (2015) diversity profile estimates and their 95% confidence intervals based on the bootstrap method. 
+
+And in the last of output, it shows the empirical diversity profile and Chao and Jost (2015) diversity estimates profile.  
+
+
+## MAIN FUNCTION 3: ChaoShared()
+
+Here we describe the main function `ChaoShared()` with default arguments: 
+
+```{r eval=FALSE}
+ChaoShared(data, datatype, units, se = TRUE, nboot = 200, conf = 0.95)
+```
+
+The arguments of this function are briefly described below, and will be explained in more details by illustrative examples in later text. 
+
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>data</code></td>
+<td align="left">
+a matrix/data.frame of species abundances/incidences. </td>
+
+</tr>
+<tr class="even">
+<td align="center"><code>datatype</code></td>
+<td align="left">type of input data, "abundance", "incidence_freq" or "incidence_raw".</td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>units</code></td>
+<td align="left">number of sampling units in each community. For <code>datatype = "incidence_raw"</code>, users must specify the number of sampling units taken from each community. This argument is not needed for "abundance" and "incidence_freq" data.</td>
+
+</tr>
+<tr class="even">
+<td align="center"><code>se</code></td>
+<td align="left">a logical variable to calculate the bootstrap standard error and the associated confidence interval. Default is <code>se = TRUE</code></td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>nboot</code></td>
+<td align="left">an integer specifying the number of bootstrap replications.Default is <code>nboot = 200</code></td>
+
+</tr>
+<tr class="even">
+<td align="center"><code>conf</code></td>
+<td align="left">a positive number ≤ 1 specifying the level of confidence interval. Default is <code>conf = 0.95</code></td>
+
+</tbody>
+</table>
+
+
+Following codes show the examples for this function using on each datatype. 
+
+```{r, eval=FALSE}
+# Data for Function ChaoShared(data, datatype, units, se = TRUE, nboot = 200, conf = 0.95)
+data(ChaoSharedData)
+
+# Type (1) abundance data
+Shared_output1 <- ChaoShared(ChaoSharedData$Abu,"abundance", se = TRUE, nboot = 200, conf = 0.95)
+
+# Type (2) incidence-frequency data
+Shared_output2 <- ChaoShared(ChaoSharedData$Inci,"incidence_freq", se = TRUE, nboot = 200, conf = 0.95)
+
+# Type (2B) incidence-raw data
+Shared_output2B <- ChaoShared(ChaoSharedData$Inci_raw,"incidence_raw", units = c(16,17), se = TRUE, nboot = 200, conf = 0.95)
+```
+
+And following we only show the output of abundance data as example. (Notice that only "abundance", "incidence_freq" or "incidence_raw" data can use function <code>ChaoShared</code>.)   
+ 
+```{r, eval=FALSE}
+ChaoShared(ChaoSharedData$Abu, "abundance", se = TRUE, nboot = 200, conf = 0.95)
+``` 
+ 
+```{r, echo=FALSE}
+data(ChaoSharedData)
+ChaoShared(ChaoSharedData$Abu, "abundance", se = TRUE, nboot = 200, conf = 0.95)
+```
+
+The above output is divided into three parts: 
+
+The **first part Output(1)** shows basic data information for two communities which including the total number of individuals for both communities, the observed number of species for both communities and the number of observed shared species. 
+
+The **second part Output(2)** lists four estimates of shared species richness, along with their standard errors and confidence intervals.  
+
+The **third part Output(3)** provides a brief explanation of each model/estimator calculated in second part. For more details, please refer to Chao et al. (2000) and Chao and Chiu (2012) for reviews. 
+
+
+## MAIN FUNCTION 4: SimilarityPair()
+
+Here we describe the main function `SimilarityPair()` with default arguments: 
+
+```{r eval=FALSE}
+SimilarityPair(X, datatype, units, nboot = 200)
+```
+
+The arguments of this function are briefly described below, and will be explained in more details by illustrative examples in later text. 
+
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>X</code></td>
+<td align="left">
+a matrix/data.frame of species abundances/incidences. </td>
+
+</tr>
+<tr class="even">
+<td align="center"><code>datatype</code></td>
+<td align="left">type of input data, "abundance", "incidence_freq" or "incidence_raw".</td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>units</code></td>
+<td align="left">number of sampling units in each community. For <code>datatype = "incidence_raw"</code>, users must specify the number of sampling units taken from each community. This argument is not needed for "abundance" and "incidence_freq" data.</td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>nboot</code></td>
+<td align="left">an integer specifying the number of bootstrap replications.Default is <code>nboot = 200</code></td>
+
+</tbody>
+</table>
+
+
+Following codes show the examples for this function using on each datatype. 
+
+```{r, eval=FALSE}
+# Data for Function SimilarityPair(X, datatype, units, nboot = 200)
+data(SimilarityPairData)
+
+# Type (1) abundance data 
+SimilarityPair(SimilarityPairData$Abu,"abundance",nboot=200)
+
+# Type (2) incidence-frequency data 
+SimilarityPair(SimilarityPairData$Inci,"incidence_freq",nboot=200)
+
+# Type (2B) incidence-raw data 
+SimilarityPair(SimilarityPairData$Inci_raw,"incidence_raw",units=c(19,17),nboot=200)
+```
+
+And following we only show the output of abundance data as example. (Notice that only "abundance", "incidence_freq" or "incidence_raw" data can use function <code>SimilarityPair</code>.)   
+ 
+```{r, eval=FALSE}
+SimilarityPair(SimilarityPairData$Abu,"abundance",nboot=200)
+``` 
+ 
+```{r, echo=FALSE}
+data(SimilarityPairData)
+SimilarityPair(SimilarityPairData$Abu,"abundance",nboot=200)
+```
+
+The above output is divided into three parts: 
+
+The **first part Output(1)** shows basic data information for two communities which including the total number of individuals for both communities, the observed number of species for both communities and the number of observed shared species. 
+
+The **second part Output(2)** lists observed value of similarity indices for four goals which including (a) Classic richness-based similarity, (b) Measures for comparing species relative abundances, (c) Measures for comparing size-weighted species relative abundances and (d) Measures for comparing species absolute abundances, along with their standard errors and confidence intervals.  
+
+The **third part Output(3)** lists estimated value of similarity indices for four goals (which are the same as in part Output(2)), along with their standard errors and confidence intervals.
+
+## MAIN FUNCTION 5: SimilarityMult()
+
+Here we describe the main function `SimilarityMult()` with default arguments: 
+
+```{r eval=FALSE}
+SimilarityMult(X, datatype, units, q = 2, nboot = 200, goal = "relative")
+```
+
+The arguments of this function are briefly described below, and will be explained in more details by illustrative examples in later text. 
+
+<table style="width:100%;">
+<colgroup>
+<col width="20%">
+<col width="80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Argument</th>
+<th align="left">Description</th>
+
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>X</code></td>
+<td align="left">
+a matrix/data.frame of species abundances/incidences. </td>
+
+</tr>
+<tr class="even">
+<td align="center"><code>datatype</code></td>
+<td align="left">type of input data, "abundance", "incidence_freq" or "incidence_raw".</td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>units</code></td>
+<td align="left">number of sampling units in each community. For <code>datatype = "incidence_raw"</code>, users must specify the number of sampling units taken from each community. This argument is not needed for "abundance" and "incidence_freq" data.</td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>q</code></td>
+<td align="left">a specified order to use to compute pairwise similarity measures. If <code>q = 0</code>, this function computes the estimated pairwise richness-based Jaccard and Sorensen similarity indices.\
+If <code>q = 1</code> and <code>goal=relative</code>, this function computes the estimated pairwise equal-weighted and size-weighted Horn indices based on Shannon entropy; If <code>q = 1</code> and <code>goal=absolute</code>, this function computes the estimated pairwise Shannon-entropy-based measure for comparing absolute abundances. If <code>q = 2</code> and <code>goal=relative</code>, this function computes the estimated pairwise Morisita-Horn and regional species-overlap indices based on species relative abundances.\
+If <code>q = 2</code> and <code>goal=absolute</code>, this function computes the estimated pairwise Morisita-Horn and regional species-overlap indices based on species absolute abundances.</td>
+
+
+</tr>
+<tr class="odd">
+<td align="center"><code>nboot</code></td>
+<td align="left">an integer specifying the number of bootstrap replications.Default is <code>nboot = 200</code></td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>goal</code></td>
+<td align="left">a specified estimating goal to use to compute pairwise similarity measures:comparing species relative abundances (<code>goal=relative</code>) or comparing species absolute abundances (<code>goal=absolute</code>). </td>
+</tbody>
+</table>
+
+
+Following codes show the examples for this function using on each datatype. 
+
+```{r, eval=FALSE}
+# Data for Function SimilarityMult(X, datatype, units, q = 2, nboot = 200, goal = "relative")
+data(SimilarityMultData)
+
+# Type (1) abundance data 
+SimilarityMult(SimilarityMultData$Abu,"abundance",q=2,nboot=200, goal = "relative")
+
+# Type (2) incidence-frequency data 
+SimilarityMult(SimilarityMultData$Inci,"incidence_freq",q=2,nboot=200, goal = "relative")
+
+# Type (2B) incidence-raw data 
+SimilarityMult(SimilarityMultData$Inci_raw,"incidence_raw", units=c(19,17,15),q=2,nboot=200, goal = "relative")
+```
+
+And following we only show the output of abundance data as example. (Notice that only "abundance", "incidence_freq" or "incidence_raw" data can use function <code>SimilarityMult</code>.)   
+ 
+```{r, eval=FALSE}
+SimilarityMult(SimilarityMultData$Abu,"abundance",q=2,nboot=200,"relative")
+``` 
+ 
+```{r, echo=FALSE}
+data(SimilarityMultData)
+SimilarityMult(SimilarityMultData$Abu,"abundance",q=2,nboot=200,"relative")
+```
+
+The above output is divided into four parts: 
+
+The **first part Output(1)** shows basic data information for each communities. 
+
+The **second part Output(2)** lists observed value of similarity indices for four goals, which including (a) Classic richness-based similarity, (b) Measures for comparing species relative abundances, (c) Measures for comparing size-weighted species relative abundances and (d) Measures for comparing species absolute abundances, along with their standard errors and confidence intervals.
+
+The **third part Output(3)** lists estimated value of similarity indices for four goals (which are the same as in part Output(2)), along with their standard errors and confidence intervals.
+
+The **fourth part Output(4)** lists estimated value of similarity indices for all pairs of communities and their average.
