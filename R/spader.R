@@ -577,7 +577,7 @@ Diversity=function(data, datatype=c("abundance","abundance_freq_count", "inciden
 #' Chiu, C. H., Jost, L. and Chao, A. (2014). Phylogenetic beta diversity, similarity, and differentiation measures based on Hill numbers. Ecological Monographs, 84, 21-44.\cr\cr
 #' @export
 
-SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence_raw"), units,nboot=200)
+SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence_raw"), units,nboot=200,weight,w)
 { 
   
   if(datatype=="abundance")
@@ -607,7 +607,7 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     Est_Jaccard <- mat[2, ]
     MLE_Sorensen <- mat[3, ]
     Est_Sorensen <- mat[4, ]
-    mat2 <-  Two_Horn_equ(X[,1], X[,2], method="all", weight="unequal", nboot = nboot)
+    mat2 <-  Two_Horn_equ(X[,1], X[,2], method="all", weight="Size Weight", nboot = nboot)
     MLE_Ee_Horn <- mat2$mle
     MLE_Ee_Horn <- plus_CI(c(MLE_Ee_Horn[1],MLE_Ee_Horn[2]))
     Est_Ee_Horn <- mat2$est
@@ -621,7 +621,7 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     Est_Ee_C22 <- mat4$CqN[2, ]
     MLE_Ee_U22 <- mat4$UqN[1, ]
     Est_Ee_U22 <- mat4$UqN[2, ]
-    mat5 <- Two_Horn_equ(X[,1], X[,2], method="all", weight="equal", nboot = nboot)
+    mat5 <- Two_Horn_equ(X[,1], X[,2], method="all", weight="Equal Weight", nboot = nboot)
     MLE_ew_Horn <- mat5$mle
     Est_ew_Horn <- mat5$est
     mat6 <- SimilarityTwo(X,2,nboot,method="equal weight")
@@ -635,6 +635,31 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     Est_ew_ChaoSoresen <- mat[12, ]
     MLE_ew_ChaoJaccard <- mat[9, ]
     Est_ew_ChaoJaccard <- mat[10, ]
+    
+    ##############################################################################################  new
+    Est_q0_sor=sor_est_N2_abu(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q0_sor=plus_CI(c(Est_q0_sor[1],Est_q0_sor[2]))
+    MLE_q0_sor=sor_est_N2_abu(X,nboot = nboot,weight=weight,w=w)$obs
+    MLE_q0_sor=plus_CI(c(MLE_q0_sor[1],MLE_q0_sor[2]))
+    
+    Est_q0_jar=Jar_est_N2_abu(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q0_jar=plus_CI(c(Est_q0_jar[1],Est_q0_jar[2]))
+    MLE_q0_jar=Jar_est_N2_abu(X,nboot = nboot,weight=weight,w=w)$obs
+    MLE_q0_jar=plus_CI(c(MLE_q0_jar[1],MLE_q0_jar[2]))
+    
+    Est_q2_sor=MH_est_abu(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q2_sor=plus_CI(c(Est_q2_sor[1],Est_q2_sor[2]))
+    MLE_q2_sor=MH_est_abu(X,nboot = nboot,weight=weight,w=w)$mle
+    MLE_q2_sor=plus_CI(c(MLE_q2_sor[1],MLE_q2_sor[2]))
+    
+    Est_q2_jar=regional_est_abu(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q2_jar=plus_CI(c(Est_q2_jar[1],Est_q2_jar[2]))
+    MLE_q2_jar=regional_est_abu(X,nboot = nboot,weight=weight,w=w)$mle
+    MLE_q2_jar=plus_CI(c(MLE_q2_jar[1],MLE_q2_jar[2]))
+    ##############################################################################################  new
+    
+    
+    
     temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard)
     rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 
     temp[[2]] <- rbind(MLE_ew_Horn, MLE_ew_C22, MLE_ew_U22, MLE_ew_ChaoJaccard, MLE_ew_ChaoSoresen)
@@ -656,9 +681,17 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
       colnames(x) <- c("Estimate", "s.e.", "95%.LCL", "95%.UCL") 
       return(x)
     })
+    
+    ##############################################################################################  new
+    temp[[9]]=rbind(Est_q0_sor, Est_q0_jar,Est_q2_sor,Est_q2_jar)
+    temp[[10]]=rbind(MLE_q0_sor, MLE_q0_jar,MLE_q2_sor,MLE_q2_jar)
+    ##############################################################################################  new
+    
+    
     rownames(temp[[8]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
     z <- list("datatype"=type,"info"=info, "Empirical_richness"=temp[[1]], "Empirical_relative"=temp[[2]], "Empirical_WtRelative"=temp[[3]],
-              "Empirical_absolute"=temp[[4]], "estimated_richness"=temp[[5]], "estimated_relative"=temp[[6]], "estimated_WtRelative"=temp[[7]], "estimated_absolute"=temp[[8]]) 
+              "Empirical_absolute"=temp[[4]], "estimated_richness"=temp[[5]], "estimated_relative"=temp[[6]], "estimated_WtRelative"=temp[[7]], "estimated_absolute"=temp[[8]],
+              "new_empirical_relative"=temp[[10]],"new_estimated_relative"=temp[[9]]) 
   }      
   ##---------------------------------------------------------------
   if(datatype=="incidence_raw"){
@@ -736,6 +769,31 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     mat5 <- Two_BC_equ(X[, 1],X[, 2], datatype="incidence", nboot)
     MLE_Ee_Braycurtis <- mat5$mle
     Est_Ee_Braycurtis <- mat5$est
+    
+    ##############################################################################################  new
+    Est_q0_sor=sor_est_N2_inc(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q0_sor=plus_CI(c(Est_q0_sor[1],Est_q0_sor[2]))
+    MLE_q0_sor=sor_est_N2_inc(X,nboot = nboot,weight=weight,w=w)$obs
+    MLE_q0_sor=plus_CI(c(MLE_q0_sor[1],MLE_q0_sor[2]))
+    
+    Est_q0_jar=Jar_est_N2_inc(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q0_jar=plus_CI(c(Est_q0_jar[1],Est_q0_jar[2]))
+    MLE_q0_jar=Jar_est_N2_inc(X,nboot = nboot,weight=weight,w=w)$obs
+    MLE_q0_jar=plus_CI(c(MLE_q0_jar[1],MLE_q0_jar[2]))
+    
+    Est_q2_sor=MH_est_inc(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q2_sor=plus_CI(c(Est_q2_sor[1],Est_q2_sor[2]))
+    MLE_q2_sor=MH_est_inc(X,nboot = nboot,weight=weight,w=w)$mle
+    MLE_q2_sor=plus_CI(c(MLE_q2_sor[1],MLE_q2_sor[2]))
+    
+    Est_q2_jar=regional_est_inc(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q2_jar=plus_CI(c(Est_q2_jar[1],Est_q2_jar[2]))
+    MLE_q2_jar=regional_est_inc(X,nboot = nboot,weight=weight,w=w)$mle
+    MLE_q2_jar=plus_CI(c(MLE_q2_jar[1],MLE_q2_jar[2]))
+    ##############################################################################################  new
+    
+    
+    
     temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard)
     rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 
     temp[[2]] <- rbind(MLE_ew_Horn, MLE_ew_C22, MLE_ew_U22, MLE_ew_ChaoJaccard, MLE_ew_ChaoSoresen)
@@ -754,12 +812,21 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     rownames(temp[[7]]) <- c("Horn size weighted(q=1)")  
     temp[[8]] <- rbind(Est_Ee_U12, Est_Ee_C22, Est_Ee_U22, Est_Ee_Braycurtis)
     rownames(temp[[8]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
+    
+    ##############################################################################################  new
+    temp[[9]]=rbind(Est_q0_sor, Est_q0_jar,Est_q2_sor,Est_q2_jar)
+    temp[[10]]=rbind(MLE_q0_sor, MLE_q0_jar,MLE_q2_sor,MLE_q2_jar)
+    ##############################################################################################  new
+    
+    
+    
     temp <- lapply(temp, FUN = function(x){
       colnames(x) <- c("Estimate", "s.e.", "95%.LCL", "95%.UCL") 
       return(x)
     })
     z <- list("datatype"=type,"info"=info, "Empirical_richness"=temp[[1]], "Empirical_relative"=temp[[2]], "Empirical_WtRelative"=temp[[3]],
-              "Empirical_absolute"=temp[[4]], "estimated_richness"=temp[[5]], "estimated_relative"=temp[[6]], "estimated_WtRelative"=temp[[7]], "estimated_absolute"=temp[[8]]) 
+              "Empirical_absolute"=temp[[4]], "estimated_richness"=temp[[5]], "estimated_relative"=temp[[6]], "estimated_WtRelative"=temp[[7]], "estimated_absolute"=temp[[8]],
+              "new_empirical_relative"=temp[[10]],"new_estimated_relative"=temp[[9]]) 
     
   }  
   class(z) <- c("spadeTwo")
