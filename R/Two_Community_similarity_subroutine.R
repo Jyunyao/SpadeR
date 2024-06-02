@@ -2093,6 +2093,161 @@ SpecInciModelh1 <-function(data, k=10, conf=0.95)
 
 
 
+# print.spadeTwo <- function(x, ...){
+#   if(x$datatype=="abundance"){
+#     cat('(1) BASIC DATA INFORMATION:\n\n')
+#     cat('    The loaded set includes abundance/incidence data from 2 communities\n')
+#     cat('    and a total of',x$info[1],'species.\n\n')
+#     cat('    Samples size in Community 1                            n1  =',x$info[2],'\n')
+#     cat('    Samples size in Community 2                            n2  =',x$info[3],'\n')
+#     cat('    Number of observed species in Community 1              D1  =',x$info[4],'\n')
+#     cat('    Number of observed species in Community 2              D2  =',x$info[5],'\n')
+#     cat('    Number of observed shared species in two communities   D12 =',x$info[6],'\n')
+#     cat('    Number of bootstrap replications for s.e. estimate          ',x$info[7],'\n\n')
+#     cat('    Some statistics:\n')
+#     cat('          f[11]=',x$info[8],'; f[1+]=',x$info[9],
+#         '; f[+1]=',x$info[10],'; f[2+]=',x$info[11],
+#         '; f[+2]=',x$info[12],'; f[22]=',x$info[13],'\n\n')
+#     
+#     cat('(2) EMPIRICAL SIMILARITY INDICES: \n\n')
+#     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
+#     cat('    (a) Classic richness-based similarity\n\n')
+#     temp <- apply(as.matrix(x$Empirical_richness), 2, as.numeric)
+#     cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
+#     cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+#     cat('    (b) Measures for comparing species relative abundances\n\n')
+#     temp <- apply(as.matrix(x$Empirical_relative), 2, as.numeric)
+#     cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('        ChaoJaccard-abundance          ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
+#     cat('        ChaoSorensen-abundance         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
+#     cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
+#     temp <- x$Empirical_WtRelative
+#     cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('    (d) Measures for comparing species absolute abundances\n\n')
+#     temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
+#     cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C22 (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U22 (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+#     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
+#     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
+#     cat('    (a) Classic richness-based similarity:\n\n')
+#     temp <- apply(as.matrix(x$estimated_richness), 2, as.numeric)
+#     if(temp[1,1]>1) {cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
+#     if(temp[1,1]<=1){cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+#     if(temp[2,1]>1) {cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[2,1]<=1){cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+#     cat('    (b) Measures for comparing species relative abundances\n\n')
+#     temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
+#     if(temp[1,1]>1) {cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[1,1]<=1){cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
+#     if(temp[2,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n')}
+#     if(temp[2,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')}
+#     if(temp[3,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[3,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+#     #if(temp[4,1]>1) {cat('        Bray-Curtis (q=1)              ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     #if(temp[4,1]<=1){cat('        Bray-Curtis (q=1)              ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')}
+#     if(temp[4,1]>1) {cat('        ChaoJaccard-abundance          ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
+#     if(temp[4,1]<=1){cat('        ChaoJaccard-abundance          ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
+#     if(temp[5,1]>1) {cat('        ChaoSorensen-abundance         ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[5,1]<=1){cat('        ChaoSorensen-abundance         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
+#     cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
+#     temp <- x$estimated_WtRelative
+#     if(temp[1,1]>1) {cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[1,1]<=1){cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
+#     cat('    (d) Measures for comparing species absolute abundances\n\n')
+#     temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
+#     if(temp[1,1]>1) {cat('        C12=U12 (q=1)                  ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[1,1]<=1){cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
+#     if(temp[2,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n')}
+#     if(temp[2,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')}
+#     if(temp[3,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[3,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+#     if(temp[4,1]>1) {cat('        Bray-Curtis                    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[4,1]<=1){cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')}
+#     cat('        NOTE: If an estimate is greater than 1, it is replaced by 1.')
+#   }else{
+#     cat('(1) BASIC DATA INFORMATION:\n\n')
+#     cat('    The loaded set includes abundance/incidence data from 2 communities\n')
+#     cat('    and a total of',x$info[1],'species.\n\n')
+#     cat('    Number of sampling units in Community 1                T1  =',x$info[2],'\n')
+#     cat('    Number of sampling units in Community 2                T2  =',x$info[3],'\n')
+#     cat('    Number of total incidences in Community 1              U1  =',x$info[4],'\n')
+#     cat('    Number of total incidences in Community 2              U2  =',x$info[5],'\n')    
+#     cat('    Number of observed species in Community 1              D1  =',x$info[6],'\n')
+#     cat('    Number of observed species in Community 2              D2  =',x$info[7],'\n')
+#     cat('    Number of observed shared species in two communities   D12 =',x$info[8],'\n')
+#     cat('    Number of bootstrap replications for s.e. estimate          ',x$info[9],'\n\n')
+#     cat('    Some Statistics:\n')
+#     cat('          Q[11]=',x$info[10],
+#         '; Q[1+]=',x$info[11], '; Q[+1]=',x$info[12],
+#         '; Q[2+]=',x$info[13], '; Q[+2]=',x$info[14], '; Q[22]=',x$info[15],'\n\n')
+#     
+#     cat('(2) EMPIRICAL SIMILARITY INDICES: \n\n')
+#     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
+#     cat('    (a) Classic richness-based similarity\n\n')
+#     temp <- apply(as.matrix(x$Empirical_richness), 2, as.numeric)
+#     cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
+#     cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+#     cat('    (b) Measures for comparing species relative abundances\n\n')
+#     temp <- apply(as.matrix(x$Empirical_relative), 2, as.numeric)
+#     cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('        ChaoJaccard-abundance          ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
+#     cat('        ChaoSorensen-abundance         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
+#     cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
+#     temp <- x$Empirical_size_weighted
+#     cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('    (d) Measures for comparing species absolute abundances\n\n')
+#     temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
+#     cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C22 (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U22 (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+#     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
+#     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
+#     cat('    (a) Classic richness-based similarity:\n\n')
+#     temp <- apply(as.matrix(x$estimated_richness), 2, as.numeric)
+#     if(temp[1,1]>1) {cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
+#     if(temp[1,1]<=1){cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+#     if(temp[2,1]>1) {cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[2,1]<=1){cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+#     cat('    (b) Measures for comparing species relative abundances\n\n')
+#     temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
+#     if(temp[1,1]>1) {cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[1,1]<=1){cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
+#     if(temp[2,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n')}
+#     if(temp[2,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')}
+#     if(temp[3,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[3,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+#     #if(temp[4,1]>1) {cat('        Bray-Curtis (q=1)              ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     #if(temp[4,1]<=1){cat('        Bray-Curtis (q=1)              ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')}
+#     if(temp[4,1]>1) {cat('        ChaoJaccard-abundance          ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
+#     if(temp[4,1]<=1){cat('        ChaoJaccard-abundance          ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
+#     if(temp[5,1]>1) {cat('        ChaoSorensen-abundance         ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[5,1]<=1){cat('        ChaoSorensen-abundance         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
+#     cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
+#     temp <- x$estimated_WtRelative
+#     if(temp[1,1]>1) {cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[1,1]<=1){cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
+#     cat('    (d) Measures for comparing species absolute abundances\n\n')
+#     temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
+#     if(temp[1,1]>1) {cat('        C12=U12 (q=1)                  ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[1,1]<=1){cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
+#     if(temp[2,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n')}
+#     if(temp[2,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')}
+#     if(temp[3,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[3,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+#     if(temp[4,1]>1) {cat('        Bray-Curtis                    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n\n')}
+#     if(temp[4,1]<=1){cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')}
+#     cat('        NOTE: If an estimate is greater than 1, it is replaced by 1.')    
+#   }
+# }
+
+
 print.spadeTwo <- function(x, ...){
   if(x$datatype=="abundance"){
     cat('(1) BASIC DATA INFORMATION:\n\n')
@@ -2111,62 +2266,49 @@ print.spadeTwo <- function(x, ...){
     
     cat('(2) EMPIRICAL SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
-    cat('    (a) Classic richness-based similarity\n\n')
-    temp <- apply(as.matrix(x$Empirical_richness), 2, as.numeric)
+    cat('    (a) Measures for comparing species absolute abundances\n\n')
+    temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
     cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
     cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+    cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+    cat('        C22 (Morisita-Horn)            ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
+    cat('        U22 (Regional overlap)         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
     cat('    (b) Measures for comparing species relative abundances\n\n')
     temp <- apply(as.matrix(x$Empirical_relative), 2, as.numeric)
-    cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('        ChaoJaccard-abundance          ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
-    cat('        ChaoSorensen-abundance         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
-    cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
-    temp <- x$Empirical_WtRelative
-    cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('    (d) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
-    cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C22 (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U22 (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+    cat('        Size-weighted Sorenson (q=0)          ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
+    cat('        Size-weighted Jaccard  (q=0)          ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+    cat('        Horn size-weighted (q=1)              ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+    cat('        Size-weighted Morisita-Horn (q=2)     ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
+    cat('        Size-weighted regional-overlap (q=2)  ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
-    cat('    (a) Classic richness-based similarity:\n\n')
-    temp <- apply(as.matrix(x$estimated_richness), 2, as.numeric)
+    cat('    (a) Measures for comparing species absolute abundances\n\n')
+    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
     if(temp[1,1]>1) {cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[1,1]<=1){cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
     if(temp[2,1]<=1){cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+    if(temp[3,1]>1) {cat('        C12=U12 (q=1)                  ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[3,1]<=1){cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[4,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[4,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
+    if(temp[5,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[5,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
     cat('    (b) Measures for comparing species relative abundances\n\n')
     temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
-    if(temp[1,1]>1) {cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[1,1]<=1){cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
-    if(temp[2,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n')}
-    if(temp[2,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')}
-    if(temp[3,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[3,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[1,1]>1) {cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[1,1]<=1){cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+    if(temp[2,1]>1) {cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[2,1]<=1){cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+    if(temp[3,1]>1) {cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[3,1]<=1){cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[4,1]>1) {cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[4,1]<=1){cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
+    if(temp[5,1]>1) {cat('        Size-weighted regional-overlap (q=2)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[5,1]<=1){cat('        Size-weighted regional-overlap (q=2)    ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
     #if(temp[4,1]>1) {cat('        Bray-Curtis (q=1)              ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n\n')}
     #if(temp[4,1]<=1){cat('        Bray-Curtis (q=1)              ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')}
-    if(temp[4,1]>1) {cat('        ChaoJaccard-abundance          ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
-    if(temp[4,1]<=1){cat('        ChaoJaccard-abundance          ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
-    if(temp[5,1]>1) {cat('        ChaoSorensen-abundance         ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[5,1]<=1){cat('        ChaoSorensen-abundance         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
-    cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
-    temp <- x$estimated_WtRelative
-    if(temp[1,1]>1) {cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[1,1]<=1){cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
-    cat('    (d) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
-    if(temp[1,1]>1) {cat('        C12=U12 (q=1)                  ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[1,1]<=1){cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
-    if(temp[2,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n')}
-    if(temp[2,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')}
-    if(temp[3,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[3,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
-    if(temp[4,1]>1) {cat('        Bray-Curtis                    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[4,1]<=1){cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')}
+    
     cat('        NOTE: If an estimate is greater than 1, it is replaced by 1.')
   }else{
     cat('(1) BASIC DATA INFORMATION:\n\n')
@@ -2185,64 +2327,110 @@ print.spadeTwo <- function(x, ...){
         '; Q[1+]=',x$info[11], '; Q[+1]=',x$info[12],
         '; Q[2+]=',x$info[13], '; Q[+2]=',x$info[14], '; Q[22]=',x$info[15],'\n\n')
     
+    # cat('(2) EMPIRICAL SIMILARITY INDICES: \n\n')
+    # cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
+    # cat('    (a) Classic richness-based similarity\n\n')
+    # temp <- apply(as.matrix(x$Empirical_richness), 2, as.numeric)
+    # cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
+    # cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+    # cat('    (b) Measures for comparing species relative abundances\n\n')
+    # temp <- apply(as.matrix(x$Empirical_relative), 2, as.numeric)
+    # cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+    # cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+    # cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+    # cat('        ChaoJaccard-abundance          ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
+    # cat('        ChaoSorensen-abundance         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
+    # cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
+    # temp <- x$Empirical_size_weighted
+    # cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+    # cat('    (d) Measures for comparing species absolute abundances\n\n')
+    # temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
+    # cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+    # cat('        C22 (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+    # cat('        U22 (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+    # cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+    # cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
+    # cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
+    # cat('    (a) Classic richness-based similarity:\n\n')
+    # temp <- apply(as.matrix(x$estimated_richness), 2, as.numeric)
+    # if(temp[1,1]>1) {cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
+    # if(temp[1,1]<=1){cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+    # if(temp[2,1]>1) {cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    # if(temp[2,1]<=1){cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+    # cat('    (b) Measures for comparing species relative abundances\n\n')
+    # temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
+    # if(temp[1,1]>1) {cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    # if(temp[1,1]<=1){cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
+    # if(temp[2,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n')}
+    # if(temp[2,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')}
+    # if(temp[3,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    # if(temp[3,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    # #if(temp[4,1]>1) {cat('        Bray-Curtis (q=1)              ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    # #if(temp[4,1]<=1){cat('        Bray-Curtis (q=1)              ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')}
+    # if(temp[4,1]>1) {cat('        ChaoJaccard-abundance          ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
+    # if(temp[4,1]<=1){cat('        ChaoJaccard-abundance          ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
+    # if(temp[5,1]>1) {cat('        ChaoSorensen-abundance         ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    # if(temp[5,1]<=1){cat('        ChaoSorensen-abundance         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
+    # cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
+    # temp <- x$estimated_WtRelative
+    # if(temp[1,1]>1) {cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    # if(temp[1,1]<=1){cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
+    # cat('    (d) Measures for comparing species absolute abundances\n\n')
+    # temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
+    # if(temp[1,1]>1) {cat('        C12=U12 (q=1)                  ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    # if(temp[1,1]<=1){cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
+    # if(temp[2,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n')}
+    # if(temp[2,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')}
+    # if(temp[3,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    # if(temp[3,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    # if(temp[4,1]>1) {cat('        Bray-Curtis                    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    # if(temp[4,1]<=1){cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')}
+    # cat('        NOTE: If an estimate is greater than 1, it is replaced by 1.')    
     cat('(2) EMPIRICAL SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
-    cat('    (a) Classic richness-based similarity\n\n')
-    temp <- apply(as.matrix(x$Empirical_richness), 2, as.numeric)
+    cat('    (a) Measures for comparing species absolute abundances\n\n')
+    temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
     cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
     cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+    cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+    cat('        C22 (Morisita-Horn)            ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
+    cat('        U22 (Regional overlap)         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
     cat('    (b) Measures for comparing species relative abundances\n\n')
     temp <- apply(as.matrix(x$Empirical_relative), 2, as.numeric)
-    cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('        ChaoJaccard-abundance          ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
-    cat('        ChaoSorensen-abundance         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
-    cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
-    temp <- x$Empirical_size_weighted
-    cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('    (d) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
-    cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C22 (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U22 (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+    cat('        Size-weighted Sorenson (q=0)          ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
+    cat('        Size-weighted Jaccard  (q=0)          ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+    cat('        Horn size-weighted (q=1)              ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+    cat('        Size-weighted Morisita-Horn (q=2)     ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
+    cat('        Size-weighted regional-overlap (q=2)  ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
-    cat('    (a) Classic richness-based similarity:\n\n')
-    temp <- apply(as.matrix(x$estimated_richness), 2, as.numeric)
+    cat('    (a) Measures for comparing species absolute abundances\n\n')
+    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
     if(temp[1,1]>1) {cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[1,1]<=1){cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
     if(temp[2,1]<=1){cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+    if(temp[3,1]>1) {cat('        C12=U12 (q=1)                  ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[3,1]<=1){cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[4,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[4,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
+    if(temp[5,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[5,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
     cat('    (b) Measures for comparing species relative abundances\n\n')
     temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
-    if(temp[1,1]>1) {cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[1,1]<=1){cat('        C12=U12 (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
-    if(temp[2,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n')}
-    if(temp[2,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')}
-    if(temp[3,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[3,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[1,1]>1) {cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[1,1]<=1){cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+    if(temp[2,1]>1) {cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[2,1]<=1){cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+    if(temp[3,1]>1) {cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[3,1]<=1){cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[4,1]>1) {cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[4,1]<=1){cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
+    if(temp[5,1]>1) {cat('        Size-weighted regional-overlap (q=2)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[5,1]<=1){cat('        Size-weighted regional-overlap (q=2)    ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
     #if(temp[4,1]>1) {cat('        Bray-Curtis (q=1)              ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n\n')}
     #if(temp[4,1]<=1){cat('        Bray-Curtis (q=1)              ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')}
-    if(temp[4,1]>1) {cat('        ChaoJaccard-abundance          ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
-    if(temp[4,1]<=1){cat('        ChaoJaccard-abundance          ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
-    if(temp[5,1]>1) {cat('        ChaoSorensen-abundance         ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[5,1]<=1){cat('        ChaoSorensen-abundance         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
-    cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
-    temp <- x$estimated_WtRelative
-    if(temp[1,1]>1) {cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[1,1]<=1){cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
-    cat('    (d) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
-    if(temp[1,1]>1) {cat('        C12=U12 (q=1)                  ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[1,1]<=1){cat('        C12=U12 (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')}
-    if(temp[2,1]>1) {cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n')}
-    if(temp[2,1]<=1){cat('        C22 (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')}
-    if(temp[3,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[3,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
-    if(temp[4,1]>1) {cat('        Bray-Curtis                    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[4,1]<=1){cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')}
-    cat('        NOTE: If an estimate is greater than 1, it is replaced by 1.')    
+    
+    cat('        NOTE: If an estimate is greater than 1, it is replaced by 1.')
   }
 }
