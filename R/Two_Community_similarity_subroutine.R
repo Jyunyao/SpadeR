@@ -527,14 +527,18 @@ Two_com_correct_obspi_Inc=function(X1,X2)
   a=cbind(P1,P2)
   return(a)
 }
-Horn.Est=function(data,method=c("equal", "unequal"))
+Horn.Est=function(data,method=c("Size Weight", "Equal Weight","Others"),w)
 { #data is a species*plot data matrix and w is a given weight vector. 
   N=ncol(data);data=data[rowSums(data)>0,];
   S=nrow(data);
   n=colSums(data);
-  if(method == "unequal"){
+  if(method == "Size Weight"){
     w <- n/sum(n)
-  }else{w <- rep(1/N,N)}
+  }else if(method == "Equal Weight"){
+    w <- rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
   W=sum(-w*log(w));
   r.data=sapply(1:N,function(k) data[,k]/n[k]);
   r.pool=c(r.data%*%w); 
@@ -557,7 +561,7 @@ Horn.Est=function(data,method=c("equal", "unequal"))
   Mle=(G-A)/W;
   return(c(1-Est,1-Mle))
 }
-Two_Horn_equ <- function(X1, X2, datatype="abundance", weight="equal",nboot=50, method="all")
+Two_Horn_equ <- function(X1, X2, datatype="abundance", weight="Equal Weight",nboot=50, method="all")
 {
   if(datatype=="abundance"){
     p <- Two_com_correct_obspi(X1 ,X2)
