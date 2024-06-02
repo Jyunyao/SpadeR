@@ -1,5 +1,5 @@
 chao_sor_multiple=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   N=ncol(data)
   
@@ -27,7 +27,7 @@ chao_sor_multiple=function(data,weight=c("Size Weight","Equal Weight","Others"),
 
 chao_sor_multiple_inc=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
   data=data[-1,]
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   N=ncol(data)
   
@@ -54,7 +54,7 @@ chao_sor_multiple_inc=function(data,weight=c("Size Weight","Equal Weight","Other
 }
 
 sor_est_multiple_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   N=ncol(data)
   
@@ -93,7 +93,7 @@ sor_est_multiple_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","
 }
 
 sor_est_multiple_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   if(weight=="Size Weight"){
     w<-colSums(data)/sum(data)
@@ -134,7 +134,7 @@ sor_est_multiple_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","
 }
 
 chao_jar_multiple=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   N=ncol(data)
   if(weight=="Size Weight"){
@@ -160,7 +160,7 @@ chao_jar_multiple=function(data,weight=c("Size Weight","Equal Weight","Others"),
 
 chao_jar_multiple_inc=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
   data=data[-1,]
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   N=ncol(data)
   if(weight=="Size Weight"){
@@ -186,7 +186,7 @@ chao_jar_multiple_inc=function(data,weight=c("Size Weight","Equal Weight","Other
 
 
 Jar_est_multiple_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   pool=rowSums(data)
   if(weight=="Size Weight"){
@@ -221,7 +221,7 @@ Jar_est_multiple_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","
 }
 
 Jar_est_multiple_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   pool=rowSums(data[-1,])
   if(weight=="Size Weight"){
@@ -261,7 +261,7 @@ Jar_est_multiple_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","
 }
 
 MH_theoretical_multiple<-function(popu,weight){
-  popu=popu %>% as.matrix()
+  popu=as.matrix(popu)
   popu=popu[which(rowSums(popu)>0),]
   # w<-colSums(popu)/sum(popu)
   # popu=apply(popu,2,function(x){x/sum(x)})
@@ -276,7 +276,7 @@ MH_theoretical_multiple<-function(popu,weight){
 }
 
 regional_theoretical_multiple<-function(popu,weight){
-  popu=popu %>% as.matrix()
+  popu=as.matrix(popu)
   popu=popu[which(rowSums(popu)>0),]
   left=1-MH_theoretical_multiple(popu=popu,weight=weight)
   up=sum((popu^2)%*%(weight^2))
@@ -305,10 +305,10 @@ MH_unbias_est=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
     up=2*sum(w[1]*w[2]*p.data[,1]*p.data[,2])
   }else{
     cb=combn(1:length(w),2)
-    up=2*sapply(1:length(w),function(x){
+    up=2*sum(sapply(1:length(w),function(x){
       idx=cb[,x]
       sum(w[idx[1]]*w[idx[2]]*p.data[,idx[1]]*p.data[,idx[2]])
-    }) %>% sum()
+    }))
   }
   
   est=up/down
@@ -316,7 +316,7 @@ MH_unbias_est=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
 }
 
 MH_unbias_est_inc=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
-  n=data[1,] %>% as.numeric()
+  n=as.numeric(data[1,])
   data=data[-1,]
   N=ncol(data)
   if(weight=="Size Weight"){
@@ -342,10 +342,10 @@ MH_unbias_est_inc=function(data,weight=c("Size Weight","Equal Weight","Others"),
     up=2*sum(w[1]*w[2]*p.data[,1]*p.data[,2])
   }else{
     cb=combn(1:length(w),2)
-    up=2*sapply(1:length(w),function(x){
+    up=2*sum(sapply(1:length(w),function(x){
       idx=cb[,x]
       sum(w[idx[1]]*w[idx[2]]*p.data[,idx[1]]*p.data[,idx[2]])
-    }) %>% sum()
+    }))
   }
   
   est=up/down
@@ -354,7 +354,7 @@ MH_unbias_est_inc=function(data,weight=c("Size Weight","Equal Weight","Others"),
 
 MH_est_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
   
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   N=ncol(data)
   
@@ -386,7 +386,7 @@ MH_est_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w
 }
 
 MH_est_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   N=ncol(data)
   
@@ -439,10 +439,10 @@ MH_jar_unbias_est<-function(data,weight=c("Size Weight","Equal Weight","Others")
     up=2*sum(w[1]*w[2]*p.data[,1]*p.data[,2])
   }else{
     cb=combn(1:length(w),2)
-    up=2*sapply(1:length(w),function(x){
+    up=2*sum(sapply(1:length(w),function(x){
       idx=cb[,x]
       sum(w[idx[1]]*w[idx[2]]*p.data[,idx[1]]*p.data[,idx[2]])
-    }) %>% sum()
+    }))
   }
   down=sum(xm1%*%(w^2))
   right=1/(1+up/down)
@@ -452,7 +452,7 @@ MH_jar_unbias_est<-function(data,weight=c("Size Weight","Equal Weight","Others")
 }
 
 MH_jar_unbias_est_inc<-function(data,weight=c("Size Weight","Equal Weight","Others"),w){
-  n=data[1,] %>% as.numeric()
+  n=as.numeric(data[1,])
   data=data[-1,]
   N=ncol(data)
   
@@ -477,10 +477,10 @@ MH_jar_unbias_est_inc<-function(data,weight=c("Size Weight","Equal Weight","Othe
     up=2*sum(w[1]*w[2]*p.data[,1]*p.data[,2])
   }else{
     cb=combn(1:length(w),2)
-    up=2*sapply(1:length(w),function(x){
+    up=2*sum(sapply(1:length(w),function(x){
       idx=cb[,x]
       sum(w[idx[1]]*w[idx[2]]*p.data[,idx[1]]*p.data[,idx[2]])
-    }) %>% sum()
+    }))
   }
   down=sum(xm1%*%(w^2))
   right=1/(1+up/down)
@@ -490,7 +490,7 @@ MH_jar_unbias_est_inc<-function(data,weight=c("Size Weight","Equal Weight","Othe
 }
 
 regional_est_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   N=ncol(data)
   if(weight=="Size Weight"){
@@ -509,7 +509,7 @@ regional_est_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Othe
   boot=matrix(0,2,nboot)
   for(i in 1:nboot){
     boot.X=sapply(1:dim(data)[2],function(k) rmultinom(1, sum(data[,k]), p[,k]))
-    boot.jade=Boots.pop_JADE_abu(boot.X)
+    # boot.jade=Boots.pop_JADE_abu(boot.X)
     boot[1,i]=MH_jar_unbias_est(data = boot.X, weight=weight, w=w)
     boot.mle=apply(boot.X,2,function(x){x/sum(x)})
     boot[2,i]=regional_theoretical_multiple(popu=boot.mle, weight=w)
@@ -521,7 +521,7 @@ regional_est_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Othe
 }
 
 regional_est_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   N=ncol(data)
   if(weight=="Size Weight"){

@@ -99,7 +99,7 @@ chao_Jar_inc<-function(data,weight=c("Size Weight","Equal Weight","Others"),w){
 
 
 sor_est_N2_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   N=2
   if(weight=="Size Weight"){
@@ -126,7 +126,7 @@ sor_est_N2_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others
 }
 
 sor_est_N2_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   N=2
   if(weight=="Size Weight"){
@@ -154,7 +154,7 @@ sor_est_N2_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others
 }
 
 Jar_est_N2_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   pool=rowSums(data)
   N=ncol(data)
@@ -185,7 +185,7 @@ Jar_est_N2_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others
 }
 
 Jar_est_N2_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
-  data=data %>% as.matrix()
+  data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   pool=rowSums(data[-1,])
   N=ncol(data)
