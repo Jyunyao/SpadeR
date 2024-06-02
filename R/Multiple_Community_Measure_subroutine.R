@@ -189,6 +189,7 @@ Jar_est_multiple_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","
   data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
   pool=rowSums(data)
+  N=ncol(data)
   if(weight=="Size Weight"){
     w<-colSums(data)/sum(data)
   }else if(weight=="Equal Weight"){
