@@ -866,7 +866,7 @@ SimilarityMul=function(X ,q, nboot=50, datatype="abundance", method=c("equal wei
   rownames(out2)=c("Emperical","Estimate")
   return(list(UqN=out1,CqN=out2));
 }
-Cq2_est_equ <- function(X, q, boot, datatype="abundance" ,method=c("equal effort", "equal weight"))
+Cq2_est_equ <- function(X, q, boot, datatype="abundance" ,method=c("Size Weight", "Equal Weight"))
 { 
   N <- ncol(X)
   if(datatype=="abundance"){
@@ -889,7 +889,7 @@ Cq2_est_equ <- function(X, q, boot, datatype="abundance" ,method=c("equal effort
   }
   if(method == "equal effort"){
     if(q == 1){
-      out2 = Two_Horn_equ(X[, 1], X[, 2], weight = "unequal", datatype, method = "est", boot)
+      out2 = Two_Horn_equ(X[, 1], X[, 2], weight = "Size Weight", datatype, method = "est", boot)
       out1 = plus_CI(c(weight*out2[1],out2[2]))
       out=rbind(out1, out2) 
     }
@@ -905,7 +905,7 @@ Cq2_est_equ <- function(X, q, boot, datatype="abundance" ,method=c("equal effort
   }
   if(method == "equal weight"){
     if(q == 1){
-      out = Two_Horn_equ(X[, 1], X[, 2], weight = "equal", datatype, method = "est", boot) ; out=rbind(out, out)
+      out = Two_Horn_equ(X[, 1], X[, 2], weight = "Equal Weight", datatype, method = "est", boot) ; out=rbind(out, out)
     }
     if(q == 2){
       out=SimilarityTwo(X, q, boot, datatype, method="equal weight") 
