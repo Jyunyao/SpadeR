@@ -695,7 +695,7 @@ Boots.pop_inc=function(data)
   }
   return(boots.pop)
 }
-Horn_Multi_equ <- function(X, datatype="abundance", nboot=50,method=c("equal", "unequal"))
+Horn_Multi_equ <- function(X, datatype="abundance", nboot=50,method=c("Equal Weight", "Size Weight","Others"),w)
 {
   boot=matrix(0,2,nboot)
   for(i in 1:nboot)
@@ -707,11 +707,11 @@ Horn_Multi_equ <- function(X, datatype="abundance", nboot=50,method=c("equal", "
       p <- Boots.pop_inc(X)
       boot.X=sapply(1:dim(X)[2],function(k) sapply(1:nrow(p),FUN = function(i) rbinom(1, X[1,k], p[i,1]) ))
     }
-    boot[,i]=Horn.Est(boot.X, method)
+    boot[,i]=Horn.Est(boot.X, method=method,w=w)
   }
   se <- apply(boot, MARGIN = 1, FUN = sd)
   if(datatype=="incidence") X <- X[-1, ]
-  value <- Horn.Est(as.matrix(X), method)
+  value <- Horn.Est(as.matrix(X), method=method,w=w)
   out <- c(value[1], se[1], max(0,value[1]-1.96*se[1]), min(1,value[1]+1.96*se[1]))
   out2 <- c(value[2], se[2],max(0,value[2]-1.96*se[2]), min(1,value[2]+1.96*se[2]))
   return(list(est=out,mle=out2))
