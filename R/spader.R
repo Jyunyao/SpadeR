@@ -792,7 +792,8 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     MLE_q2_jar=plus_CI(c(MLE_q2_jar[1],MLE_q2_jar[2]))
     ##############################################################################################  new
     
-    
+    temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard, MLE_Ee_U12, MLE_Ee_C22, MLE_Ee_U22)
+    temp[[2]] <- rbind(Est_Sorensen, Est_Jaccard)
     
     temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard)
     rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 

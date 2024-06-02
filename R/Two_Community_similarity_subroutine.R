@@ -561,7 +561,7 @@ Horn.Est=function(data,method=c("Size Weight", "Equal Weight","Others"),w)
   Mle=(G-A)/W;
   return(c(1-Est,1-Mle))
 }
-Two_Horn_equ <- function(X1, X2, datatype="abundance", weight="Equal Weight",nboot=50, method="all")
+Two_Horn_equ <- function(X1, X2, datatype="abundance", weight="Equal Weight",nboot=50, method="all",w)
 {
   if(datatype=="abundance"){
     p <- Two_com_correct_obspi(X1 ,X2)
@@ -576,26 +576,26 @@ Two_Horn_equ <- function(X1, X2, datatype="abundance", weight="Equal Weight",nbo
   }
   if(method=="all"){
     se <- apply(sapply(1:nboot, FUN = function(x){
-      Horn.Est(data=cbind(commnunity1[,x] ,commnunity2[,x]),method=weight)
+      Horn.Est(data=cbind(commnunity1[,x] ,commnunity2[,x]),method=weight,w=w)
     }),MARGIN = 1, sd)
-    value <- Horn.Est(data=cbind(X1, X2),method=weight)
+    value <- Horn.Est(data=cbind(X1, X2),method=weight,w=w)
     out <- c(value[1], se[1], max(0,value[1]-1.96*se[1]), min(1,value[1]+1.96*se[1]))
     out2 <- c(value[2], se[2],max(0,value[2]-1.96*se[2]), min(1,value[2]+1.96*se[2]))
     return(list(est=out,mle=out2))
   }
   if(method=="est"){
     se <-sd(sapply(1:nboot, FUN = function(x){
-      Horn.Est(data=cbind(commnunity1[,x] ,commnunity2[,x]),method=weight)[1]
+      Horn.Est(data=cbind(commnunity1[,x] ,commnunity2[,x]),method=weight,w=w)[1]
     }))
-    value <- Horn.Est(data=cbind(X1, X2),method=weight)
+    value <- Horn.Est(data=cbind(X1, X2),method=weight,w=w)
     out <- c(value[1], se, max(0,value[1]-1.96*se), min(1,value[1]+1.96*se) )
     return(out)
   }
   if(method=="mle"){
     se <-sd(sapply(1:nboot, FUN = function(x){
-      Horn.Est(data=cbind(commnunity1[,x] ,commnunity2[,x]),method=weight)[2]
+      Horn.Est(data=cbind(commnunity1[,x] ,commnunity2[,x]),method=weight,w=w)[2]
     }))
-    value <- Horn.Est(data=cbind(X1, X2),method=weight)
+    value <- Horn.Est(data=cbind(X1, X2),method=weight,w=w)
     out <- c(value[2], se, max(0,value[2]-1.96*se), min(1,value[2]+1.96*se) )
     return(out)
   }
