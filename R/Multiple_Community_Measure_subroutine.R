@@ -1327,6 +1327,498 @@ C33_se_equ=function(X,boot=200)
 
 #Multiple_Community_Measure=function(X,q=2,boot=200,method=c("relative","absolute"))
 
+# print.spadeMult <- function(x, ...){
+#   if(x$datatype=="abundance"){
+#     cat('\n(1) BASIC DATA INFORMATION:\n\n')
+#     cat('    The loaded set includes abundance/incidence data from',x$info[1],'communities\n')
+#     cat('    and a total of',x$info[2],'species.\n\n')
+#     cat('    Sample size in each community                            n1   =', x$info[3],'\n')
+#     N <- x$info[1]
+#     q <- x$q
+#     method <- x$goal
+#     for(j in 2:N){
+#       cat('                                                            ','n')
+#       cat(j,'  =',x$info[2+j],'\n')   
+#     }
+#     cat('\n')
+#     cat('    Number of observed species in one community              D1   =', x$info[N+3],'\n')
+#     
+#     for(j in 2:N){
+#       cat('                                                            ','D')
+#       cat(j,'  =',x$info[N+2+j],'\n')
+#     }
+#     cat('\n')
+#     cat('    Number of observed shared species in two communities     D12  =', x$info[3+2*N], '\n')
+#     
+#     if(N>2){
+#       k <- 1
+#       for(i in 1:(N-1)){     
+#         for(j in (i+1):N){
+#           if(i==1 & j==2) next
+#           cat('                                                            ','D')
+#           cat(i,j,'  = ', x$info[3+2*N+k], '\n', sep="")
+#           k <- k + 1
+#         }
+#       }
+#     }
+#     cat('\n')
+#     if(N==3)
+#     {
+#       cat('    Number of observed shared species in three communities   D123 =',rev(x$info)[2],'\n\n') 
+#     }
+#     cat('    Number of bootstrap replications for s.e. estimate             ',rev(x$info)[1],'\n\n')
+#     cat('(2) EMPIRICAL SIMILARITY INDICES: \n\n')
+#     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
+#     cat('    (a) Classic richness-based similarity\n\n')
+#     temp <- apply(as.matrix(x$Empirical_richness), 2, as.numeric)
+#     cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
+#     cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+#     cat('    (b) Measures for comparing species relative abundances\n\n')
+#     temp <- apply(as.matrix(x$Empirical_relative), 2, as.numeric)
+#     cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C2');cat(N);cat(' (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U2');cat(N);cat(' (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
+#     temp <- x$Empirical_WtRelative
+#     cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('    (d) Measures for comparing species absolute abundances\n\n')
+#     temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
+#     cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C2');cat(N);cat(' (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U2');cat(N);cat(' (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+#     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
+#     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
+#     cat('    (a) Classic richness-based similarity\n\n')
+#     temp <- apply(as.matrix(x$estimated_richness), 2, as.numeric)
+#     if(temp[1,1]>1) {cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+#     if(temp[1,1]<=1){cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+#     if(temp[2,1]>1) {cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+#     if(temp[2,1]<=1){cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+#     #cat('      Lennon et al (2001)             ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'\n\n')
+#     cat('    (b) Measures for comparing species relative abundances\n\n')
+#     temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
+#     cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C2');cat(N);cat(' (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U2');cat(N);cat(' (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
+#     temp <- x$estimated_WtRelative
+#     cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('    (d) Measures for comparing species absolute abundances\n\n')
+#     temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
+#     cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C2');cat(N);cat(' (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U2');cat(N);cat(' (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+#    
+#   }else{
+#     
+#     cat('\n(1) BASIC DATA INFORMATION:\n\n')
+#     cat('    The loaded set includes abundance/incidence data from',x$info[[1]],'communities\n')
+#     cat('    and a total of',x$info[2],'species.\n\n')
+#     
+#     cat('    Number of sample units in each community                 T1   =', x$info[3],'\n')
+#     N <- x$info[1]
+#     q <- x$q
+#     method <- x$goal
+#     for(j in 2:N){
+#       cat('                                                            ','T')
+#       cat(j,'  =',x$info[2+j],'\n')   
+#     }
+#     cat('\n')
+#     cat('    Number of total incidences in each community             U1   =', x$info[N+3],'\n')
+#     N <- x$info[1]
+#     q <- x$q
+#     method <- x$goal
+#     for(j in 2:N){
+#       cat('                                                            ','U')
+#       cat(j,'  =',x$info[N+2+j],'\n')   
+#     }
+#     cat('\n')
+#     cat('    Number of observed species in one community              D1   =', x$info[2*N+3],'\n')
+#     for(j in 2:N){
+#       cat('                                                            ','D')
+#       cat(j,'  =',x$info[2*N+2+j],'\n')
+#     }
+#     cat('\n')
+#     cat('    Number of observed shared species in two communities     D12  =', x$info[3+3*N], '\n')
+#     
+#     if(N>2){
+#       k <- 1
+#       for(i in 1:(N-1)){     
+#         for(j in (i+1):N){
+#           if(i==1 & j==2) next
+#           cat('                                                            ','D')
+#           cat(i,j,'  = ', x$info[3+3*N+k], '\n', sep="")
+#           k <- k + 1
+#         }
+#       }
+#     }
+#     cat('\n')
+#     if(N==3)
+#     {
+#       cat('    Number of observed shared species in three communities   D123 =',rev(x$info)[2],'\n\n') 
+#     }
+#     cat('    Number of bootstrap replications for s.e. estimate             ',rev(x$info)[1],'\n\n')
+#     cat('(2) EMPIRICAL SIMILARITY INDICES: \n\n')
+#     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
+#     cat('    (a) Classic richness-based similarity\n\n')
+#     temp <- apply(as.matrix(x$Empirical_richness), 2, as.numeric)
+#     cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
+#     cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+#     cat('    (b) Measures for comparing species relative abundances\n\n')
+#     temp <- apply(as.matrix(x$Empirical_relative), 2, as.numeric)
+#     cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C2');cat(N);cat(' (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U2');cat(N);cat(' (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
+#     temp <- x$Empirical_WtRelative
+#     cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('    (d) Measures for comparing species absolute abundances\n\n')
+#     temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
+#     cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C2');cat(N);cat(' (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U2');cat(N);cat(' (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+#     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
+#     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
+#     cat('    (a) Classic richness-based similarity\n\n')
+#     temp <- apply(as.matrix(x$estimated_richness), 2, as.numeric)
+#     if(temp[1,1]>1) {cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+#     if(temp[1,1]<=1){cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+#     if(temp[2,1]>1) {cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+#     if(temp[2,1]<=1){cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+#     #cat('      Lennon et al (2001)             ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'\n\n')
+#     cat('    (b) Measures for comparing species relative abundances\n\n')
+#     temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
+#     cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C2');cat(N);cat(' (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U2');cat(N);cat(' (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
+#     temp <- x$estimated_WtRelative
+#     cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('    (d) Measures for comparing species absolute abundances\n\n')
+#     temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
+#     cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
+#     cat('        C2');cat(N);cat(' (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
+#     cat('        U2');cat(N);cat(' (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+#     cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+#   }
+#   cat('(4) ESTIMATED PAIRWISE SIMILARITY:\n\n')
+#   if(q == 0){
+#     cat('    -------------------------Measure C02---------------------------\n\n')
+#     cat('    Estimator','     Estimate','     s.e.','       95% Confidence Interval\n\n')
+#     Cqn_PC <- x$pairwise$C02
+#     no.temp=1
+#     for(i in 1:(N-1))
+#     {
+#       for(j in (i+1):N)
+#       {
+#         temp=Cqn_PC[no.temp,]
+#         cat('    C02(')
+#         cat(i)
+#         cat(',')
+#         cat(j)
+#         if(temp[1]>1)
+#         {cat(')','     ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
+#              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
+#         }
+#         if(temp[1]<=1)
+#         {cat(')','     ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
+#              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
+#         no.temp=no.temp+1
+#       }
+#     }
+#     cat('\n')
+#     cat('    Average pairwise similarity=',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
+#     cat('    Pairwise similarity matrix: \n\n')
+#     C_SM=x$similarity.matrix$C02
+#     cat('    C02(i,j)  ')
+#     for(i in 1:N)
+#     {
+#       cat(i,"      ")
+#     }
+#     cat('\n')
+#     for(i in 1:N)
+#     {
+#       cat('      ',i,'     ')
+#       for(j in 1:N)
+#       {
+#         if(i>j){cat('        ')}
+#         if(i<=j) {
+#           if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
+#           else cat(sprintf("%.3f#",1),'  ')
+#         }
+#       }
+#       cat('\n')
+#     }
+#     cat('\n')
+#     cat('    -------------------------Measure U02---------------------------\n\n')
+#     cat('    Estimator','     Estimate','     s.e.','       95% Confidence Interval\n\n')
+#     Cqn_PC <- x$pairwise$U02
+#     no.temp=1
+#     for(i in 1:(N-1))
+#     {
+#       for(j in (i+1):N)
+#       {
+#         temp=Cqn_PC[no.temp,]
+#         cat('    U02(')
+#         cat(i)
+#         cat(',')
+#         cat(j)
+#         if(temp[1]>1)
+#         {cat(')','     ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
+#              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
+#         }
+#         if(temp[1]<=1)
+#         {cat(')','     ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
+#              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
+#         no.temp=no.temp+1
+#       }
+#     }
+#     
+#     cat('\n')
+#     cat('    Average pairwise similarity =',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
+#     cat('    Pairwise similarity matrix: \n\n')
+#     C_SM=x$similarity.matrix$U02
+#     cat('    U02(i,j)  ')
+#     for(i in 1:N)
+#     {
+#       cat(i,"      ")
+#     }
+#     cat('\n')
+#     for(i in 1:N)
+#     {
+#       cat('      ',i,'     ')
+#       for(j in 1:N)
+#       {
+#         if(i>j){cat('        ')}
+#         if(i<=j) {
+#           if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
+#           else cat(sprintf("%.3f#",1),'  ')
+#         }
+#       }
+#       cat('\n')
+#     }
+#     cat('\n')
+#   }
+#   if(q == 1){
+#     cat('    ----------------------Measure C12 (=U12)------------------------\n\n')
+#     cat('    Estimator','     Estimate','     s.e.','       95% Confidence Interval\n\n')
+#     ###################################################CqN_ Equal weight
+#     Cqn_PC <- x$pairwise$C12
+#     no.temp=1
+#     for(i in 1:(N-1))
+#     {
+#       for(j in (i+1):N)
+#       {
+#         temp=Cqn_PC[no.temp,]
+#         cat('    C12(')
+#         cat(i)
+#         cat(',')
+#         cat(j)
+#         if(temp[1]>1)
+#         {cat(')','     ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
+#              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
+#         }
+#         if(temp[1]<=1)
+#         {cat(')','     ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
+#              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
+#         no.temp=no.temp+1
+#       }
+#     }
+#     cat('\n')
+#     cat('    Average pairwise similarity=',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
+#     cat('    Pairwise similarity matrix: \n\n')
+#     C_SM=x$similarity.matrix$C12
+#     cat('    C12(i,j)  ')
+#     for(i in 1:N)
+#     {
+#       cat(i,"      ")
+#     }
+#     cat('\n')
+#     for(i in 1:N)
+#     {
+#       cat('      ',i,'     ')
+#       for(j in 1:N)
+#       {
+#         if(i>j){cat('        ')}
+#         if(i<=j) {
+#           if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
+#           else cat(sprintf("%.3f#",1),'  ')
+#         }
+#       }
+#       cat('\n')
+#     }
+#     cat('\n')
+#     if(method=="relative"){
+#       cat('    -------------------Measure Horn size-weighted--------------------\n\n')
+#       cat('    Estimator','     Estimate','     s.e.','       95% Confidence Interval\n\n')
+#       Cqn_PC <- x$pairwise$Horn
+#       no.temp=1
+#       for(i in 1:(N-1))
+#       {
+#         for(j in (i+1):N)
+#         {
+#           temp=Cqn_PC[no.temp,]
+#           cat('    Horn(')
+#           cat(i)
+#           cat(',')
+#           cat(j)
+#           if(temp[1]>1)
+#           {cat(')','    ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
+#                sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
+#           }
+#           if(temp[1]<=1)
+#           {cat(')','    ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
+#                sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
+#           no.temp=no.temp+1
+#         }
+#       }
+#       
+#       cat('\n')
+#       cat('    Average pairwise similarity =',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
+#       cat('    Pairwise similarity matrix: \n\n')
+#       C_SM=x$similarity.matrix$Horn
+#       
+#       cat('    Horn(i,j) ')
+#       for(i in 1:N)
+#       {
+#         cat(i,"      ")
+#       }
+#       cat('\n')
+#       for(i in 1:N)
+#       {
+#         cat('      ',i,'     ')
+#         for(j in 1:N)
+#         {
+#           if(i>j){cat('        ')}
+#           if(i<=j) {
+#             if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
+#             else cat(sprintf("%.3f#",1),'  ')
+#           }
+#         }
+#         cat('\n')
+#       }
+#       cat('\n')
+#     }
+#   }
+#   if(q == 2){
+#     cat('    -------------------------Measure C22---------------------------\n\n')
+#     cat('    Estimator','     Estimate','     s.e.','       95% Confidence Interval\n\n')
+#     Cqn_PC <- x$pairwise$C22
+#     no.temp=1
+#     for(i in 1:(N-1))
+#     {
+#       for(j in (i+1):N)
+#       {
+#         temp=Cqn_PC[no.temp,]
+#         cat('    C22(')
+#         cat(i)
+#         cat(',')
+#         cat(j)
+#         if(temp[1]>1)
+#         {cat(')','     ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
+#              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
+#         }
+#         if(temp[1]<=1)
+#         {cat(')','     ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
+#              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
+#         no.temp=no.temp+1
+#       }
+#     }
+#     cat('\n')
+#     cat('    Average pairwise similarity=',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
+#     cat('    Pairwise similarity matrix: \n\n')
+#     C_SM=x$similarity.matrix$C22
+#     cat('    C22(i,j)  ')
+#     for(i in 1:N)
+#     {
+#       cat(i,"      ")
+#     }
+#     cat('\n')
+#     for(i in 1:N)
+#     {
+#       cat('      ',i,'     ')
+#       for(j in 1:N)
+#       {
+#         if(i>j){cat('        ')}
+#         if(i<=j) {
+#           if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
+#           else cat(sprintf("%.3f#",1),'  ')
+#         }
+#       }
+#       cat('\n')
+#     }
+#     cat('\n')
+#     ###################################################UqN_ Equal weight
+#     cat('    -------------------------Measure U22---------------------------\n\n')
+#     cat('    Estimator','     Estimate','     s.e.','       95% Confidence Interval\n\n')
+#     Cqn_PC <- x$pairwise$U22
+#     no.temp=1
+#     for(i in 1:(N-1))
+#     {
+#       for(j in (i+1):N)
+#       {
+#         temp=Cqn_PC[no.temp,]
+#         cat('    U22(')
+#         cat(i)
+#         cat(',')
+#         cat(j)
+#         if(temp[1]>1)
+#         {cat(')','     ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
+#              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
+#         }
+#         if(temp[1]<=1)
+#         {cat(')','     ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
+#              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
+#         no.temp=no.temp+1
+#       }
+#     }
+#     cat('\n')
+#     cat('    Average pairwise similarity =',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
+#     cat('    Pairwise similarity matrix: \n\n')
+#     C_SM=x$similarity.matrix$U22
+#     cat('    U22(i,j)  ')
+#     for(i in 1:N)
+#     {
+#       cat(i,"      ")
+#     }
+#     cat('\n')
+#     for(i in 1:N)
+#     {
+#       cat('      ',i,'     ')
+#       for(j in 1:N)
+#       {
+#         if(i>j){cat('        ')}
+#         if(i<=j) {
+#           if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
+#           else cat(sprintf("%.3f#",1),'  ')
+#         }
+#       }
+#       cat('\n')
+#     }
+#     cat('\n')
+#   }
+#   
+#   cat('    NOTE: Any estimate greater than 1 is replaced by 1; any estimate less than 0 is replaced by 0.')
+#   #cat('
+#   #    References:
+#   #    
+#   #    Chao, A., Jost, L., Chiang, S. C., Jiang, Y.-H. and Chazdon, R. (2008). A Two-
+#   #    stage probabilistic approach to multiple-community similarity indices. 
+#   #    Biometrics, 64, 1178-1186.
+#   #    
+#   #    Jost, L. (2008). GST and its relatives do not measure differentiation. Molecular
+#   #    Ecology, 17, 4015-4026.
+#   #    ')
+#   cat('\n')
+# }
+
+
+
+
+
 print.spadeMult <- function(x, ...){
   if(x$datatype=="abundance"){
     cat('\n(1) BASIC DATA INFORMATION:\n\n')
@@ -1369,49 +1861,130 @@ print.spadeMult <- function(x, ...){
     cat('    Number of bootstrap replications for s.e. estimate             ',rev(x$info)[1],'\n\n')
     cat('(2) EMPIRICAL SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
-    cat('    (a) Classic richness-based similarity\n\n')
-    temp <- apply(as.matrix(x$Empirical_richness), 2, as.numeric)
-    cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
-    cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+    cat('    (a) Measures for comparing species absolute abundances\n\n')
+    temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
+    cat('        C0');cat(N);cat( ' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
+    cat('        U0');cat(N);cat( ' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+    cat('        C1');cat(N);cat( '=U1');cat(N);cat( ' (q=1)                  ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+    cat('        C2');cat(N);cat( ' (Morisita-Horn)            ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
+    cat('        U2');cat(N);cat( ' (Regional overlap)         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
     cat('    (b) Measures for comparing species relative abundances\n\n')
     temp <- apply(as.matrix(x$Empirical_relative), 2, as.numeric)
-    cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C2');cat(N);cat(' (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U2');cat(N);cat(' (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
-    temp <- x$Empirical_WtRelative
-    cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('    (d) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
-    cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C2');cat(N);cat(' (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U2');cat(N);cat(' (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+    cat('        Size-weighted Sorenson (q=0)          ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
+    cat('        Size-weighted Jaccard  (q=0)          ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+    cat('        Horn size-weighted (q=1)              ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+    cat('        Size-weighted Morisita-Horn (q=2)     ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
+    cat('        Size-weighted regional-overlap (q=2)  ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
+    
+    
+    
+    
     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
-    cat('    (a) Classic richness-based similarity\n\n')
-    temp <- apply(as.matrix(x$estimated_richness), 2, as.numeric)
-    if(temp[1,1]>1) {cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
-    if(temp[1,1]<=1){cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
-    if(temp[2,1]>1) {cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
-    if(temp[2,1]<=1){cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+    cat('    (a) Measures for comparing species absolute abundances\n\n')
+    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
+    if(temp[1,1]>1) {cat('        C0');cat(N);cat( ' (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[1,1]<=1){cat('        C0');cat(N);cat( ' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+    if(temp[2,1]>1) {cat('        U0');cat(N);cat( ' (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[2,1]<=1){cat('        U0');cat(N);cat( ' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+    if(temp[3,1]>1) {cat('        C1');cat(N);cat( '=U1');cat(N);cat( ' (q=1)                  ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[3,1]<=1){cat('        C1');cat(N);cat( '=U1');cat(N);cat( ' (q=1)                  ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[4,1]>1) {cat('        C2');cat(N);cat( ' (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[4,1]<=1){cat('        C2');cat(N);cat( ' (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
+    if(temp[5,1]>1) {cat('        U2');cat(N);cat( ' (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[5,1]<=1){cat('        U2');cat(N);cat( ' (q=2, Regional overlap)    ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
+    
+    
+    
+    
     #cat('      Lennon et al (2001)             ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'\n\n')
     cat('    (b) Measures for comparing species relative abundances\n\n')
     temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
-    cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C2');cat(N);cat(' (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U2');cat(N);cat(' (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
-    temp <- x$estimated_WtRelative
-    cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('    (d) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
-    cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C2');cat(N);cat(' (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U2');cat(N);cat(' (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
-   
-  }else{
+    if(temp[1,1]>1) {cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[1,1]<=1){cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+    if(temp[2,1]>1) {cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[2,1]<=1){cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+    if(temp[3,1]>1) {cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[3,1]<=1){cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[4,1]>1) {cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[4,1]<=1){cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
+    if(temp[5,1]>1) {cat('        Size-weighted regional-overlap (q=2)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[5,1]<=1){cat('        Size-weighted regional-overlap (q=2)    ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
+    ################################################################
+    #cat('(2) ESTIMATION OF OVERLAP MEASURE IN',N,'COMMUNITIES:\n\n')
+    #cat('    Estimator','     Estimate','     s.e.','     95% Confidence Interval\n\n')
+    #temp0n=x$overlap[1,]
+    #if(temp0n[1]>1)
+    #{
+    #  cat('    C0')
+    #  cat(N,'(Sorensen)',sprintf("%.3f",1)        ,'#      ',sprintf("%.3f",temp0n[2]),'        (',
+    #      sprintf("%.3f",temp0n[3]),',',sprintf("%.3f",temp0n[4]),')\n')
+    #}
+    #if(temp0n[1]<=1)
+    #{
+    #  cat('    C0')
+    #  cat(N,'(Sorensen)',sprintf("%.3f",temp0n[1]),'       ',sprintf("%.3f",temp0n[2]),'        (',
+    #      sprintf("%.3f",temp0n[3]),',',sprintf("%.3f",temp0n[4]),')\n')
+    #}
+    ##temp1n=x$overlap[2,]
+    ##cat('    C1')
+    ##cat(N,'          ',sprintf("%.3f",temp1n[1]),'       ',sprintf("%.3f",temp1n[2]),'        (',
+    ##    sprintf("%.3f",temp1n[3]),',',sprintf("%.3f",temp1n[4]),')\n')
+    #temp1n=x$overlap[2,]
+    #if(temp1n[1]>1)
+    #{
+    #  cat('    C1')
+    #  cat(N)
+    #  cat('*(Horn)    ',sprintf("%.3f",1)        ,'#      ',sprintf("%.3f",temp1n[2]),'        (',
+    #      sprintf("%.3f",temp1n[3]),',',sprintf("%.3f",temp1n[4]),')\n')
+    #}
+    #if(temp1n[1]<=1)
+    #{
+    #  cat('    C1')
+    #  cat(N)
+    #  cat('*(Horn)    ',sprintf("%.3f",temp1n[1]),'       ',sprintf("%.3f",temp1n[2]),'        (',
+    #      sprintf("%.3f",temp1n[3]),',',sprintf("%.3f",temp1n[4]),')\n')
+    #  
+    #}
+    #
+    #cat('*          ',sprintf("%.3f",1-temp1n[1]),'       ',sprintf("%.3f",temp1n[2]),'        (',
+    ##     sprintf("%.3f",max(1-temp1n[1]-1.96*temp1n[2],0)),',',sprintf("%.3f",min(1-temp1n[1]+1.96*temp1n[2],1)),')\n')
+    #temp2n=x$overlap[3,]
+    #temp33=x$overlap[4,]
+    #cat('    C2')
+    #cat(N,'(Morisita)',sprintf("%.3f",temp2n[1]),'       ',sprintf("%.3f",temp2n[2]),'        (',
+    #    sprintf("%.3f",temp2n[3]),',',sprintf("%.3f",temp2n[4]),')\n')  
+    #
+    #if(N==3)
+    #{
+    #  temp33=x$overlap[4,]
+    #  cat('    C33','          ',sprintf("%.3f",temp33[1]),'       ',sprintf("%.3f",temp33[2]),'        (',
+    #      sprintf("%.3f",temp33[3]),',',sprintf("%.3f",temp33[4]),')\n')
+    #}
+    #cat('\n')
+    #cat('    C0')
+    #cat(N,': A similarity measure of comparing',N,
+    #    'communities using empirical method.\n')
+    ##cat('    C1')
+    ##cat(N,': A similarity measure of comparing',N,
+    ##   'communities based on equal sample size among all communities.\n')
+    #cat('    C1')
+    #cat(N)
+    #cat('*')
+    #cat(': A similarity measure of comparing',N,
+    #    'communities based on equal-effort sample size among all communities.\n')
+    #cat('    C2')
+    #cat(N,': A similarity measure of comparing',N,'communities based on shared information between any two communities.\n')
+    #if(N==3)
+    #{
+    #  cat('    C33',': A similarity measure of comparing 3 communities using all shared information.\n')
+    #}
+    #cat('    
+    #    Confidence Interval: Based on an improved bootstrap percentile method. (recommend for use in the case when 
+    #    similarity is close to 0 or 1 ) \n\n')
+    #cat('    # if the estimate is greater than 1, it is replaced by 1.\n\n')
+    
+  }else if(x$datatype=="incidence_freq" | x$datatype=="incidence_raw"){
     
     cat('\n(1) BASIC DATA INFORMATION:\n\n')
     cat('    The loaded set includes abundance/incidence data from',x$info[[1]],'communities\n')
@@ -1462,50 +2035,58 @@ print.spadeMult <- function(x, ...){
     cat('    Number of bootstrap replications for s.e. estimate             ',rev(x$info)[1],'\n\n')
     cat('(2) EMPIRICAL SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
-    cat('    (a) Classic richness-based similarity\n\n')
-    temp <- apply(as.matrix(x$Empirical_richness), 2, as.numeric)
-    cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
-    cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+    cat('    (a) Measures for comparing species absolute abundances\n\n')
+    temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
+    cat('        C0');cat(N);cat( ' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
+    cat('        U0');cat(N);cat( ' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+    cat('        C1');cat(N);cat( '=U1');cat(N);cat( ' (q=1)                  ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+    cat('        C2');cat(N);cat( ' (Morisita-Horn)            ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
+    cat('        U2');cat(N);cat( ' (Regional overlap)         ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
     cat('    (b) Measures for comparing species relative abundances\n\n')
     temp <- apply(as.matrix(x$Empirical_relative), 2, as.numeric)
-    cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C2');cat(N);cat(' (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U2');cat(N);cat(' (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
-    temp <- x$Empirical_WtRelative
-    cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('    (d) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$Empirical_absolute), 2, as.numeric)
-    cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C2');cat(N);cat(' (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U2');cat(N);cat(' (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+    cat('        Size-weighted Sorenson (q=0)          ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
+    cat('        Size-weighted Jaccard  (q=0)          ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
+    cat('        Horn size-weighted (q=1)              ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+    cat('        Size-weighted Morisita-Horn (q=2)     ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
+    cat('        Size-weighted regional-overlap (q=2)  ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
+    
+    
+    
+    
     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
-    cat('    (a) Classic richness-based similarity\n\n')
-    temp <- apply(as.matrix(x$estimated_richness), 2, as.numeric)
-    if(temp[1,1]>1) {cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
-    if(temp[1,1]<=1){cat('        C0');cat(N);cat(' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
-    if(temp[2,1]>1) {cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
-    if(temp[2,1]<=1){cat('        U0');cat(N);cat(' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+    cat('    (a) Measures for comparing species absolute abundances\n\n')
+    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
+    if(temp[1,1]>1) {cat('        C0');cat(N);cat( ' (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[1,1]<=1){cat('        C0');cat(N);cat( ' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+    if(temp[2,1]>1) {cat('        U0');cat(N);cat( ' (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[2,1]<=1){cat('        U0');cat(N);cat( ' (q=0, Jaccard)             ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+    if(temp[3,1]>1) {cat('        C1');cat(N);cat( '=U1');cat(N);cat( ' (q=1)                  ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[3,1]<=1){cat('        C1');cat(N);cat( '=U1');cat(N);cat( ' (q=1)                  ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[4,1]>1) {cat('        C2');cat(N);cat( ' (q=2, Morisita-Horn)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[4,1]<=1){cat('        C2');cat(N);cat( ' (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
+    if(temp[5,1]>1) {cat('        U2');cat(N);cat( ' (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[5,1]<=1){cat('        U2');cat(N);cat( ' (q=2, Regional overlap)    ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
+    
+    
+    
+    
     #cat('      Lennon et al (2001)             ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'\n\n')
     cat('    (b) Measures for comparing species relative abundances\n\n')
     temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
-    cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1, Horn)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C2');cat(N);cat(' (q=2, Morisita-Horn)       ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U2');cat(N);cat(' (q=2, Regional overlap)    ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('    (c) Measures for comparing size-weighted species relative abundances\n\n')
-    temp <- x$estimated_WtRelative
-    cat('        Horn size-weighted (q=1)       ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('    (d) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
-    cat('        C1');cat(N);cat('=U1');cat(N);cat(' (q=1)                  ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n\n')
-    cat('        C2');cat(N);cat(' (Morisita-Horn)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n')
-    cat('        U2');cat(N);cat(' (Regional overlap)         ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
-    cat('        Bray-Curtis                    ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n\n')
+    if(temp[1,1]>1) {cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[1,1]<=1){cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
+    if(temp[2,1]>1) {cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[2,1]<=1){cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
+    if(temp[3,1]>1) {cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[3,1]<=1){cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[4,1]>1) {cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
+    if(temp[4,1]<=1){cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
+    if(temp[5,1]>1) {cat('        Size-weighted regional-overlap (q=2)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[5,1]<=1){cat('        Size-weighted regional-overlap (q=2)    ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
   }
   cat('(4) ESTIMATED PAIRWISE SIMILARITY:\n\n')
-  if(q == 0){
+  if(q == 0 & x$goal=="absolute"){
     cat('    -------------------------Measure C02---------------------------\n\n')
     cat('    Estimator','     Estimate','     s.e.','       95% Confidence Interval\n\n')
     Cqn_PC <- x$pairwise$C02
@@ -1520,7 +2101,7 @@ print.spadeMult <- function(x, ...){
         cat(',')
         cat(j)
         if(temp[1]>1)
-        {cat(')','     ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
+        {cat(')','     ',sprintf("%.3f",1)      ,'       ',sprintf("%.3f",temp[2]),'        (',
              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
         }
         if(temp[1]<=1)
@@ -1547,7 +2128,7 @@ print.spadeMult <- function(x, ...){
         if(i>j){cat('        ')}
         if(i<=j) {
           if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
-          else cat(sprintf("%.3f#",1),'  ')
+          else cat(sprintf("%.3f ",1),'  ')
         }
       }
       cat('\n')
@@ -1567,7 +2148,7 @@ print.spadeMult <- function(x, ...){
         cat(',')
         cat(j)
         if(temp[1]>1)
-        {cat(')','     ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
+        {cat(')','     ',sprintf("%.3f",1)      ,'       ',sprintf("%.3f",temp[2]),'        (',
              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
         }
         if(temp[1]<=1)
@@ -1595,14 +2176,111 @@ print.spadeMult <- function(x, ...){
         if(i>j){cat('        ')}
         if(i<=j) {
           if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
-          else cat(sprintf("%.3f#",1),'  ')
+          else cat(sprintf("%.3f ",1),'  ')
         }
       }
       cat('\n')
     }
     cat('\n')
   }
-  if(q == 1){
+  if(q == 0 & x$goal=="relative"){
+    cat('    -------------------------Measure Size-weighted Sorenson---------------------------\n\n')
+    cat('    Estimator','                        Estimate','     s.e.','       95% Confidence Interval\n\n')
+    Cqn_PC <- x$pairwise$`Size-weighted Sorenson`
+    no.temp=1
+    for(i in 1:(N-1))
+    {
+      for(j in (i+1):N)
+      {
+        temp=Cqn_PC[no.temp,]
+        cat('    Size-weighted Sorenson(')
+        cat(i)
+        cat(',')
+        cat(j)
+        if(temp[1]>1)
+        {cat(')','     ',sprintf("%.3f",1)      ,'       ',sprintf("%.3f",temp[2]),'        (',
+             sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
+        }
+        if(temp[1]<=1)
+        {cat(')','     ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
+             sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
+        no.temp=no.temp+1
+      }
+    }
+    cat('\n')
+    cat('    Average pairwise similarity=',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
+    cat('    Pairwise similarity matrix: \n\n')
+    C_SM=x$similarity.matrix$`Size-weighted Sorenson`
+    cat('    Size-weighted Sorenson(i,j)  ')
+    for(i in 1:N)
+    {
+      cat(i,"      ")
+    }
+    cat('\n')
+    for(i in 1:N)
+    {
+      cat('      ',i,'                        ')
+      for(j in 1:N)
+      {
+        if(i>j){cat('        ')}
+        if(i<=j) {
+          if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
+          else cat(sprintf("%.3f ",1),'  ')
+        }
+      }
+      cat('\n')
+    }
+    cat('\n')
+    cat('    -------------------------Measure Size-weighted Jaccard---------------------------\n\n')
+    cat('    Estimator','                       Estimate','     s.e.','       95% Confidence Interval\n\n')
+    Cqn_PC <- x$pairwise$`Size-weighted Jaccard`
+    no.temp=1
+    for(i in 1:(N-1))
+    {
+      for(j in (i+1):N)
+      {
+        temp=Cqn_PC[no.temp,]
+        cat('    Size-weighted Jaccard(')
+        cat(i)
+        cat(',')
+        cat(j)
+        if(temp[1]>1)
+        {cat(')','     ',sprintf("%.3f",1)      ,'       ',sprintf("%.3f",temp[2]),'        (',
+             sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
+        }
+        if(temp[1]<=1)
+        {cat(')','     ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
+             sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
+        no.temp=no.temp+1
+      }
+    }
+    
+    cat('\n')
+    cat('    Average pairwise similarity =',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
+    cat('    Pairwise similarity matrix: \n\n')
+    C_SM=x$similarity.matrix$`Size-weighted Jaccard`
+    cat('    Size-weighted Jaccard(i,j)  ')
+    for(i in 1:N)
+    {
+      cat(i,"      ")
+    }
+    cat('\n')
+    for(i in 1:N)
+    {
+      cat('      ',i,'                       ')
+      for(j in 1:N)
+      {
+        if(i>j){cat('        ')}
+        if(i<=j) {
+          if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
+          else cat(sprintf("%.3f ",1),'  ')
+        }
+      }
+      cat('\n')
+    }
+    cat('\n')
+  }
+  if(q == 1 & x$goal=="absolute"){
     cat('    ----------------------Measure C12 (=U12)------------------------\n\n')
     cat('    Estimator','     Estimate','     s.e.','       95% Confidence Interval\n\n')
     ###################################################CqN_ Equal weight
@@ -1618,7 +2296,7 @@ print.spadeMult <- function(x, ...){
         cat(',')
         cat(j)
         if(temp[1]>1)
-        {cat(')','     ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
+        {cat(')','     ',sprintf("%.3f",1)      ,'       ',sprintf("%.3f",temp[2]),'        (',
              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
         }
         if(temp[1]<=1)
@@ -1645,65 +2323,64 @@ print.spadeMult <- function(x, ...){
         if(i>j){cat('        ')}
         if(i<=j) {
           if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
-          else cat(sprintf("%.3f#",1),'  ')
+          else cat(sprintf("%.3f ",1),'  ')
         }
       }
       cat('\n')
     }
     cat('\n')
-    if(method=="relative"){
-      cat('    -------------------Measure Horn size-weighted--------------------\n\n')
-      cat('    Estimator','     Estimate','     s.e.','       95% Confidence Interval\n\n')
-      Cqn_PC <- x$pairwise$Horn
-      no.temp=1
-      for(i in 1:(N-1))
+  }
+  if(q == 1 & x$goal=="relative"){
+    cat('    ----------------------Measure Horn size weighted------------------------\n\n')
+    cat('    Estimator','                    Estimate','     s.e.','       95% Confidence Interval\n\n')
+    ###################################################CqN_ Equal weight
+    Cqn_PC <- x$pairwise$`Horn size weighted`
+    no.temp=1
+    for(i in 1:(N-1))
+    {
+      for(j in (i+1):N)
       {
-        for(j in (i+1):N)
-        {
-          temp=Cqn_PC[no.temp,]
-          cat('    Horn(')
-          cat(i)
-          cat(',')
-          cat(j)
-          if(temp[1]>1)
-          {cat(')','    ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
-               sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
-          }
-          if(temp[1]<=1)
-          {cat(')','    ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
-               sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
-          no.temp=no.temp+1
+        temp=Cqn_PC[no.temp,]
+        cat('    Horn size weighted(')
+        cat(i)
+        cat(',')
+        cat(j)
+        if(temp[1]>1)
+        {cat(')','     ',sprintf("%.3f",1)      ,'       ',sprintf("%.3f",temp[2]),'        (',
+             sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
         }
+        if(temp[1]<=1)
+        {cat(')','     ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
+             sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
+        no.temp=no.temp+1
       }
-      
-      cat('\n')
-      cat('    Average pairwise similarity =',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
-      cat('    Pairwise similarity matrix: \n\n')
-      C_SM=x$similarity.matrix$Horn
-      
-      cat('    Horn(i,j) ')
-      for(i in 1:N)
+    }
+    cat('\n')
+    cat('    Average pairwise similarity=',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
+    cat('    Pairwise similarity matrix: \n\n')
+    C_SM=x$similarity.matrix$`Horn size weighted`
+    cat('    Horn size weighted(i,j)  ')
+    for(i in 1:N)
+    {
+      cat(i,"      ")
+    }
+    cat('\n')
+    for(i in 1:N)
+    {
+      cat('      ',i,'                    ')
+      for(j in 1:N)
       {
-        cat(i,"      ")
-      }
-      cat('\n')
-      for(i in 1:N)
-      {
-        cat('      ',i,'     ')
-        for(j in 1:N)
-        {
-          if(i>j){cat('        ')}
-          if(i<=j) {
-            if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
-            else cat(sprintf("%.3f#",1),'  ')
-          }
+        if(i>j){cat('        ')}
+        if(i<=j) {
+          if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
+          else cat(sprintf("%.3f ",1),'  ')
         }
-        cat('\n')
       }
       cat('\n')
     }
+    cat('\n')
   }
-  if(q == 2){
+  if(q == 2 & x$goal=="absolute"){
     cat('    -------------------------Measure C22---------------------------\n\n')
     cat('    Estimator','     Estimate','     s.e.','       95% Confidence Interval\n\n')
     Cqn_PC <- x$pairwise$C22
@@ -1718,7 +2395,7 @@ print.spadeMult <- function(x, ...){
         cat(',')
         cat(j)
         if(temp[1]>1)
-        {cat(')','     ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
+        {cat(')','     ',sprintf("%.3f",1)      ,'       ',sprintf("%.3f",temp[2]),'        (',
              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
         }
         if(temp[1]<=1)
@@ -1745,7 +2422,7 @@ print.spadeMult <- function(x, ...){
         if(i>j){cat('        ')}
         if(i<=j) {
           if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
-          else cat(sprintf("%.3f#",1),'  ')
+          else cat(sprintf("%.3f ",1),'  ')
         }
       }
       cat('\n')
@@ -1766,7 +2443,7 @@ print.spadeMult <- function(x, ...){
         cat(',')
         cat(j)
         if(temp[1]>1)
-        {cat(')','     ',sprintf("%.3f",1)      ,'#      ',sprintf("%.3f",temp[2]),'        (',
+        {cat(')','     ',sprintf("%.3f",1)      ,'       ',sprintf("%.3f",temp[2]),'        (',
              sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
         }
         if(temp[1]<=1)
@@ -1793,7 +2470,105 @@ print.spadeMult <- function(x, ...){
         if(i>j){cat('        ')}
         if(i<=j) {
           if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
-          else cat(sprintf("%.3f#",1),'  ')
+          else cat(sprintf("%.3f ",1),'  ')
+        }
+      }
+      cat('\n')
+    }
+    cat('\n')
+  }
+  
+  if(q == 2 & x$goal=="relative"){
+    cat('    -------------------------Measure Size-weighted Morisita-Horn---------------------------\n\n')
+    cat('    Estimator','                             Estimate','     s.e.','       95% Confidence Interval\n\n')
+    Cqn_PC <- x$pairwise$`Size-weighted Morisita-Horn`
+    no.temp=1
+    for(i in 1:(N-1))
+    {
+      for(j in (i+1):N)
+      {
+        temp=Cqn_PC[no.temp,]
+        cat('    Size-weighted Morisita-Horn(')
+        cat(i)
+        cat(',')
+        cat(j)
+        if(temp[1]>1)
+        {cat(')','     ',sprintf("%.3f",1)      ,'       ',sprintf("%.3f",temp[2]),'        (',
+             sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
+        }
+        if(temp[1]<=1)
+        {cat(')','     ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
+             sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
+        no.temp=no.temp+1
+      }
+    }
+    cat('\n')
+    cat('    Average pairwise similarity=',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
+    cat('    Pairwise similarity matrix: \n\n')
+    C_SM=x$similarity.matrix$`Size-weighted Morisita-Horn`
+    cat('    Size-weighted Morisita-Horn(i,j)  ')
+    for(i in 1:N)
+    {
+      cat(i,"      ")
+    }
+    cat('\n')
+    for(i in 1:N)
+    {
+      cat('      ',i,'                             ')
+      for(j in 1:N)
+      {
+        if(i>j){cat('        ')}
+        if(i<=j) {
+          if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
+          else cat(sprintf("%.3f ",1),'  ')
+        }
+      }
+      cat('\n')
+    }
+    cat('\n')
+    ###################################################UqN_ Equal weight
+    cat('    -------------------------Measure Size-weighted regional-overlap---------------------------\n\n')
+    cat('    Estimator','                                Estimate','     s.e.','       95% Confidence Interval\n\n')
+    Cqn_PC <- x$pairwise$`Size-weighted regional-overlap`
+    no.temp=1
+    for(i in 1:(N-1))
+    {
+      for(j in (i+1):N)
+      {
+        temp=Cqn_PC[no.temp,]
+        cat('    Size-weighted regional-overlap(')
+        cat(i)
+        cat(',')
+        cat(j)
+        if(temp[1]>1)
+        {cat(')','     ',sprintf("%.3f",1)      ,'       ',sprintf("%.3f",temp[2]),'        (',
+             sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')
+        }
+        if(temp[1]<=1)
+        {cat(')','     ',sprintf("%.3f",temp[1]),'       ',sprintf("%.3f",temp[2]),'        (',
+             sprintf("%.3f",temp[3]),',',sprintf("%.3f",temp[4]),')\n')}
+        no.temp=no.temp+1
+      }
+    }
+    cat('\n')
+    cat('    Average pairwise similarity =',sprintf("%.3f",mean(Cqn_PC[,1])),'\n\n')
+    cat('    Pairwise similarity matrix: \n\n')
+    C_SM=x$similarity.matrix$`Size-weighted regional-overlap`
+    cat('    Size-weighted regional-overlap(i,j)  ')
+    for(i in 1:N)
+    {
+      cat(i,"      ")
+    }
+    cat('\n')
+    for(i in 1:N)
+    {
+      cat('      ',i,'                                ')
+      for(j in 1:N)
+      {
+        if(i>j){cat('        ')}
+        if(i<=j) {
+          if(C_SM[i,j]<=1) cat(sprintf("%.3f",C_SM[i,j]),'  ')
+          else cat(sprintf("%.3f ",1),'  ')
         }
       }
       cat('\n')
@@ -1814,6 +2589,12 @@ print.spadeMult <- function(x, ...){
   #    ')
   cat('\n')
 }
+
+
+
+
+
+
 
 
 
