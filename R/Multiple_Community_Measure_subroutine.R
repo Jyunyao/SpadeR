@@ -260,7 +260,296 @@ Jar_est_multiple_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","
   return(list(est=out1,obs=out2))
 }
 
+MH_theoretical_multiple<-function(popu,weight){
+  popu=popu %>% as.matrix()
+  popu=popu[which(rowSums(popu)>0),]
+  # w<-colSums(popu)/sum(popu)
+  # popu=apply(popu,2,function(x){x/sum(x)})
+  # p_bar_ori=w[1]*popu[,1]+w[2]*popu[,2]
+  p_bar=popu%*%weight
+  H_gamma=1-sum(p_bar^2)
+  H_alpha=sum(weight*(1-colSums(popu^2)))
+  den=sum(colSums(popu^2)*(weight-weight^2))
+  H=(H_gamma-H_alpha)/den
+  
+  return(1-H)
+}
 
+regional_theoretical_multiple<-function(popu,weight){
+  popu=popu %>% as.matrix()
+  popu=popu[which(rowSums(popu)>0),]
+  left=1-MH_theoretical_multiple(popu=popu,weight=weight)
+  up=sum((popu^2)%*%(weight^2))
+  down=sum((popu%*%weight)^2)
+  H=1-left*up/down
+  
+  return(H)
+}
+
+MH_unbias_est=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  N=ncol(data)
+  n=colSums(data)
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  # xm1=data*(data)/(n*(n))
+  xm1=apply(data,2,function(x){x*(x-1)/sum(x)/(sum(x)-1)})
+  p.data=apply(data,2,function(x){x/sum(x)})
+  down=sum(xm1%*%(w-w^2))
+  # down=sum(colSums(xm1)*(w-w^2))
+  if(length(w)==2){
+    up=2*sum(w[1]*w[2]*p.data[,1]*p.data[,2])
+  }else{
+    cb=combn(1:length(w),2)
+    up=2*sapply(1:length(w),function(x){
+      idx=cb[,x]
+      sum(w[idx[1]]*w[idx[2]]*p.data[,idx[1]]*p.data[,idx[2]])
+    }) %>% sum()
+  }
+  
+  est=up/down
+  return(est)
+}
+
+MH_unbias_est_inc=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  n=data[1,] %>% as.numeric()
+  data=data[-1,]
+  N=ncol(data)
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  # n=colSums(data)
+  # xm1=data*(data)/(n*(n))
+  # xm1=apply(data,2,function(x){x*(x-1)/sum(x)/(sum(x)-1)})
+  xm1=sapply(1:N,function(x){
+    data[,x]*(data[,x]-1)/n[x]/(n[x]-1)
+  })
+  # p.data=apply(data,2,function(x){x/sum(x)})
+  p.data=sapply(1:N,function(x){
+    data[,x]/n[x]
+  })
+  down=sum(xm1%*%(w-w^2))
+  # down=sum(colSums(xm1)*(w-w^2))
+  if(length(w)==2){
+    up=2*sum(w[1]*w[2]*p.data[,1]*p.data[,2])
+  }else{
+    cb=combn(1:length(w),2)
+    up=2*sapply(1:length(w),function(x){
+      idx=cb[,x]
+      sum(w[idx[1]]*w[idx[2]]*p.data[,idx[1]]*p.data[,idx[2]])
+    }) %>% sum()
+  }
+  
+  est=up/down
+  return(est)
+}
+
+MH_est_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  N=ncol(data)
+  
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  
+  mle.data = apply(data,2,function(x){x/sum(x)})
+  
+  p=Boots.pop(data)
+  est=MH_unbias_est(data = data, weight = weight, w=w)
+  mle=MH_theoretical_multiple(popu = mle.data, weight=w)
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) rmultinom(1, sum(data[,k]), p[,k]))
+    boot[1,i]=MH_unbias_est(data=boot.X, weight = weight, w=w)
+    boot.mle=apply(boot.X,2,function(x){x/sum(x)})
+    boot[2,i]=MH_theoretical_multiple(popu=boot.mle, weight=w)
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(mle, se[2], max(0,mle-1.96*se[2]), min(1,mle+1.96*se[2]))
+  return(list(est=out1,mle=out2))
+}
+
+MH_est_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  N=ncol(data)
+  
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  
+  mle.data = sapply(1:N,function(x){data[-1,x]/data[1,x]})
+  
+  p <- Boots.pop_inc(data)
+  
+  
+  est=MH_unbias_est_inc(data = data, weight = weight, w=w)
+  mle=MH_theoretical_multiple(popu = mle.data, weight=w)
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) sapply(1:nrow(p),FUN = function(i) rbinom(1, data[1,k], p[i,1]) ))
+    # boot.jade=Boots.pop_JADE_abu(boot.X)
+    boot[1,i]=MH_unbias_est_inc(data=rbind(data[1,],boot.X), weight = weight, w=w)
+    boot.mle=apply(boot.X,2,function(x){x/sum(x)})
+    boot[2,i]=MH_theoretical_multiple(popu=boot.mle, weight=w)
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(mle, se[2], max(0,mle-1.96*se[2]), min(1,mle+1.96*se[2]))
+  return(list(est=out1,mle=out2))
+}
+
+MH_jar_unbias_est<-function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  n=colSums(data)
+  N=ncol(data)
+  
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  
+  xm1=apply(data,2,function(x){x*(x-1)/sum(x)/(sum(x)-1)})
+  p.data=apply(data,2,function(x){x/sum(x)})
+  
+  if(length(w)==2){
+    up=2*sum(w[1]*w[2]*p.data[,1]*p.data[,2])
+  }else{
+    cb=combn(1:length(w),2)
+    up=2*sapply(1:length(w),function(x){
+      idx=cb[,x]
+      sum(w[idx[1]]*w[idx[2]]*p.data[,idx[1]]*p.data[,idx[2]])
+    }) %>% sum()
+  }
+  down=sum(xm1%*%(w^2))
+  right=1/(1+up/down)
+  est=1-((1-MH_unbias_est(data,weight=weight,w=w))*right)
+  
+  return(est)
+}
+
+MH_jar_unbias_est_inc<-function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  n=data[1,] %>% as.numeric()
+  data=data[-1,]
+  N=ncol(data)
+  
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  
+  # n=colSums(data)
+  xm1=sapply(1:N,function(x){
+    data[,x]*(data[,x]-1)/n[x]/(n[x]-1)
+  })
+  # p.data=apply(data,2,function(x){x/sum(x)})
+  p.data=sapply(1:N,function(x){
+    data[,x]/n[x]
+  })
+  
+  if(length(w)==2){
+    up=2*sum(w[1]*w[2]*p.data[,1]*p.data[,2])
+  }else{
+    cb=combn(1:length(w),2)
+    up=2*sapply(1:length(w),function(x){
+      idx=cb[,x]
+      sum(w[idx[1]]*w[idx[2]]*p.data[,idx[1]]*p.data[,idx[2]])
+    }) %>% sum()
+  }
+  down=sum(xm1%*%(w^2))
+  right=1/(1+up/down)
+  est=1-((1-MH_unbias_est_inc(rbind(n,data),weight=weight,w=w))*right)
+  
+  return(est)
+}
+
+regional_est_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  N=ncol(data)
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  mle.data = apply(data,2,function(x){x/sum(x)})
+  
+  p=Boots.pop(data)
+  est=MH_jar_unbias_est(data=data, weight=weight, w=w)
+  mle=regional_theoretical_multiple(popu = mle.data, weight=w)
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) rmultinom(1, sum(data[,k]), p[,k]))
+    boot.jade=Boots.pop_JADE_abu(boot.X)
+    boot[1,i]=MH_jar_unbias_est(data = boot.X, weight=weight, w=w)
+    boot.mle=apply(boot.X,2,function(x){x/sum(x)})
+    boot[2,i]=regional_theoretical_multiple(popu=boot.mle, weight=w)
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(mle, se[2], max(0,mle-1.96*se[2]), min(1,mle+1.96*se[2]))
+  return(list(est=out1,mle=out2))
+}
+
+regional_est_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  N=ncol(data)
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  mle.data = sapply(1:N,function(x){data[-1,x]/data[1,x]})
+  
+  p <- Boots.pop_inc(data)
+  est=MH_jar_unbias_est_inc(data=data,weight = weight,w=w)
+  mle=regional_theoretical_multiple(popu = mle.data, weight=w)
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) sapply(1:nrow(p),FUN = function(i) rbinom(1, data[1,k], p[i,1]) ))
+    # boot.jade=Boots.pop_JADE_abu(boot.X)
+    boot[1,i]=MH_jar_unbias_est_inc(data = rbind(data[1,],boot.X),weight = weight,w=w)
+    boot.mle=apply(boot.X,2,function(x){x/sum(x)})
+    boot[2,i]=regional_theoretical_multiple(popu=boot.mle, weight=w)
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(mle, se[2], max(0,mle-1.96*se[2]), min(1,mle+1.96*se[2]))
+  return(list(est=out1,mle=out2))
+}
 
 
 ###########################################2016.07.24-(P.L.Lin)

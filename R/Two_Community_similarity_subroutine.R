@@ -1,3 +1,222 @@
+chao_sor<-function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  N=2
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  
+  f1=sapply(1:N,function(k) sum(data[,k]==1));
+  f2=sapply(1:N,function(k) sum(data[,k]==2));
+  
+  f0=round(sapply(1:N,function(k) ifelse(f2[k]==0,f1[k]*(f1[k]-1)/2,f1[k]^2/(2*f2[k]))));
+  S1=sum(data[,1]>0)+f0[1]
+  S2=sum(data[,2]>0)+f0[2]
+  S12=PanEstFun(data[,1],data[,2])
+  
+  est=unname(S12/((1-w[1])*S1+(1-w[2])*S2))
+  
+  return(est)
+}
+
+chao_sor_inc<-function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  N=2
+  S12=PanEstFun.Sam(data[,1],data[,2])
+  data=data[-1,]
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  
+  
+  f1=sapply(1:N,function(k) sum(data[,k]==1));
+  f2=sapply(1:N,function(k) sum(data[,k]==2));
+  
+  f0=round(sapply(1:N,function(k) ifelse(f2[k]==0,f1[k]*(f1[k]-1)/2,f1[k]^2/(2*f2[k]))));
+  S1=sum(data[,1]>0)+f0[1]
+  S2=sum(data[,2]>0)+f0[2]
+  
+  est=unname(S12/((1-w[1])*S1+(1-w[2])*S2))
+  
+  return(est)
+}
+
+chao_Jar<-function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  N=2
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  
+  f1=sapply(1:N,function(k) sum(data[,k]==1));
+  f2=sapply(1:N,function(k) sum(data[,k]==2));
+  
+  f0=round(sapply(1:N,function(k) ifelse(f2[k]==0,f1[k]*(f1[k]-1)/2,f1[k]^2/(2*f2[k]))));
+  S1=sum(data[,1]>0)+f0[1]
+  S2=sum(data[,2]>0)+f0[2]
+  S12=PanEstFun(data[,1],data[,2])
+  
+  right=S12/(S1+S2-S12)
+  left=unname((w[1]*S1+w[2]*S2)/((1-w[1])*S1+(1-w[2])*S2))
+  est=left*right
+  
+  return(est)
+}
+
+chao_Jar_inc<-function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  N=2
+  S12=PanEstFun.Sam(data[,1],data[,2])
+  data=data[-1,]
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  
+  f1=sapply(1:N,function(k) sum(data[,k]==1));
+  f2=sapply(1:N,function(k) sum(data[,k]==2));
+  
+  f0=round(sapply(1:N,function(k) ifelse(f2[k]==0,f1[k]*(f1[k]-1)/2,f1[k]^2/(2*f2[k]))));
+  S1=sum(data[,1]>0)+f0[1]
+  S2=sum(data[,2]>0)+f0[2]
+  
+  right=S12/(S1+S2-S12)
+  left=unname((w[1]*S1+w[2]*S2)/((1-w[1])*S1+(1-w[2])*S2))
+  est=left*right
+  
+  return(est)
+}
+
+
+sor_est_N2_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  N=2
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  est=chao_sor(data = data,weight=weight,w=w)
+  obs=unname(sum(data[,1]>0 & data[,2]>0)/((1-w[1])*sum(data[,1]>0)+(1-w[2])*sum(data[,2]>0)))
+  p=Boots.pop(data = data)
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) rmultinom(1, sum(data[,k]), p[,k]))
+    boot[1,i]=chao_sor(data=boot.X,weight=weight,w=w)
+    boot[2,i]=sum(boot.X[,1]>0 & boot.X[,2]>0)/((1-w[1])*sum(boot.X[,1]>0)+(1-w[2])*sum(boot.X[,2]>0))
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(obs, se[2], max(0,obs-1.96*se[2]), min(1,obs+1.96*se[2]))
+  return(list(est=out1,obs=out2))
+}
+
+sor_est_N2_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  N=2
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  est=chao_sor_inc(data = data, weight=weight, w=w)
+  data1=data[-1,]
+  obs=unname(sum(data1[,1]>0 & data1[,2]>0)/((1-w[1])*sum(data1[,1]>0)+(1-w[2])*sum(data1[,2]>0)))
+  p=Boots.pop_inc(data)
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) sapply(1:nrow(p),FUN = function(i) rbinom(1, data[1,k], p[i,1]) ))
+    boot[1,i]=chao_sor_inc(data=rbind(data[1,],boot.X), weight=weight, w=w)
+    boot[2,i]=sum(boot.X[,1]>0 & boot.X[,2]>0)/((1-w[1])*sum(boot.X[,1]>0)+(1-w[2])*sum(boot.X[,2]>0))
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(obs, se[2], max(0,obs-1.96*se[2]), min(1,obs+1.96*se[2]))
+  return(list(est=out1,obs=out2))
+}
+
+Jar_est_N2_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  pool=rowSums(data)
+  N=ncol(data)
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  est=chao_Jar(data = data,weight = weight, w=w)
+  obs_left=unname((w[1]*sum(data[,1]>0)+w[2]*sum(data[,2]>0))/((1-w[1])*sum(data[,1]>0)+(1-w[2])*sum(data[,2]>0)))
+  obs_right=(sum(data[,1]>0 & data[,2]>0)/(sum(data[,1]>0)+sum(data[,2]>0)-sum(data[,1]>0 & data[,2]>0)))
+  obs=obs_left*obs_right
+  p=Boots.pop(data = data)
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) rmultinom(1, sum(data[,k]), p[,k]))
+    boot[1,i]=chao_Jar(data=boot.X,weight = weight, w=w)
+    boot[2,i]=unname((w[1]*sum(boot.X[,1]>0)+w[2]*sum(boot.X[,2]>0))/((1-w[1])*sum(boot.X[,1]>0)+(1-w[2])*sum(boot.X[,2]>0)))*
+      (sum(boot.X[,1]>0 & boot.X[,2]>0)/sum(rowSums(boot.X)>0))
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(obs, se[2], max(0,obs-1.96*se[2]), min(1,obs+1.96*se[2]))
+  return(list(est=out1,obs=out2))
+}
+
+Jar_est_N2_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  pool=rowSums(data[-1,])
+  N=ncol(data)
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  est=chao_Jar_inc(data = data,weight = weight,w=w)
+  data1=data[-1,]
+  obs_left=unname((w[1]*sum(data1[,1]>0)+w[2]*sum(data1[,2]>0))/((1-w[1])*sum(data1[,1]>0)+(1-w[2])*sum(data1[,2]>0)))
+  obs_right=(sum(data1[,1]>0 & data1[,2]>0)/sum(pool>0))
+  obs=obs_left*obs_right
+  p=Boots.pop_inc(data)
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) sapply(1:nrow(p),FUN = function(i) rbinom(1, data[1,k], p[i,1]) ))
+    boot[1,i]=chao_Jar_inc(data=rbind(data[1,],boot.X),weight = weight,w=w)
+    boot[2,i]=unname((w[1]*sum(boot.X[,1]>0)+w[2]*sum(boot.X[,2]>0))/((1-w[1])*sum(boot.X[,1]>0)+(1-w[2])*sum(boot.X[,2]>0)))*
+      (sum(boot.X[,1]>0 & boot.X[,2]>0)/sum(rowSums(boot.X)>0))
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(obs, se[2], max(0,obs-1.96*se[2]), min(1,obs+1.96*se[2]))
+  return(list(est=out1,obs=out2))
+}
+
+
 Chat.Ind <- function(x, m)
 {
   x <- x[x>0]
