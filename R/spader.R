@@ -1364,8 +1364,8 @@ SimilarityMult=function(X,datatype=c("abundance","incidence_freq", "incidence_ra
       for(i in 1:(N-1)){  
         for(j in (i+1):N){
           # mat <- Cq2_est_equ(Y[,c(i,j)], q, nboot,datatype="incidence", method='equal effort')
-          C02[k,] <- sor_est_multiple_inc(Y[,c(i,j)],nboot,weight = weight_type,w=weights[,c(i,j)])$est
-          U02[k,] <- Jar_est_multiple_inc(Y[,c(i,j)],nboot,weight = weight_type,w=weights[,c(i,j)])$est
+          C02[k,] <- sor_est_multiple_inc(Y[,c(i,j)],nboot,weight = weight_type,w=weights[c(i,j)])$est
+          U02[k,] <- Jar_est_multiple_inc(Y[,c(i,j)],nboot,weight = weight_type,w=weights[c(i,j)])$est
           temp_PC[k] <- paste("Size-weighted Sorenson (",i,",",j,")", sep="")
           temp_PU[k] <- paste("Size-weighted Jaccard(",i,",",j,")", sep="")
           C_SM_1[i,j] <- C_SM_1[j,i] <- C02[k,1]
@@ -1399,7 +1399,7 @@ SimilarityMult=function(X,datatype=c("abundance","incidence_freq", "incidence_ra
       C12=matrix(0,choose(no.community,2),4)
       for(i in 1:(N-1)){  
         for(j in (i+1):N){
-          C12[k,] <- Horn_Multi_equ(Y[,c(i,j)], datatype="incidence", nboot, method=weight_type,w=weights)$est
+          C12[k,] <- Horn_Multi_equ(Y[,c(i,j)], datatype="incidence", nboot, method=weight_type,w=weights[c(i,j)])$est
           temp_PC[k] <- paste("Horn size weighted (",i,",",j,")", sep="")
           C_SM_1[i,j] <- C_SM_1[j,i] <- C12[k,1]
           k <- k+1
@@ -1443,8 +1443,8 @@ SimilarityMult=function(X,datatype=c("abundance","incidence_freq", "incidence_ra
       k=1
       for(i in 1:(N-1)){  
         for(j in (i+1):N){
-          C22[k,] <- MH_est_inc(Y[,c(i,j)],nboot,weight = weight_type,w=weights[,c(i,j)])$est
-          U22[k,] <- regional_est_inc(Y[,c(i,j)],nboot,weight = weight_type,w=weights[,c(i,j)])$est
+          C22[k,] <- MH_est_inc(Y[,c(i,j)],nboot,weight = weight_type,w=weights[c(i,j)])$est
+          U22[k,] <- regional_est_inc(Y[,c(i,j)],nboot,weight = weight_type,w=weights[c(i,j)])$est
           temp_PC[k] <- paste("Size-weighted Morisita-Horn (",i,",",j,")", sep="")
           temp_PU[k] <- paste("Size-weighted regional-overlap (",i,",",j,")", sep="")
           C_SM_1[i,j] <- C_SM_1[j,i] <- C22[k,1]
