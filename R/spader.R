@@ -658,40 +658,47 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     MLE_q2_jar=plus_CI(c(MLE_q2_jar[1],MLE_q2_jar[2]))
     ##############################################################################################  new
     
+    temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard, MLE_Ee_U12, MLE_Ee_C22, MLE_Ee_U22)
+    rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional overlap)") 
+    temp[[2]] <- rbind(Est_Sorensen, Est_Jaccard, Est_ew_Horn, Est_Ee_C22, Est_Ee_U22)
+    rownames(temp[[2]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional overlap)") 
+    temp[[3]]=rbind(Est_q0_sor, Est_q0_jar,t(as.matrix(Est_Ee_Horn)),Est_q2_sor,Est_q2_jar)
+    rownames(temp[[3]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)") 
+    temp[[4]]=rbind(MLE_q0_sor, MLE_q0_jar,t(as.matrix(MLE_Ee_Horn)),MLE_q2_sor,MLE_q2_jar)
+    rownames(temp[[4]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)")
     
-    
-    temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard)
-    rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 
-    temp[[2]] <- rbind(MLE_ew_Horn, MLE_ew_C22, MLE_ew_U22, MLE_ew_ChaoJaccard, MLE_ew_ChaoSoresen)
-    rownames(temp[[2]]) <- c("C12=U12(q=1,Horn)","C22(q=2,Morisita)","U22(q=2,Regional overlap)",
-                             "ChaoJaccard","ChaoSorensen")  
-    temp[[3]] <- t(as.matrix(MLE_Ee_Horn))
-    rownames(temp[[3]]) <- c("Horn size weighted(q=1)")  
-    temp[[4]] <- rbind(MLE_Ee_U12, MLE_Ee_C22, MLE_Ee_U22, MLE_Ee_Braycurtis)
-    rownames(temp[[4]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
-    temp[[5]] <- rbind(Est_Sorensen, Est_Jaccard)
-    rownames(temp[[5]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 
-    temp[[6]] <- rbind(Est_ew_Horn, Est_ew_C22, Est_ew_U22, Est_ew_ChaoJaccard, Est_ew_ChaoSoresen)
-    rownames(temp[[6]]) <- c("C12=U12(q=1,Horn)","C22(q=2,Morisita)","U22(q=2,Regional overlap)",
-                             "ChaoJaccard","ChaoSorensen")  
-    temp[[7]] <- t(as.matrix(Est_Ee_Horn))
-    rownames(temp[[7]]) <- c("Horn size weighted(q=1)")  
-    temp[[8]] <- rbind(Est_Ee_U12, Est_Ee_C22, Est_Ee_U22, Est_Ee_Braycurtis)
+    # 
+    # 
+    # temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard)
+    # rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 
+    # temp[[2]] <- rbind(MLE_ew_Horn, MLE_ew_C22, MLE_ew_U22, MLE_ew_ChaoJaccard, MLE_ew_ChaoSoresen)
+    # rownames(temp[[2]]) <- c("C12=U12(q=1,Horn)","C22(q=2,Morisita)","U22(q=2,Regional overlap)",
+    #                          "ChaoJaccard","ChaoSorensen")  
+    # temp[[3]] <- t(as.matrix(MLE_Ee_Horn))
+    # rownames(temp[[3]]) <- c("Horn size weighted(q=1)")  
+    # temp[[4]] <- rbind(MLE_Ee_U12, MLE_Ee_C22, MLE_Ee_U22, MLE_Ee_Braycurtis)
+    # rownames(temp[[4]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
+    # temp[[5]] <- rbind(Est_Sorensen, Est_Jaccard)
+    # rownames(temp[[5]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 
+    # temp[[6]] <- rbind(Est_ew_Horn, Est_ew_C22, Est_ew_U22, Est_ew_ChaoJaccard, Est_ew_ChaoSoresen)
+    # rownames(temp[[6]]) <- c("C12=U12(q=1,Horn)","C22(q=2,Morisita)","U22(q=2,Regional overlap)",
+    #                          "ChaoJaccard","ChaoSorensen")  
+    # temp[[7]] <- t(as.matrix(Est_Ee_Horn))
+    # rownames(temp[[7]]) <- c("Horn size weighted(q=1)")  
+    # temp[[8]] <- rbind(Est_Ee_U12, Est_Ee_C22, Est_Ee_U22, Est_Ee_Braycurtis)
     temp <- lapply(temp, FUN = function(x){
       colnames(x) <- c("Estimate", "s.e.", "95%.LCL", "95%.UCL") 
       return(x)
     })
     
-    ##############################################################################################  new
-    temp[[9]]=rbind(Est_q0_sor, Est_q0_jar,Est_q2_sor,Est_q2_jar)
-    temp[[10]]=rbind(MLE_q0_sor, MLE_q0_jar,MLE_q2_sor,MLE_q2_jar)
-    ##############################################################################################  new
+    # ##############################################################################################  new
+    # temp[[9]]=rbind(Est_q0_sor, Est_q0_jar,Est_q2_sor,Est_q2_jar)
+    # temp[[10]]=rbind(MLE_q0_sor, MLE_q0_jar,MLE_q2_sor,MLE_q2_jar)
+    # ##############################################################################################  new
     
     
-    rownames(temp[[8]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
-    z <- list("datatype"=type,"info"=info, "Empirical_richness"=temp[[1]], "Empirical_relative"=temp[[2]], "Empirical_WtRelative"=temp[[3]],
-              "Empirical_absolute"=temp[[4]], "estimated_richness"=temp[[5]], "estimated_relative"=temp[[6]], "estimated_WtRelative"=temp[[7]], "estimated_absolute"=temp[[8]],
-              "new_empirical_relative"=temp[[10]],"new_estimated_relative"=temp[[9]]) 
+    # rownames(temp[[8]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
+    z <- list("datatype"=type,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[3]],"estimated_absolute"=temp[[5]], "estimated_relative"=temp[[6]]) 
   }      
   ##---------------------------------------------------------------
   if(datatype=="incidence_raw"){
@@ -743,7 +750,7 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     Est_Jaccard <- mat[2, ]
     MLE_Sorensen <- mat[3, ]
     Est_Sorensen <- mat[4, ]
-    mat2 <-  Two_Horn_equ(X[,1], X[,2], datatype = "incidence", method="all", weight="unequal", nboot)
+    mat2 <-  Two_Horn_equ(X[,1], X[,2], datatype = "incidence", method="all", weight=weight_type, nboot, w=weights)
     MLE_Ee_Horn <- mat2$mle
     MLE_Ee_Horn <- plus_CI(c(MLE_Ee_Horn[1],MLE_Ee_Horn[2]))
     Est_Ee_Horn <- mat2$est
@@ -754,7 +761,7 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     Est_Ee_C22 <- plus_CI(mat3[3,])
     MLE_Ee_U22 <- plus_CI(mat3[2,])
     Est_Ee_U22 <- plus_CI(mat3[4,])
-    mat4 <- Two_Horn_equ(X[,1], X[,2], datatype = "incidence", method="all", weight="equal", nboot)
+    mat4 <- Two_Horn_equ(X[,1], X[,2], datatype = "incidence", method="all", weight="Equal Weights", nboot)
     MLE_ew_Horn <- mat4$mle
     Est_ew_Horn <- mat4$est
     mat5 <- SimilarityTwo(X, 2, nboot, method="equal weight", datatype="incidence")
@@ -793,41 +800,45 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     ##############################################################################################  new
     
     temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard, MLE_Ee_U12, MLE_Ee_C22, MLE_Ee_U22)
-    temp[[2]] <- rbind(Est_Sorensen, Est_Jaccard)
+    rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional overlap)") 
+    temp[[2]] <- rbind(Est_Sorensen, Est_Jaccard, Est_ew_Horn, Est_Ee_C22, Est_Ee_U22)
+    rownames(temp[[2]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional overlap)") 
+    temp[[3]]=rbind(Est_q0_sor, Est_q0_jar,t(as.matrix(Est_Ee_Horn)),Est_q2_sor,Est_q2_jar)
+    rownames(temp[[3]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)") 
+    temp[[4]]=rbind(MLE_q0_sor, MLE_q0_jar,t(as.matrix(MLE_Ee_Horn)),MLE_q2_sor,MLE_q2_jar)
+    rownames(temp[[4]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)")
     
-    temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard)
-    rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 
-    temp[[2]] <- rbind(MLE_ew_Horn, MLE_ew_C22, MLE_ew_U22, MLE_ew_ChaoJaccard, MLE_ew_ChaoSoresen)
-    rownames(temp[[2]]) <- c("C12=U12(q=1,Horn)","C22(q=2,Morisita)","U22(q=2,Regional overlap)",
-                             "ChaoJaccard","ChaoSorensen")  
-    temp[[3]] <- t(as.matrix(MLE_Ee_Horn))
-    rownames(temp[[3]]) <- c("Horn size weighted(q=1)")  
-    temp[[4]] <- rbind(MLE_Ee_U12, MLE_Ee_C22, MLE_Ee_U22, MLE_Ee_Braycurtis)
-    rownames(temp[[4]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
-    temp[[5]] <- rbind(Est_Sorensen, Est_Jaccard)
-    rownames(temp[[5]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 
-    temp[[6]] <- rbind(Est_ew_Horn, Est_ew_C22, Est_ew_U22, Est_ew_ChaoJaccard, Est_ew_ChaoSoresen)
-    rownames(temp[[6]]) <- c("C12=U12(q=1,Horn)","C22(q=2,Morisita)","U22(q=2,Regional overlap)",
-                             "ChaoJaccard","ChaoSorensen")  
-    temp[[7]] <- t(as.matrix(Est_Ee_Horn))
-    rownames(temp[[7]]) <- c("Horn size weighted(q=1)")  
-    temp[[8]] <- rbind(Est_Ee_U12, Est_Ee_C22, Est_Ee_U22, Est_Ee_Braycurtis)
-    rownames(temp[[8]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
-    
-    ##############################################################################################  new
-    temp[[9]]=rbind(Est_q0_sor, Est_q0_jar,Est_q2_sor,Est_q2_jar)
-    temp[[10]]=rbind(MLE_q0_sor, MLE_q0_jar,MLE_q2_sor,MLE_q2_jar)
-    ##############################################################################################  new
-    
+    # temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard)
+    # rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 
+    # temp[[2]] <- rbind(MLE_ew_Horn, MLE_ew_C22, MLE_ew_U22, MLE_ew_ChaoJaccard, MLE_ew_ChaoSoresen)
+    # rownames(temp[[2]]) <- c("C12=U12(q=1,Horn)","C22(q=2,Morisita)","U22(q=2,Regional overlap)",
+    #                          "ChaoJaccard","ChaoSorensen")  
+    # temp[[3]] <- t(as.matrix(MLE_Ee_Horn))
+    # rownames(temp[[3]]) <- c("Horn size weighted(q=1)")  
+    # temp[[4]] <- rbind(MLE_Ee_U12, MLE_Ee_C22, MLE_Ee_U22, MLE_Ee_Braycurtis)
+    # rownames(temp[[4]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
+    # temp[[5]] <- rbind(Est_Sorensen, Est_Jaccard)
+    # rownames(temp[[5]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 
+    # temp[[6]] <- rbind(Est_ew_Horn, Est_ew_C22, Est_ew_U22, Est_ew_ChaoJaccard, Est_ew_ChaoSoresen)
+    # rownames(temp[[6]]) <- c("C12=U12(q=1,Horn)","C22(q=2,Morisita)","U22(q=2,Regional overlap)",
+    #                          "ChaoJaccard","ChaoSorensen")  
+    # temp[[7]] <- t(as.matrix(Est_Ee_Horn))
+    # rownames(temp[[7]]) <- c("Horn size weighted(q=1)")  
+    # temp[[8]] <- rbind(Est_Ee_U12, Est_Ee_C22, Est_Ee_U22, Est_Ee_Braycurtis)
+    # rownames(temp[[8]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
+    # 
+    # ##############################################################################################  new
+    # temp[[9]]=rbind(Est_q0_sor, Est_q0_jar,Est_q2_sor,Est_q2_jar)
+    # temp[[10]]=rbind(MLE_q0_sor, MLE_q0_jar,MLE_q2_sor,MLE_q2_jar)
+    # ##############################################################################################  new
+    # 
     
     
     temp <- lapply(temp, FUN = function(x){
       colnames(x) <- c("Estimate", "s.e.", "95%.LCL", "95%.UCL") 
       return(x)
     })
-    z <- list("datatype"=type,"info"=info, "Empirical_richness"=temp[[1]], "Empirical_relative"=temp[[2]], "Empirical_WtRelative"=temp[[3]],
-              "Empirical_absolute"=temp[[4]], "estimated_richness"=temp[[5]], "estimated_relative"=temp[[6]], "estimated_WtRelative"=temp[[7]], "estimated_absolute"=temp[[8]],
-              "new_empirical_relative"=temp[[10]],"new_estimated_relative"=temp[[9]]) 
+    z <- list("datatype"=type,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[3]], "estimated_absolute"=temp[[2]], "estimated_relative"=temp[[4]]) 
     
   }  
   class(z) <- c("spadeTwo")
