@@ -1,3 +1,268 @@
+chao_sor_multiple=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  N=ncol(data)
+  
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  
+  pool=rowSums(data)
+  
+  f1=apply(data,2,function(x) sum(x==1));
+  f2=apply(data,2,function(x) sum(x==2));
+  Sobs=apply(data,2,function(x) sum(x>0));
+  Si=Sobs+sapply(1:N, function(k) ifelse(f2[k]==0, f1[k]*(f1[k]-1)/2,f1[k]^2/(2*f2[k])));
+  Sa=Si%*%w
+  F1=sum(pool==1);F2=sum(pool==2);
+  Sg=sum(pool>0)+ifelse(F2==0,F1*(F1-1)/2,F1^2/(2*F2));
+  est=1-(Sg-Sa)/(Si%*%(1-w))
+  
+  return(est)
+}
+
+chao_sor_multiple_inc=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data[-1,]
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  N=ncol(data)
+  
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  
+  pool=rowSums(data)
+  
+  f1=apply(data,2,function(x) sum(x==1));
+  f2=apply(data,2,function(x) sum(x==2));
+  Sobs=apply(data,2,function(x) sum(x>0));
+  Si=Sobs+sapply(1:N, function(k) ifelse(f2[k]==0, f1[k]*(f1[k]-1)/2,f1[k]^2/(2*f2[k])));
+  Sa=Si%*%w
+  F1=sum(pool==1);F2=sum(pool==2);
+  Sg=sum(pool>0)+ifelse(F2==0,F1*(F1-1)/2,F1^2/(2*F2));
+  est=1-(Sg-Sa)/(Si%*%(1-w))
+  
+  return(est)
+}
+
+sor_est_multiple_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  N=ncol(data)
+  
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  
+  pool=rowSums(data)
+  
+  Sg_mle=sum(pool>0)
+  Sa_mle=apply(data,2,function(x){sum(x>0)})
+  obs=1-(Sg_mle-Sa_mle%*%w)/(Sa_mle%*%(1-w))
+  
+  est=chao_sor_multiple(data, weight=weight, w=w)
+  
+  
+  p=Boots.pop(data = data)
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) rmultinom(1, sum(data[,k]), p[,k]))
+    boot[1,i]=chao_sor_multiple(data=boot.X, weight=weight, w=w)
+    pool.boot=rowSums(boot.X)
+    Sg_mle.boot=sum(pool.boot>0)
+    Sa_mle.boot=apply(boot.X,2,function(x){sum(x>0)})
+    boot[2,i]=1-(Sg_mle.boot-Sa_mle.boot%*%w)/(Sa_mle.boot%*%(1-w))
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(obs, se[2], max(0,obs-1.96*se[2]), min(1,obs+1.96*se[2]))
+  return(list(est=out1,obs=out2))
+}
+
+sor_est_multiple_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  est=chao_sor_multiple_inc(data = data, weight=weight, w=w)
+  data1=data[-1,]
+  
+  pool=rowSums(data1)
+  Sg_mle=sum(pool>0)
+  Sa_mle=apply(data1,2,function(x){sum(x>0)})
+  obs=1-(Sg_mle-Sa_mle%*%w)/(Sa_mle%*%(1-w))
+  
+  p=Boots.pop_inc(data)
+  
+  if(any(is.na(p))) stop("NA values found in p")
+  if(any(p < 0 | p > 1)) stop("p contains invalid probability values")
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) sapply(1:nrow(p),FUN = function(i) rbinom(1, data[1,k], p[i,1]) ))
+    boot[1,i]=chao_sor_multiple_inc(data=rbind(data[1,],boot.X), weight=weight, w=w)
+    
+    data1.boot=boot.X
+    pool.boot=rowSums(data1.boot)
+    Sg_mle.boot=sum(pool.boot>0)
+    Sa_mle.boot=apply(data1.boot,2,function(x){sum(x>0)})
+    boot[2,i]=1-(Sg_mle.boot-Sa_mle.boot%*%w)/(Sa_mle.boot%*%(1-w))
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(obs, se[2], max(0,obs-1.96*se[2]), min(1,obs+1.96*se[2]))
+  return(list(est=out1,obs=out2))
+  # return(p)
+}
+
+chao_jar_multiple=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  N=ncol(data)
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  pool=rowSums(data)
+  
+  f1=apply(data,2,function(x) sum(x==1));
+  f2=apply(data,2,function(x) sum(x==2));
+  Sobs=apply(data,2,function(x) sum(x>0));
+  Si=Sobs+sapply(1:N, function(k) ifelse(f2[k]==0, f1[k]*(f1[k]-1)/2,f1[k]^2/(2*f2[k])));
+  Sa=Si%*%w
+  F1=sum(pool==1);F2=sum(pool==2);
+  Sg=sum(pool>0)+ifelse(F2==0,F1*(F1-1)/2,F1^2/(2*F2));
+  est=1-(Sg-Sa)/((1-Sa/sum(Si))*Sg)
+  
+  return(est)
+}
+
+chao_jar_multiple_inc=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data[-1,]
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  N=ncol(data)
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  pool=rowSums(data)
+  
+  f1=apply(data,2,function(x) sum(x==1));
+  f2=apply(data,2,function(x) sum(x==2));
+  Sobs=apply(data,2,function(x) sum(x>0));
+  Si=Sobs+sapply(1:N, function(k) ifelse(f2[k]==0, f1[k]*(f1[k]-1)/2,f1[k]^2/(2*f2[k])));
+  Sa=Si%*%w
+  F1=sum(pool==1);F2=sum(pool==2);
+  Sg=sum(pool>0)+ifelse(F2==0,F1*(F1-1)/2,F1^2/(2*F2));
+  est=1-(Sg-Sa)/((1-Sa/sum(Si))*Sg)
+  
+  return(est)
+}
+
+
+Jar_est_multiple_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  pool=rowSums(data)
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  est=chao_jar_multiple(data = data,weight=weight,w=w)
+  
+  Sg_mle=sum(pool>0)
+  Sa_mle=apply(data,2,function(x){sum(x>0)})
+  obs=1-(Sg_mle-Sa_mle%*%w)/((1-((Sa_mle%*%w)/sum(Sa_mle)))*Sg_mle)
+  
+  p=Boots.pop(data = data)
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) rmultinom(1, sum(data[,k]), p[,k]))
+    boot[1,i]=chao_jar_multiple(data=boot.X,weight=weight,w=w)
+    
+    pool.boot=rowSums(boot.X)
+    Sg_mle.boot=sum(pool.boot>0)
+    Sa_mle.boot=apply(boot.X,2,function(x){sum(x>0)})
+    boot[2,i]=1-(Sg_mle.boot-Sa_mle.boot%*%w)/((1-((Sa_mle.boot%*%w)/sum(Sa_mle.boot)))*Sg_mle.boot)
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(obs, se[2], max(0,obs-1.96*se[2]), min(1,obs+1.96*se[2]))
+  return(list(est=out1,obs=out2))
+}
+
+Jar_est_multiple_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data %>% as.matrix()
+  data=data[which(rowSums(data)>0),]
+  pool=rowSums(data[-1,])
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  est=chao_jar_multiple_inc(data = data,weight=weight,w=w)
+  data1=data[-1,]
+  
+  pool=rowSums(data1)
+  Sg_mle=sum(pool>0)
+  Sa_mle=apply(data1,2,function(x){sum(x>0)})
+  obs=1-(Sg_mle-Sa_mle%*%w)/((1-(Sa_mle%*%w)/sum(Sa_mle))*Sg_mle)
+  
+  
+  p=Boots.pop_inc(data)
+  
+  boot=matrix(0,2,nboot)
+  for(i in 1:nboot){
+    boot.X=sapply(1:dim(data)[2],function(k) sapply(1:nrow(p),FUN = function(i) rbinom(1, data[1,k], p[i,1]) ))
+    boot[1,i]=chao_jar_multiple_inc(data=rbind(data[1,],boot.X),weight=weight,w=w)
+    
+    data1.boot=boot.X
+    pool.boot=rowSums(data1.boot)
+    Sg_mle.boot=sum(pool.boot>0)
+    Sa_mle.boot=apply(data1.boot,2,function(x){sum(x>0)})
+    boot[2,i]=1-(Sg_mle.boot-Sa_mle.boot%*%w)/((1-(Sa_mle.boot%*%w)/sum(Sa_mle.boot))*Sg_mle.boot)
+    
+  }
+  se <- apply(boot, MARGIN = 1, FUN = sd)
+  out1=c(est, se[1], max(0,est-1.96*se[1]), min(1,est+1.96*se[1]))
+  out2=c(obs, se[2], max(0,obs-1.96*se[2]), min(1,obs+1.96*se[2]))
+  return(list(est=out1,obs=out2))
+}
+
+
+
+
 ###########################################2016.07.24-(P.L.Lin)
 Horn_MLE_Multi = function(X, method=c("equal effort", "equal weight"))
 {
