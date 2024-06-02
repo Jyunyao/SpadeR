@@ -607,7 +607,7 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     Est_Jaccard <- mat[2, ]
     MLE_Sorensen <- mat[3, ]
     Est_Sorensen <- mat[4, ]
-    mat2 <-  Two_Horn_equ(X[,1], X[,2], method="all", weight=weight_type, nboot = nboot)
+    mat2 <-  Two_Horn_equ(X[,1], X[,2], method="all", weight=weight_type, nboot = nboot, w=weights)
     MLE_Ee_Horn <- mat2$mle
     MLE_Ee_Horn <- plus_CI(c(MLE_Ee_Horn[1],MLE_Ee_Horn[2]))
     Est_Ee_Horn <- mat2$est
@@ -621,7 +621,7 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     Est_Ee_C22 <- mat4$CqN[2, ]
     MLE_Ee_U22 <- mat4$UqN[1, ]
     Est_Ee_U22 <- mat4$UqN[2, ]
-    mat5 <- Two_Horn_equ(X[,1], X[,2], method="all", weight="Equal Weight", nboot = nboot)
+    mat5 <- Two_Horn_equ(X[,1], X[,2], method="all", weight="Equal Weight", nboot = nboot, w=weights)
     MLE_ew_Horn <- mat5$mle
     Est_ew_Horn <- mat5$est
     mat6 <- SimilarityTwo(X,2,nboot,method="equal weight")
