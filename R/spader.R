@@ -577,7 +577,7 @@ Diversity=function(data, datatype=c("abundance","abundance_freq_count", "inciden
 #' Chiu, C. H., Jost, L. and Chao, A. (2014). Phylogenetic beta diversity, similarity, and differentiation measures based on Hill numbers. Ecological Monographs, 84, 21-44.\cr\cr
 #' @export
 
-SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence_raw"), units,nboot=200,weight,w)
+SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence_raw"), units,nboot=200,weight_type,weights)
 { 
   
   if(datatype=="abundance")
@@ -637,24 +637,24 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     Est_ew_ChaoJaccard <- mat[10, ]
     
     ##############################################################################################  new
-    Est_q0_sor=sor_est_N2_abu(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q0_sor=sor_est_N2_abu(X,nboot = nboot,weight=weight_type,w=weights)$est
     Est_q0_sor=plus_CI(c(Est_q0_sor[1],Est_q0_sor[2]))
-    MLE_q0_sor=sor_est_N2_abu(X,nboot = nboot,weight=weight,w=w)$obs
+    MLE_q0_sor=sor_est_N2_abu(X,nboot = nboot,weight=weight_type,w=weights)$obs
     MLE_q0_sor=plus_CI(c(MLE_q0_sor[1],MLE_q0_sor[2]))
     
-    Est_q0_jar=Jar_est_N2_abu(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q0_jar=Jar_est_N2_abu(X,nboot = nboot,weight=weight_type,w=weights)$est
     Est_q0_jar=plus_CI(c(Est_q0_jar[1],Est_q0_jar[2]))
-    MLE_q0_jar=Jar_est_N2_abu(X,nboot = nboot,weight=weight,w=w)$obs
+    MLE_q0_jar=Jar_est_N2_abu(X,nboot = nboot,weight=weight_type,w=weights)$obs
     MLE_q0_jar=plus_CI(c(MLE_q0_jar[1],MLE_q0_jar[2]))
     
-    Est_q2_sor=MH_est_abu(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q2_sor=MH_est_abu(X,nboot = nboot,weight=weight_type,w=weights)$est
     Est_q2_sor=plus_CI(c(Est_q2_sor[1],Est_q2_sor[2]))
-    MLE_q2_sor=MH_est_abu(X,nboot = nboot,weight=weight,w=w)$mle
+    MLE_q2_sor=MH_est_abu(X,nboot = nboot,weight=weight_type,w=weights)$mle
     MLE_q2_sor=plus_CI(c(MLE_q2_sor[1],MLE_q2_sor[2]))
     
-    Est_q2_jar=regional_est_abu(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q2_jar=regional_est_abu(X,nboot = nboot,weight=weight_type,w=weights)$est
     Est_q2_jar=plus_CI(c(Est_q2_jar[1],Est_q2_jar[2]))
-    MLE_q2_jar=regional_est_abu(X,nboot = nboot,weight=weight,w=w)$mle
+    MLE_q2_jar=regional_est_abu(X,nboot = nboot,weight=weight_type,w=weights)$mle
     MLE_q2_jar=plus_CI(c(MLE_q2_jar[1],MLE_q2_jar[2]))
     ##############################################################################################  new
     
@@ -771,24 +771,24 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
     Est_Ee_Braycurtis <- mat5$est
     
     ##############################################################################################  new
-    Est_q0_sor=sor_est_N2_inc(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q0_sor=sor_est_N2_inc(X,nboot = nboot,weight=weight_type,w=weights)$est
     Est_q0_sor=plus_CI(c(Est_q0_sor[1],Est_q0_sor[2]))
-    MLE_q0_sor=sor_est_N2_inc(X,nboot = nboot,weight=weight,w=w)$obs
+    MLE_q0_sor=sor_est_N2_inc(X,nboot = nboot,weight=weight_type,w=weights)$obs
     MLE_q0_sor=plus_CI(c(MLE_q0_sor[1],MLE_q0_sor[2]))
     
-    Est_q0_jar=Jar_est_N2_inc(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q0_jar=Jar_est_N2_inc(X,nboot = nboot,weight=weight_type,w=weights)$est
     Est_q0_jar=plus_CI(c(Est_q0_jar[1],Est_q0_jar[2]))
-    MLE_q0_jar=Jar_est_N2_inc(X,nboot = nboot,weight=weight,w=w)$obs
+    MLE_q0_jar=Jar_est_N2_inc(X,nboot = nboot,weight=weight_type,w=weights)$obs
     MLE_q0_jar=plus_CI(c(MLE_q0_jar[1],MLE_q0_jar[2]))
     
-    Est_q2_sor=MH_est_inc(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q2_sor=MH_est_inc(X,nboot = nboot,weight=weight_type,w=weights)$est
     Est_q2_sor=plus_CI(c(Est_q2_sor[1],Est_q2_sor[2]))
-    MLE_q2_sor=MH_est_inc(X,nboot = nboot,weight=weight,w=w)$mle
+    MLE_q2_sor=MH_est_inc(X,nboot = nboot,weight=weight_type,w=weights)$mle
     MLE_q2_sor=plus_CI(c(MLE_q2_sor[1],MLE_q2_sor[2]))
     
-    Est_q2_jar=regional_est_inc(X,nboot = nboot,weight=weight,w=w)$est
+    Est_q2_jar=regional_est_inc(X,nboot = nboot,weight=weight_type,w=weights)$est
     Est_q2_jar=plus_CI(c(Est_q2_jar[1],Est_q2_jar[2]))
-    MLE_q2_jar=regional_est_inc(X,nboot = nboot,weight=weight,w=w)$mle
+    MLE_q2_jar=regional_est_inc(X,nboot = nboot,weight=weight_type,w=weights)$mle
     MLE_q2_jar=plus_CI(c(MLE_q2_jar[1],MLE_q2_jar[2]))
     ##############################################################################################  new
     
