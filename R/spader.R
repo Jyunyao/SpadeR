@@ -873,8 +873,6 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
 #' @param nboot an integer specifying the number of bootstrap replications.
 #' @param goal a specified estimating goal to use to compute pairwise similarity measures:comparing species relative abundances (\code{goal=relative}) or comparing species absolute abundances (\code{goal=absolute}). \cr\cr
 #' 
-#' @import iNEXT.beta3D
-#' 
 #' @return a list of fourteen objects: \cr\cr
 #' \code{$datatype} for showing the specified data types (abundance or incidence).\cr\cr
 #' \code{$info} for summarizing data information.\cr\cr 
