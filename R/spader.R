@@ -14,8 +14,6 @@
 #' "infrequent" groups for incidence data for the estimator ICE.
 #' @param conf a positive number \eqn{\le} 1 specifying the level of confidence interval.
 #' 
-#' @import iNEXT.beta3D
-#' 
 #' @return  a list of three objects: \cr\cr
 #' \code{$Basic_data_information} and \code{$Rare_species_group}/\code{$Infreq_species_group} for summarizing data information. \cr\cr
 #' \code{$Species_table} for showing a table of various species richness estimates, standard errors, and the associated confidence intervals. \cr\cr
@@ -547,8 +545,6 @@ Diversity=function(data, datatype=c("abundance","abundance_freq_count", "inciden
 #' @param units number of sampling units in each community. For \code{datatype = "incidence_raw"}, users must specify the number of sampling units taken from each community. This argument is not needed for "abundance" and "incidence_freq" data. \cr
 #' @param nboot an integer specifying the number of replications.
 #'
-#' @import iNEXT.beta3D
-#'
 #' @return a list of ten objects: \cr\cr
 #' \code{$datatype} for showing the specified data types (abundance or incidence). \cr\cr
 #' \code{$info} for summarizing data information. \cr\cr
@@ -876,8 +872,6 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
 #' this function computes the estimated pairwise Morisita-Horn and regional species-overlap indices based on species absolute abundances.
 #' @param nboot an integer specifying the number of bootstrap replications.
 #' @param goal a specified estimating goal to use to compute pairwise similarity measures:comparing species relative abundances (\code{goal=relative}) or comparing species absolute abundances (\code{goal=absolute}). \cr\cr
-#' 
-#' @import iNEXT.beta3D
 #' 
 #' @return a list of fourteen objects: \cr\cr
 #' \code{$datatype} for showing the specified data types (abundance or incidence).\cr\cr
