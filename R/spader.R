@@ -1189,7 +1189,7 @@ SimilarityMult=function(X,datatype=c("abundance","incidence_freq", "incidence_ra
       rownames(Cqn_PC[[2]])=temp_PU
     }
     
-    z <- list("datatype"=datatype,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[3]],"estimated_absolute"=temp[[2]], "estimated_relative"=temp[[4]], "pairwise"=Cqn_PC, "similarity.matrix"=C_SM, "goal"=method, "q"=q)
+    z <- list("datatype"=datatype,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[4]],"estimated_absolute"=temp[[2]], "estimated_relative"=temp[[3]], "pairwise"=Cqn_PC, "similarity.matrix"=C_SM, "goal"=method, "q"=q)
   }
   if(datatype == "incidence_raw"){
     data <- X
@@ -1469,7 +1469,7 @@ SimilarityMult=function(X,datatype=c("abundance","incidence_freq", "incidence_ra
       rownames(Cqn_PC[[2]])=temp_PU
     }
     
-    z <- list("datatype"=datatype,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[3]],"estimated_absolute"=temp[[2]], "estimated_relative"=temp[[4]], "pairwise"=Cqn_PC, "similarity.matrix"=C_SM, "goal"=method, "q"=q)
+    z <- list("datatype"=datatype,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[4]],"estimated_absolute"=temp[[2]], "estimated_relative"=temp[[3]], "pairwise"=Cqn_PC, "similarity.matrix"=C_SM, "goal"=method, "q"=q)
   }
   class(z) <- c("spadeMult")
   z
