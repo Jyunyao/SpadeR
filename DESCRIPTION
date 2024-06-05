@@ -7,7 +7,8 @@ Author: Anne Chao, K. H. Ma, T. C. Hsieh and Chun-Huo Chiu
 Maintainer: Anne Chao <chao@stat.nthu.edu.tw>
 Description: Estimation of various biodiversity indices and related (dis)similarity measures based on individual-based (abundance) data or sampling-unit-based (incidence) data taken from one or multiple communities/assemblages.
 License: GPL (>= 3)
-Imports: stats
+Imports: stats,
+         iNEXT.beta3D
 Depends: R (>= 2.14)
 RoxygenNote: 7.2.3
 NeedsCompilation: no
