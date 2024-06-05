@@ -1,3 +1,28 @@
+rout_C_q2<-function(data,weight=c("Size Weight","Equal Weight","Others"),w){
+  data=data[which(rowSums(data)>0),]
+  N=ncol(data)
+  
+  if(weight=="Size Weight"){
+    w<-colSums(data)/sum(data)
+  }else if(weight=="Equal Weight"){
+    w=rep(1/N,N)
+  }else{
+    w=w/sum(w)
+  }
+  gamma=iNEXTbeta3D(data = data,diversity = "TD",q=2,base = "coverage",level=1,nboot=0)$Dataset_1$gamma$Gamma
+  alpha=((((apply(data,2,function(x){
+    ObsAsy3D(x,diversity = "TD",q=2,datatype = "abundance",nboot=0,method="Asymptotic")$qTD
+  }))^(-1))%*%w)^(-1))
+  beta=gamma/alpha
+  beta_max=((((apply(data,2,function(x){
+    ObsAsy3D(x,diversity = "TD",q=2,datatype = "abundance",nboot=0,method="Asymptotic")$qTD
+  }))^(-1))%*%w^2)^(-1))/alpha
+  C=1-(1/beta-1)/(1/beta_max-1)
+  
+  return(C)
+  
+}
+
 chao_sor_multiple=function(data,weight=c("Size Weight","Equal Weight","Others"),w){
   data=as.matrix(data)
   data=data[which(rowSums(data)>0),]
@@ -372,7 +397,7 @@ MH_est_abu=function(data,nboot,weight=c("Size Weight","Equal Weight","Others"),w
   mle.data = apply(data,2,function(x){x/sum(x)})
   
   p=Boots.pop(data)
-  est=MH_unbias_est(data = data, weight = weight, w=w)
+  est=rout_C_q2(data = data, weight = weight, w=w)
   mle=MH_theoretical_multiple(popu = mle.data, weight=w)
   
   boot=matrix(0,2,nboot)
