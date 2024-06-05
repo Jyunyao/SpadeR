@@ -664,6 +664,8 @@ Boots.pop=function(data)
       boots.pop[II,i]=rep((1-C[i])/f0[i],f0[i])
     }
   }
+  
+  boots.pop[which(abs(boots.pop)<10^(-10))]=0
   return(boots.pop)
 }
 Boots.pop_inc=function(data)
