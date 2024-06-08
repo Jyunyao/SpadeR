@@ -313,7 +313,7 @@ Jar_est_multiple_inc=function(data,nboot,weight=c("Size Weight","Equal Weight","
 
 MH_theoretical_multiple<-function(popu,weight){
   popu=as.matrix(popu)
-  popu=popu[which(rowSums(popu)>0),]
+  # popu=popu[which(rowSums(popu)>0),]
   # w<-colSums(popu)/sum(popu)
   # popu=apply(popu,2,function(x){x/sum(x)})
   # p_bar_ori=w[1]*popu[,1]+w[2]*popu[,2]
@@ -328,7 +328,7 @@ MH_theoretical_multiple<-function(popu,weight){
 
 regional_theoretical_multiple<-function(popu,weight){
   popu=as.matrix(popu)
-  popu=popu[which(rowSums(popu)>0),]
+  # popu=popu[which(rowSums(popu)>0),]
   left=1-MH_theoretical_multiple(popu=popu,weight=weight)
   up=sum((popu^2)%*%(weight^2))
   down=sum((popu%*%weight)^2)
