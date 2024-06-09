@@ -579,8 +579,10 @@ Diversity=function(data, datatype=c("abundance","abundance_freq_count", "inciden
 #' Chiu, C. H., Jost, L. and Chao, A. (2014). Phylogenetic beta diversity, similarity, and differentiation measures based on Hill numbers. Ecological Monographs, 84, 21-44.\cr\cr
 #' @export
 
-SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence_raw"), units,nboot=200,weight_type,weights)
+SimilarityPair=function(data, datatype = c("abundance","incidence_freq", "incidence_raw"), units,nboot=200,weight_type,weight)
 { 
+  X=data
+  weights=weight
   
   if(datatype=="abundance")
   {
@@ -912,9 +914,11 @@ SimilarityPair=function(X, datatype = c("abundance","incidence_freq", "incidence
 #' @export
 
 
-SimilarityMult=function(X,datatype=c("abundance","incidence_freq", "incidence_raw"),units,q=2,nboot=200,goal="relative",weight_type,weights)
+SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence_raw"),units,q=2,nboot=200,goal="relative",weight_type,weight)
 { 
+  X=data
   method <- goal
+  weights=weight
   if(datatype=="abundance"){
     if(class(X)=="list"){X <- do.call(cbind,X)}
     type <- "abundance"
