@@ -582,7 +582,9 @@ Diversity=function(data, datatype=c("abundance","abundance_freq_count", "inciden
 SimilarityPair=function(data, datatype = c("abundance","incidence_freq", "incidence_raw"), units,nboot=200,weight_type,weight)
 { 
   X=data
-  weights=weight
+  if(weight_type=="Others"){
+    weights=weight
+  }
   
   if(datatype=="abundance")
   {
@@ -918,7 +920,9 @@ SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence
 { 
   X=data
   method <- goal
-  weights=weight
+  if(weight_type=="Others"){
+    weights=weight
+  }
   if(datatype=="abundance"){
     if(class(X)=="list"){X <- do.call(cbind,X)}
     type <- "abundance"
