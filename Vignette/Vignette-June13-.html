@@ -392,9 +392,10 @@ from the github.</p>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">&quot;AnneChao/SpadeR&quot;</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="do">## import packages</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SpadeR)</span></code></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># install_github(&quot;Jyunyao/SpadeR&quot;)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">## import packages</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SpadeR)</span></code></pre></div>
 <p>There are five main functions in this package:</p>
 <ul>
 <li><strong>ChaoSpecies</strong>: Estimates species richness for one
@@ -752,10 +753,10 @@ example.</p>
 #&gt; (3a) SHANNON ENTROPY:
 #&gt; 
 #&gt;                         Estimate  s.e. 95%Lower 95%Upper
-#&gt;      MLE                   3.193 0.061    3.073    3.314
-#&gt;      Jackknife             3.280 0.065    3.152    3.408
-#&gt;      Chao &amp; Shen           3.308 0.067    3.177    3.439
-#&gt;      Chao et al. (2013)    3.293 0.067    3.162    3.423
+#&gt;      MLE                   3.193 0.069    3.059    3.328
+#&gt;      Jackknife             3.280 0.072    3.139    3.421
+#&gt;      Chao &amp; Shen           3.308 0.073    3.164    3.451
+#&gt;      Chao et al. (2013)    3.293 0.071    3.154    3.431
 #&gt; 
 #&gt;         MLE: empirical or observed entropy.
 #&gt;         Jackknife: see Zahl (1977).
@@ -767,16 +768,16 @@ example.</p>
 #&gt; (3b) SHANNON DIVERSITY (EXPONENTIAL OF SHANNON ENTROPY):
 #&gt; 
 #&gt;                         Estimate  s.e. 95%Lower 95%Upper
-#&gt;      MLE                  24.372 1.440   21.548   27.195
-#&gt;      Jackknife            26.573 1.669   23.301   29.845
-#&gt;      Chao &amp; Shen          27.320 1.765   23.860   30.780
-#&gt;      Chao et al. (2013)   26.917 1.718   23.550   30.284
+#&gt;      MLE                  24.372 1.615   21.207   27.536
+#&gt;      Jackknife            26.573 1.832   22.982   30.164
+#&gt;      Chao &amp; Shen          27.320 1.919   23.558   31.082
+#&gt;      Chao et al. (2013)   26.917 1.823   23.343   30.491
 #&gt; 
 #&gt; (4a) SIMPSON CONCENTRATION INDEX:
 #&gt; 
 #&gt;           Estimate    s.e. 95%Lower 95%Upper
-#&gt;      MVUE  0.08328 0.00730  0.06897  0.09760
-#&gt;      MLE   0.08493 0.00729  0.07064  0.09922
+#&gt;      MVUE  0.08328 0.00605  0.07143  0.09513
+#&gt;      MLE   0.08493 0.00604  0.07310  0.09676
 #&gt; 
 #&gt;         MVUE: minimum variance unbiased estimator; see Eq. (2.27) of Magurran (1988).
 #&gt;         MLE: maximum likelihood estimator or empirical index; see Eq. (2.26) of Magurran (1988).
@@ -784,22 +785,22 @@ example.</p>
 #&gt; (4b) SIMPSON DIVERSITY (INVERSE OF SIMPSON CONCENTRATION):
 #&gt; 
 #&gt;           Estimate    s.e. 95%Lower 95%Upper
-#&gt;      MVUE 12.00729 1.04329  9.96245 14.05213
-#&gt;      MLE  11.77460 1.00188  9.81091 13.73829
+#&gt;      MVUE 12.00729 0.76369 10.51045 13.50413
+#&gt;      MLE  11.77460 0.73344 10.33707 13.21214
 #&gt; 
 #&gt; (5) CHAO AND JOST (2015) ESTIMATES OF HILL NUMBERS 
 #&gt; 
 #&gt;          q ChaoJost 95%Lower 95%Upper Empirical 95%Lower 95%Upper
-#&gt;      1 0.0  104.935   63.534  146.336    69.000   60.047   77.953
-#&gt;      2 0.5   53.093   42.429   63.757    41.565   36.371   46.759
-#&gt;      3 1.0   26.917   23.228   30.606    24.372   21.297   27.447
-#&gt;      4 1.5   16.411   14.157   18.665    15.806   13.701   17.911
-#&gt;      5 2.0   12.007   10.298   13.716    11.775   10.131   13.419
+#&gt;      1 0.0  104.935   68.853  141.017    69.000   60.237   77.763
+#&gt;      2 0.5   53.093   42.493   63.693    41.565   36.643   46.487
+#&gt;      3 1.0   26.917   23.036   30.798    24.372   21.144   27.600
+#&gt;      4 1.5   16.411   13.743   19.079    15.806   13.307   18.305
+#&gt;      5 2.0   12.007    9.892   14.122    11.775    9.744   13.806
 #&gt; 
 #&gt;         ChaoJost: diversity profile estimator derived by Chao and Jost (2015).
 #&gt;          Empirical: maximum likelihood estimator (observed index).
 #&gt; </code></pre>
-<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
 <p>The above output is divided into five parts:</p>
 <p>The <strong>first part Output(1)</strong> summarizes basic data
 information, including the sample size, observed species richness,

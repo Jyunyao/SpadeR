@@ -44,6 +44,7 @@ install.packages("SpadeR")
 install.packages("devtools")
 library(devtools)
 install_github("AnneChao/SpadeR")
+# install_github("Jyunyao/SpadeR")
 
 ## import packages
 library(SpadeR)
