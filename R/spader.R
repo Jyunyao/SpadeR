@@ -8,7 +8,7 @@
 #' (datatype="abundance_freq_count"), Type (2) incidence-frequency data (datatype =
 #' "incidence_freq"), Type (2A) incidence-frequency counts (datatype="incidence_freq_count"), and
 #' Type (2B) incidence-raw data (datatype="incidence_raw"); see \code{SpadeR-package} details for data input formats.
-#' @param data a matrix/data.frame of species abundances/incidences.\cr
+#' @param data a data.frame of species abundances/incidences.\cr
 #' @param datatype type of input data, "abundance", "abundance_freq_count", "incidence_freq", "incidence_freq_count" or "incidence_raw". \cr
 #' @param k the cut-off point (default = 10), which separates species into "abundant" and "rare" groups for abundance data for the estimator ACE; it separates species into "frequent" and
 #' "infrequent" groups for incidence data for the estimator ICE.
@@ -121,7 +121,7 @@ ChaoSpecies <- function(data, datatype = c("abundance","abundance_freq_count", "
 #' three types of data: Type (1) abundance data (datatype="abundance"), Type (2) incidence-frequency
 #' data (datatype="incidence_freq"), and Type (2B) incidence-raw data (datatype="incidence\cr 
 #' _raw"); see \code{SpadeR-package} details for data input formats.
-#' @param data a matrix/data.frame of species abundances/incidences.\cr
+#' @param data a data.frame of species abundances/incidences.\cr
 #' @param datatype type of input data, "abundance", "incidence_freq" or "incidence_raw". \cr
 #' @param units number of sampling units in each community. For \code{datatype = "incidence_raw"}, users must specify the number of sampling units taken from each community. This argument is not needed for "abundance" and "incidence_freq" data.\cr
 #' @param se a logical variable to calculate the bootstrap standard error and the associated confidence interval. \cr
@@ -222,7 +222,7 @@ ChaoShared <-
 #' (datatype="abundance_freq_count"), Type (2) incidence-frequency data (datatype =
 #' "incidence_freq"), Type (2A) incidence-frequency counts (datatype="incidence_freq_count"), and
 #' Type (2B) incidence-raw data (datatype="incidence_raw"); see \code{SpadeR-package} details for data input formats.
-#' @param data a matrix/data.frame of species abundances/incidences.\cr
+#' @param data a data.frame of species abundances/incidences.\cr
 #' @param datatype type of input data, "abundance", "abundance_freq_count", "incidence_freq", "incidence_freq_count" or "incidence_raw". \cr
 #' @param q a vector of nonnegative numbers specifying the diversity orders for which Hill numbers will be estimated. If \code{NULL}, then
 #' Hill numbers will be estimated at order q from 0 to 3 with increments of 0.25.

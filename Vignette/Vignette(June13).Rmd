@@ -104,7 +104,7 @@ The arguments of this function are briefly described below, and will be explaine
 <tr class="odd">
 <td align="center"><code>data</code></td>
 <td align="left">
-a matrix/data.frame of species abundances/incidences. </td>
+a data.frame of species abundances/incidences. </td>
 
 </tr>
 <tr class="even">
@@ -198,7 +198,7 @@ The arguments of this function are briefly described below, and will be explaine
 <tr class="odd">
 <td align="center"><code>data</code></td>
 <td align="left">
-a matrix/data.frame of species abundances/incidences. </td>
+a data.frame of species abundances/incidences. </td>
 
 </tr>
 <tr class="even">
@@ -287,7 +287,7 @@ The arguments of this function are briefly described below, and will be explaine
 <tr class="odd">
 <td align="center"><code>data</code></td>
 <td align="left">
-a matrix/data.frame of species abundances/incidences. </td>
+a data.frame of species abundances/incidences. </td>
 
 </tr>
 <tr class="even">
@@ -359,7 +359,7 @@ The **third part Output(3)** provides a brief explanation of each model/estimato
 Here we describe the main function `SimilarityPair()` with default arguments: 
 
 ```{r eval=FALSE}
-SimilarityPair(X, datatype, units, nboot = 200)
+SimilarityPair(data, datatype, units, nboot = 200)
 ```
 
 The arguments of this function are briefly described below, and will be explained in more details by illustrative examples in later text. 
@@ -378,9 +378,9 @@ The arguments of this function are briefly described below, and will be explaine
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center"><code>X</code></td>
+<td align="center"><code>data</code></td>
 <td align="left">
-a matrix/data.frame of species abundances/incidences. </td>
+a data.frame of species abundances/incidences. </td>
 
 </tr>
 <tr class="even">
@@ -397,6 +397,16 @@ a matrix/data.frame of species abundances/incidences. </td>
 <td align="center"><code>nboot</code></td>
 <td align="left">an integer specifying the number of bootstrap replications.Default is <code>nboot = 200</code></td>
 
+</tr>
+<tr class="odd">
+<td align="center"><code>weight_type</code></td>
+<td align="left">choose type of weight for comparing relative abundance, <code>Size Weight</code> for using sample size of each community as weight, <code>Equal Weight</code> for using same weight for each community, <code>Others</code> for using the weight user specified.</td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>weight</code></td>
+<td align="left">only needed when <code>weight_type=Others</code>, users must specify the weight for each community.</td>
+
 </tbody>
 </table>
 
@@ -404,17 +414,17 @@ a matrix/data.frame of species abundances/incidences. </td>
 Following codes show the examples for this function using on each datatype. 
 
 ```{r, eval=FALSE}
-# Data for Function SimilarityPair(X, datatype, units, nboot = 200)
+# Data for Function SimilarityPair(data, datatype, units, nboot = 200)
 data(SimilarityPairData)
 
 # Type (1) abundance data 
-SimilarityPair(SimilarityPairData$Abu,"abundance",nboot=200)
+SimilarityPair(SimilarityPairData$Abu,"abundance",nboot=200, weight_type = "Size Weight")
 
 # Type (2) incidence-frequency data 
-SimilarityPair(SimilarityPairData$Inci,"incidence_freq",nboot=200)
+SimilarityPair(SimilarityPairData$Inci,"incidence_freq",nboot=200, weight_type = "Size Weight")
 
 # Type (2B) incidence-raw data 
-SimilarityPair(SimilarityPairData$Inci_raw,"incidence_raw",units=c(19,17),nboot=200)
+SimilarityPair(SimilarityPairData$Inci_raw,"incidence_raw",units=c(19,17),nboot=200, weight_type = "Size Weight")
 ```
 
 And following we only show the output of abundance data as example. (Notice that only "abundance", "incidence_freq" or "incidence_raw" data can use function <code>SimilarityPair</code>.)   
@@ -432,16 +442,16 @@ The above output is divided into three parts:
 
 The **first part Output(1)** shows basic data information for two communities which including the total number of individuals for both communities, the observed number of species for both communities and the number of observed shared species. 
 
-The **second part Output(2)** lists observed value of similarity indices for four goals which including (a) Classic richness-based similarity, (b) Measures for comparing species relative abundances, (c) Measures for comparing size-weighted species relative abundances and (d) Measures for comparing species absolute abundances, along with their standard errors and confidence intervals.  
+The **second part Output(2)** lists observed value of absolute and relative abundance-based similarity indices, along with their standard errors and confidence intervals. The absolute abundance-based indices include the richness-based Jaccard and Sorensen, Horn, Morisita-Horn, regional-overlap indices. The relative-based indices include the size-weighted Sorenson and Jaccard, size-weighted Horn, size-weighted Morisita-Horn, size-weighted regional-overlap. 
 
-The **third part Output(3)** lists estimated value of similarity indices for four goals (which are the same as in part Output(2)), along with their standard errors and confidence intervals.
+The **third part Output(3)** lists estimated value of absolute and relative abundance-based similarity indices, along with their standard errors and confidence intervals. Both absolute and relative abundance-based similarity indices include same indices as **Output(2)**.
 
 ## MAIN FUNCTION 5: SimilarityMult()
 
 Here we describe the main function `SimilarityMult()` with default arguments: 
 
 ```{r eval=FALSE}
-SimilarityMult(X, datatype, units, q = 2, nboot = 200, goal = "relative", weight_type="Size Weight")
+SimilarityMult(data, datatype, units, q = 2, nboot = 200, goal = "relative", weight_type="Size Weight")
 ```
 
 The arguments of this function are briefly described below, and will be explained in more details by illustrative examples in later text. 
@@ -460,7 +470,7 @@ The arguments of this function are briefly described below, and will be explaine
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center"><code>X</code></td>
+<td align="center"><code>data</code></td>
 <td align="left">
 a matrix/data.frame of species abundances/incidences. </td>
 
@@ -491,6 +501,18 @@ If <code>q = 2</code> and <code>goal=absolute</code>, this function computes the
 <tr class="odd">
 <td align="center"><code>goal</code></td>
 <td align="left">a specified estimating goal to use to compute pairwise similarity measures:comparing species relative abundances (<code>goal=relative</code>) or comparing species absolute abundances (<code>goal=absolute</code>). </td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>weight_type</code></td>
+<td align="left">choose type of weight for comparing relative abundance, <code>Size Weight</code> for using sample size of each community as weight, <code>Equal Weight</code> for using same weight for each community, <code>Others</code> for using the weight user specified.</td>
+
+</tr>
+<tr class="odd">
+<td align="center"><code>weight</code></td>
+<td align="left">only needed when <code>weight_type=Others</code>, users must specify the weight for each community.</td>
+
+
 </tbody>
 </table>
 
@@ -498,7 +520,7 @@ If <code>q = 2</code> and <code>goal=absolute</code>, this function computes the
 Following codes show the examples for this function using on each datatype. 
 
 ```{r, eval=FALSE}
-# Data for Function SimilarityMult(X, datatype, units, q = 2, nboot = 200, goal = "relative")
+# Data for Function SimilarityMult(data, datatype, units, q = 2, nboot = 200, goal = "relative")
 data(SimilarityMultData)
 
 # Type (1) abundance data 
@@ -526,8 +548,9 @@ The above output is divided into four parts:
 
 The **first part Output(1)** shows basic data information for each communities. 
 
-The **second part Output(2)** lists observed value of similarity indices for four goals, which including (a) Classic richness-based similarity, (b) Measures for comparing species relative abundances, (c) Measures for comparing size-weighted species relative abundances and (d) Measures for comparing species absolute abundances, along with their standard errors and confidence intervals.
+The **second part Output(2)** lists observed value of absolute and relative abundance-based similarity indices, along with their standard errors and confidence intervals. The absolute abundance-based indices include the richness-based Jaccard and Sorensen, Horn, Morisita-Horn, regional-overlap indices. The relative-based indices include the size-weighted Sorenson and Jaccard, size-weighted Horn, size-weighted Morisita-Horn, size-weighted regional-overlap. 
 
-The **third part Output(3)** lists estimated value of similarity indices for four goals (which are the same as in part Output(2)), along with their standard errors and confidence intervals.
+The **third part Output(3)** lists estimated value of absolute and relative abundance-based similarity indices, along with their standard errors and confidence intervals. Both absolute and relative abundance-based similarity indices include same indices as **Output(2)**.
 
-The **fourth part Output(4)** lists estimated value of similarity indices for all pairs of communities and their average.
+
+The **fourth part Output(4)** lists estimated value of similarity indices for all pairs of communities and their average for pre-specified order <code>q</code> and <code>goal</code>.
