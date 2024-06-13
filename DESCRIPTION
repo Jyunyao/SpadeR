@@ -12,3 +12,4 @@ Depends: R (>= 2.14)
 RoxygenNote: 7.2.3
 NeedsCompilation: no
 Packaged: 2016-09-06 05:40:30 UTC; USER
+Encoding: UTF-8

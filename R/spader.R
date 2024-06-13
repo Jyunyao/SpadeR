@@ -533,34 +533,32 @@ Diversity=function(data, datatype=c("abundance","abundance_freq_count", "inciden
 ###########################################
 #' Estimation of two-assemblage similarity measures
 #'
-#' \code{SimilarityPair}: Estimation various similarity indices for two assemblages. The richness-based
-#' indices include the classic two-community Jaccard and Sorensen indices; the abundance-based
-#' indices include the Horn, Morisita-Horn, regional species-overlap, two-community Bray-Curtis and the
-#' abundance-based Jaccard and Sorensen indices. Three types of data are supported: Type (1)
+#' \code{SimilarityPair}: Estimation various similarity indices for two assemblages. The absolute abundance-based
+#' indices include the richness-based Jaccard and Sorensen, Horn, Morisita-Horn, regional-overlap indices. The relative-based indices include 
+#' the size-weighted Sorenson and Jaccard, size-weighted Horn, size-weighted Morisita-Horn, size-weighted regional-overlap. 
+#' Three types of data are supported: Type (1)
 #' abundance data (datatype="abundance"), Type (2) incidence-frequency data
 #' (datatype="incidence_freq"), and Type (2B) incidence-raw data (datatype="incidence_raw"); see
 #' \code{SpadeR-package} details for data input formats.
-#' @param X a matrix/data.frame of species abundances/incidences.\cr
+#' @param data a data.frame of species abundances/incidences.\cr
 #' @param datatype type of input data, "abundance", "incidence_freq" or "incidence_raw". \cr
 #' @param units number of sampling units in each community. For \code{datatype = "incidence_raw"}, users must specify the number of sampling units taken from each community. This argument is not needed for "abundance" and "incidence_freq" data. \cr
 #' @param nboot an integer specifying the number of replications.
+#' @param weight_type choose type of weight for comparing relative abundance, \code{Size Weight} for using sample size of each community as weight, \code{Equal Weight} 
+#' for using same weight for each community, \code{Others} for using the weight user specified.
+#' @param weight only needed when \code{weight_type=Others}, users must specify the weight for each community.
 #'
-#' @return a list of ten objects: \cr\cr
+#' @return a list of six objects: \cr\cr
 #' \code{$datatype} for showing the specified data types (abundance or incidence). \cr\cr
 #' \code{$info} for summarizing data information. \cr\cr
-#' \code{$Empirical_richness} for showing the observed values of the richness-based similarity indices
-#' include the classic two-community Jaccard and Sorensen indices. \cr\cr
-#' \code{$Empirical_relative} for showing the observed values of the equal-weighted similarity indices
-#' for comparing species relative abundances including Horn, Morisita-Horn, regional overlap,
-#' Chao-Jaccard and Chao-Sorensen abundance (or incidence) measures based on species relative abundances. \cr \cr
-#' \code{$Empirical_WtRelative} for showing the observed value of the Horn similarity index for comparing
-#' size-weighted species relative abundances based on Shannon entropy under equal-effort sampling. \cr\cr
-#' \code{$Empirical_absolute} for showing the observed values of the similarity indices for comparing
-#' absolute abundances. These measures include the Shannon-entropy-based measure, 
-#' Morisita-Horn and the regional overlap measures based on species absolute abundances, as well as the Bray-Curtis index.
-#' All measures are valid only under equal-effort sampling. \cr\cr
-#' The corresponding four objects for showing the estimated similarity indices are:
-#' \code{$estimated_richness}, \code{$estimated_relative}, \code{$estimated_WtRelative} and \code{$estimated_Absolute}. \cr\cr
+#' \code{$Empirical_absolute} for showing the observed values of the absolute abundance-based similarity indices 
+#' include the richness-based Jaccard and Sorensen, Horn, Morisita-Horn, regional-overlap indices. \cr\cr
+#' \code{$Empirical_relative} for showing the observed values of the relative abundance-based similarity indices
+#' include the size-weighted Sorenson and Jaccard, size-weighted Horn, size-weighted Morisita-Horn, size-weighted regional-overlap. \cr \cr
+#' \code{$Estimated_absolute} for showing the estimaed values of the absolute abundance-based similarity indices 
+#' include the richness-based Jaccard and Sorensen, Horn, Morisita-Horn, regional-overlap indices. \cr\cr
+#' \code{$Estimated_relative} for showing the estimated values of the relative abundance-based similarity indices
+#' include the size-weighted Sorenson and Jaccard, size-weighted Horn, size-weighted Morisita-Horn, size-weighted regional-overlap. \cr\cr
 #' @examples
 #' \dontrun{
 #' data(SimilarityPairData)
@@ -579,7 +577,7 @@ Diversity=function(data, datatype=c("abundance","abundance_freq_count", "inciden
 #' Chiu, C. H., Jost, L. and Chao, A. (2014). Phylogenetic beta diversity, similarity, and differentiation measures based on Hill numbers. Ecological Monographs, 84, 21-44.\cr\cr
 #' @export
 
-SimilarityPair=function(data, datatype = c("abundance","incidence_freq", "incidence_raw"), units,nboot=200,weight_type,weight)
+SimilarityPair=function(data, datatype = c("abundance","incidence_freq", "incidence_raw"), units,nboot=200,weight_type=c("Size Weight", "Equal Weight", "Others"),weight)
 { 
   X=data
   if(weight_type=="Others"){
@@ -666,13 +664,13 @@ SimilarityPair=function(data, datatype = c("abundance","incidence_freq", "incide
     ##############################################################################################  new
     
     temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard, MLE_Ee_U12, MLE_Ee_C22, MLE_Ee_U22)
-    rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional overlap)") 
+    rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional-overlap)") 
     temp[[2]] <- rbind(Est_Sorensen, Est_Jaccard, Est_ew_Horn, Est_Ee_C22, Est_Ee_U22)
-    rownames(temp[[2]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional overlap)") 
+    rownames(temp[[2]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional-overlap)") 
     temp[[3]]=rbind(Est_q0_sor, Est_q0_jar,t(as.matrix(Est_Ee_Horn)),Est_q2_sor,Est_q2_jar)
-    rownames(temp[[3]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)") 
+    rownames(temp[[3]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Size-weighted Horn (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)") 
     temp[[4]]=rbind(MLE_q0_sor, MLE_q0_jar,t(as.matrix(MLE_Ee_Horn)),MLE_q2_sor,MLE_q2_jar)
-    rownames(temp[[4]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)")
+    rownames(temp[[4]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Size-weighted Horn (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)")
     
     # 
     # 
@@ -705,7 +703,7 @@ SimilarityPair=function(data, datatype = c("abundance","incidence_freq", "incide
     
     
     # rownames(temp[[8]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
-    z <- list("datatype"=type,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[3]],"estimated_absolute"=temp[[2]], "estimated_relative"=temp[[4]]) 
+    z <- list("datatype"=type,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[3]],"Estimated_absolute"=temp[[2]], "Estimated_relative"=temp[[4]]) 
   }      
   ##---------------------------------------------------------------
   if(datatype=="incidence_raw"){
@@ -808,13 +806,13 @@ SimilarityPair=function(data, datatype = c("abundance","incidence_freq", "incide
     ##############################################################################################  new
     
     temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard, MLE_Ee_U12, MLE_Ee_C22, MLE_Ee_U22)
-    rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional overlap)") 
+    rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional-overlap)") 
     temp[[2]] <- rbind(Est_Sorensen, Est_Jaccard, Est_ew_Horn, Est_Ee_C22, Est_Ee_U22)
-    rownames(temp[[2]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional overlap)") 
+    rownames(temp[[2]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional-overlap)") 
     temp[[3]]=rbind(Est_q0_sor, Est_q0_jar,t(as.matrix(Est_Ee_Horn)),Est_q2_sor,Est_q2_jar)
-    rownames(temp[[3]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)") 
+    rownames(temp[[3]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Size-weighted Horn (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)") 
     temp[[4]]=rbind(MLE_q0_sor, MLE_q0_jar,t(as.matrix(MLE_Ee_Horn)),MLE_q2_sor,MLE_q2_jar)
-    rownames(temp[[4]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)")
+    rownames(temp[[4]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Size-weighted Horn (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)")
     
     # temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard)
     # rownames(temp[[1]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)") 
@@ -846,7 +844,7 @@ SimilarityPair=function(data, datatype = c("abundance","incidence_freq", "incide
       colnames(x) <- c("Estimate", "s.e.", "95%.LCL", "95%.UCL") 
       return(x)
     })
-    z <- list("datatype"=type,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[3]], "estimated_absolute"=temp[[2]], "estimated_relative"=temp[[4]]) 
+    z <- list("datatype"=type,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[3]], "Estimated_absolute"=temp[[2]], "Estimated_relative"=temp[[4]]) 
     
   }  
   class(z) <- c("spadeTwo")
@@ -859,43 +857,39 @@ SimilarityPair=function(data, datatype = c("abundance","incidence_freq", "incide
 ###########################################
 #' Estimation of multiple-community similarity measures
 #'
-#' \code{SimilarityMult}: Estimation various \eqn{N}-community similarity indices. The richness-based indices
-#' include the classic \eqn{N}-community Jaccard and Sorensen indices; the abundance-based indices include the Horn, Morisita-Horn, regional species-overlap, and the \eqn{N}-community Bray-Curtis indices.
-#' Three types of data are supported: Type (1) abundance data (datatype="abundance"), Type (2)
-#' incidence-frequency data (datatype="incidence_freq"), and Type (2B) incidence-raw data
-#' (datatype="incidence_raw"); see \code{SpadeR-package} details for data input formats.
-#' @param X a matrix/data.frame of species abundances/incidences.\cr
+#' \code{SimilarityMult}: Estimation various \eqn{N}-community similarity indices. The absolute abundance-based
+#' indices include the richness-based Jaccard and Sorensen, Horn, Morisita-Horn, regional-overlap indices. The relative-based indices include 
+#' the size-weighted Sorenson and Jaccard, size-weighted Horn, size-weighted Morisita-Horn, size-weighted regional-overlap. 
+#' Three types of data are supported: Type (1)
+#' abundance data (datatype="abundance"), Type (2) incidence-frequency data
+#' (datatype="incidence_freq"), and Type (2B) incidence-raw data (datatype="incidence_raw"); see
+#' \code{SpadeR-package} details for data input formats.
+#' @param data a data.frame of species abundances/incidences.\cr
 #' @param datatype type of input data, "abundance", "incidence_freq" or "incidence_raw". \cr
 #' @param units number of sampling units in each community. For \code{datatype = "incidence_raw"}, users must specify the number of sampling units taken from each community. This argument is not needed for "abundance" and "incidence_freq" data. \cr
-#' @param q a specified order to use to compute pairwise similarity measures. If \code{q = 0}, this function computes the estimated pairwise richness-based Jaccard and
-#' Sorensen similarity indices.
-#' If \code{q = 1} and \code{goal=relative}, this function computes the estimated pairwise equal-weighted and size-weighted Horn indices based on Shannon entropy;
-#' If \code{q = 1} and \code{goal=absolute}, this function computes the estimated pairwise Shannon-entropy-based measure for comparing absolute abundances. If \code{q = 2} and \code{goal=relative}, 
-#' this function computes the estimated pairwise Morisita-Horn and regional species-overlap indices based on species relative abundances.
-#' If \code{q = 2} and \code{goal=absolute}, 
-#' this function computes the estimated pairwise Morisita-Horn and regional species-overlap indices based on species absolute abundances.
+#' @param q a specified order to use to compute pairwise similarity measures.
 #' @param nboot an integer specifying the number of bootstrap replications.
 #' @param goal a specified estimating goal to use to compute pairwise similarity measures:comparing species relative abundances (\code{goal=relative}) or comparing species absolute abundances (\code{goal=absolute}). \cr\cr
+#' @param weight_type choose type of weight for comparing relative abundance, \code{Size Weight} for using sample size of each community as weight, \code{Equal Weight} 
+#' for using same weight for each community, \code{Others} for using the weight user specified.
+#' @param weight only needed when \code{weight_type=Others}, users must specify the weight for each community.
 #' 
-#' @return a list of fourteen objects: \cr\cr
+#' @return a list of ten objects: \cr\cr
 #' \code{$datatype} for showing the specified data types (abundance or incidence).\cr\cr
 #' \code{$info} for summarizing data information.\cr\cr 
-#' \code{$Empirical_richness} for showing the observed values of the richness-based similarity indices
-#' include the classic \eqn{N}-community Jaccard and Sorensen indices. \cr\cr
-#' \code{$Empirical_relative} for showing the observed values of the equal-weighted similarity indices
-#' for comparing species relative abundances including Horn, Morisita-Horn and regional overlap measures. \cr \cr
-#' \code{$Empirical_WtRelative} for showing the observed value of the Horn similarity index for comparing
-#' size-weighted species relative abundances based on Shannon entropy under equal-effort sampling. \cr\cr
-#' \code{$Empirical_absolute} for showing the observed values of the similarity indices for comparing
-#' absolute abundances. These measures include the Shannon-entropy-based measure, Morisita-Horn and the regional species-overlap measures based on species absolute abundance, as well as the \eqn{N}-community Bray-Curtis index.
-#' All measures are valid only under equal-effort sampling. \cr\cr
-#' The corresponding four objects for showing the estimated similarity indices are:
-#' \code{$estimated_richness}, \code{$estimated_relative}, \code{$estimated_WtRelative} and \code{$estimated_absolute}. \cr\cr
+#' \code{$Empirical_absolute} for showing the observed values of the absolute abundance-based similarity indices 
+#' include the richness-based Jaccard and Sorensen, Horn, Morisita-Horn, regional-overlap indices. \cr\cr
+#' \code{$Empirical_relative} for showing the observed values of the relative abundance-based similarity indices
+#' include the size-weighted Sorenson and Jaccard, size-weighted Horn, size-weighted Morisita-Horn, size-weighted regional-overlap. \cr \cr
+#' \code{$Estimated_absolute} for showing the estimaed values of the absolute abundance-based similarity indices 
+#' include the richness-based Jaccard and Sorensen, Horn, Morisita-Horn, regional-overlap indices. \cr\cr
+#' \code{$Estimated_relative} for showing the estimated values of the relative abundance-based similarity indices
+#' include the size-weighted Sorenson and Jaccard, size-weighted Horn, size-weighted Morisita-Horn, size-weighted regional-overlap. \cr\cr
 #' \code{$pairwise} and \code{$similarity.matrix} for showing respectively the pairwise dis-similarity
 #' estimates (with related statistics) and the similarity matrix for various measures depending on the
-#' diversity order \code{q} and the \code{goal} aspecified in the function arguments. \cr\cr
+#' diversity order \code{q} and the \code{goal} specified in the function arguments. \cr\cr
 #' \code{$goal} for showing the goal specified in the argument goal (absolute or relative) used to compute pairwise similarity.\cr\cr
-#' \code{$q} for showing which diversity order \code{q} specified to compute pairwise similarity. \cr\cr
+#' \code{$q} for showing which order \code{q} specified to compute pairwise similarity. \cr\cr
 #' @examples
 #' \dontrun{
 #' data(SimilarityMultData)
@@ -916,7 +910,8 @@ SimilarityPair=function(data, datatype = c("abundance","incidence_freq", "incide
 #' @export
 
 
-SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence_raw"),units,q=2,nboot=200,goal="relative",weight_type,weight)
+SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence_raw"),units,q=2,nboot=200,goal="relative",
+                        weight_type=c("Size Weight", "Equal Weight", "Others"), weight)
 { 
   X=data
   method <- goal
@@ -1013,9 +1008,9 @@ SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence
     temp[[2]] <- rbind(Est_Sorensen, Est_Jaccard, Est_ew_Horn, Est_Ee_C22, Est_Ee_U22)
     rownames(temp[[2]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional overlap)") 
     temp[[3]]=rbind(Est_q0_sor, Est_q0_jar,t(as.matrix(Est_Ee_Horn)),Est_q2_sor,Est_q2_jar)
-    rownames(temp[[3]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)") 
+    rownames(temp[[3]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Size-weighted Horn (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)") 
     temp[[4]]=rbind(MLE_q0_sor, MLE_q0_jar,t(as.matrix(MLE_Ee_Horn)),MLE_q2_sor,MLE_q2_jar)
-    rownames(temp[[4]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)")
+    rownames(temp[[4]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Size-weighted Horn (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)")
     
     
     # temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard)
@@ -1130,13 +1125,13 @@ SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence
       for(i in 1:(N-1)){  
         for(j in (i+1):N){
           C12[k,] <- Horn_Multi_equ(X[,c(i,j)], datatype="abundance", nboot, method=weight_type,w=weights[c(i,j)])$est
-          temp_PC[k] <- paste("Horn size weighted (",i,",",j,")", sep="")
+          temp_PC[k] <- paste("Size-weighted Horn (",i,",",j,")", sep="")
           C_SM_1[i,j] <- C_SM_1[j,i] <- C12[k,1]
           k <- k+1
         }
       }
-      Cqn_PC <- list("Horn size weighted"=C12)
-      C_SM <- list("Horn size weighted"=C_SM_1)
+      Cqn_PC <- list("Size-weighted Horn"=C12)
+      C_SM <- list("Size-weighted Horn"=C_SM_1)
     }
     if(q == 2 & method=="absolute"){
       temp_PC <- rep(0, N*(N-1)/2)
@@ -1200,7 +1195,7 @@ SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence
       rownames(Cqn_PC[[2]])=temp_PU
     }
     
-    z <- list("datatype"=datatype,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[4]],"estimated_absolute"=temp[[2]], "estimated_relative"=temp[[3]], "pairwise"=Cqn_PC, "similarity.matrix"=C_SM, "goal"=method, "q"=q)
+    z <- list("datatype"=datatype,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[4]],"Estimated_absolute"=temp[[2]], "Estimated_relative"=temp[[3]], "pairwise"=Cqn_PC, "similarity.matrix"=C_SM, "goal"=method, "q"=q)
   }
   if(datatype == "incidence_raw"){
     data <- X
@@ -1313,9 +1308,9 @@ SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence
     temp[[2]] <- rbind(Est_Sorensen, Est_Jaccard, Est_ew_Horn, Est_Ee_C22, Est_Ee_U22)
     rownames(temp[[2]]) <- c("C02(q=0,Sorensen)","U02(q=0,Jaccard)","C12=U12(q=1,Horn)","C22(Morisita-Horn)", "U22(Regional overlap)") 
     temp[[3]]=rbind(Est_q0_sor, Est_q0_jar,t(as.matrix(Est_Ee_Horn)),Est_q2_sor,Est_q2_jar)
-    rownames(temp[[3]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)") 
+    rownames(temp[[3]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Size-weighted Horn (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)") 
     temp[[4]]=rbind(MLE_q0_sor, MLE_q0_jar,t(as.matrix(MLE_Ee_Horn)),MLE_q2_sor,MLE_q2_jar)
-    rownames(temp[[4]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Horn size-weighted (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)")
+    rownames(temp[[4]]) <- c("Size-weighted Sorenson (q=0)","Size-weighted Jaccard  (q=0)","Size-weighted Horn (q=1) ","Size-weighted Morisita-Horn (q=2)","Size-weighted regional-overlap (q=2)")
     
     
     
@@ -1411,13 +1406,13 @@ SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence
       for(i in 1:(N-1)){  
         for(j in (i+1):N){
           C12[k,] <- Horn_Multi_equ(Y[,c(i,j)], datatype="incidence", nboot, method=weight_type,w=weights[c(i,j)])$est
-          temp_PC[k] <- paste("Horn size weighted (",i,",",j,")", sep="")
+          temp_PC[k] <- paste("Size-weighted Horn (",i,",",j,")", sep="")
           C_SM_1[i,j] <- C_SM_1[j,i] <- C12[k,1]
           k <- k+1
         }
       }
-      Cqn_PC <- list("Horn size weighted"=C12)
-      C_SM <- list("Horn size weighted"=C_SM_1)
+      Cqn_PC <- list("Size-weighted Horn"=C12)
+      C_SM <- list("Size-weighted Horn"=C_SM_1)
     }
     if(q == 2 & method=="absolute"){
       temp_PC <- rep(0, N*(N-1)/2)
@@ -1480,7 +1475,7 @@ SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence
       rownames(Cqn_PC[[2]])=temp_PU
     }
     
-    z <- list("datatype"=datatype,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[4]],"estimated_absolute"=temp[[2]], "estimated_relative"=temp[[3]], "pairwise"=Cqn_PC, "similarity.matrix"=C_SM, "goal"=method, "q"=q)
+    z <- list("datatype"=datatype,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[4]],"Estimated_absolute"=temp[[2]], "Estimated_relative"=temp[[3]], "pairwise"=Cqn_PC, "similarity.matrix"=C_SM, "goal"=method, "q"=q)
   }
   class(z) <- c("spadeMult")
   z
@@ -1529,155 +1524,155 @@ SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence
 #' Jost, L. (2008). \eqn{G_{ST}} and its relatives do not measure differentiation. Molecular Ecology, 17, 4015-4026.\cr\cr
 
 
-
-Genetics=function(X,q=2,nboot=200)
-{ 
-  type <- "abundance"
-  N <- no.community <- ncol(X)
-  temp <- c("N"=ncol(X), "S.total"=sum(rowSums(X)>0))
-  n <- apply(X,2,sum)
-  D <- apply(X,2,function(x)sum(x>0))
-  
-  if(N > 2){
-    temp1 <- temp2 <- rep(0, N*(N-1)/2)
-    k <- 1
-    for(i in 1:(N-1)){     
-      for(j in (i+1):N){
-        temp1[k] <- paste('D',i,j,sep="")
-        temp2[k] <- sum(X[,i]>0 & X[,j]>0)
-        k <- k + 1
-      }
-    }
-  }
-  names(temp2) <- temp1
-  names(n) <- paste('n',1:N, sep="")
-  names(D) <- paste('D',1:N, sep="")
-  info <- c(temp, n, D, temp2)
-  if(N == 3) info <- c(temp, n, D, temp2, D123=sum(X[,1]>0 & X[,2]>0 & X[,3]>0))
-  info <- c(info, nboot=nboot)
-  temp <- list()
-  n <- apply(X = X, MARGIN = 2, FUN = sum)
-  weight <- n/sum(n)
-  weight <- - sum(weight*log(weight)) / log(N)
-  plus_CI <-function(x){
-    if(x[1] >= 1) x[1] <- 1
-    if(x[1] <= 0) x[1] <- 0
-    c(x, max(0,x[1]-1.96*x[2]), min(1,x[1]+1.96*x[2]))
-  }
-  mat2 <- GST_se_equ(X,nboot)
-  MLE_ew_Gst <- mat2[1, ]
-  Est_ew_Gst <- mat2[2, ]
-  mat <- SimilarityMul(X,0,nboot,method="unequal weight")
-  MLE_Jaccard <- plus_CI(c(1-mat$UqN[1, 1],mat$UqN[1, 2]))
-  Est_Jaccard <- plus_CI(c(1-mat$UqN[2, 1],mat$UqN[2, 2]))
-  MLE_Sorensen <- plus_CI(c(1-mat$CqN[1, 1],mat$CqN[1, 2]))
-  Est_Sorensen <- plus_CI(c(1-mat$CqN[2, 1],mat$CqN[2, 2]))
-  mat3 <- Horn_Multi_equ(X, datatype="abundance", nboot, method=c("unequal"))
-  MLE_Ee_Horn <- mat3$mle
-  MLE_Ee_Horn <- plus_CI(c(1-MLE_Ee_Horn[1],MLE_Ee_Horn[2])) 
-  Est_Ee_Horn <- mat3$est
-  Est_Ee_Horn <- plus_CI(c(1-Est_Ee_Horn[1],Est_Ee_Horn[2])) 
-  mat4 <- SimilarityMul(X,2,nboot,method="equal weight")
-  mat5 <- Horn_Multi_equ(X, datatype="abundance", nboot, method=c("equal"))
-  MLE_ew_Horn <- mat5$mle
-  Est_ew_Horn <- mat5$est
-  MLE_ew_Horn <- plus_CI(c(1-MLE_ew_Horn[1],MLE_ew_Horn[2]))
-  Est_ew_Horn <- plus_CI(c(1-Est_ew_Horn[1],Est_ew_Horn[2]))
-  MLE_ew_C22 <- plus_CI(c(1-mat4$CqN[1, 1],mat4$CqN[1, 2]))
-  Est_ew_C22 <- plus_CI(c(1-mat4$CqN[2, 1],mat4$CqN[2, 2]))
-  MLE_ew_U22 <- plus_CI(c(1-mat4$UqN[1, 1],mat4$UqN[1, 2]))
-  Est_ew_U22 <- plus_CI(c(1-mat4$UqN[2, 1],mat4$UqN[2, 2]))
-  temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard)
-  rownames(temp[[1]]) <- c("1-C0N(q=0,Sorensen)","1-U0N(q=0,Jaccard)") 
-  temp[[2]] <- rbind(MLE_ew_Horn, MLE_ew_C22, MLE_ew_U22,MLE_ew_Gst)
-  rownames(temp[[2]]) <- c("1-C1N=1-U1N(q=1,Horn)","1-C2N(q=2,Morisita)","1-U2N(q=2,Regional overlap)","Gst")  
-  temp[[3]] <- t(as.matrix(MLE_Ee_Horn))
-  rownames(temp[[3]]) <- c("Horn size weighted(q=1)")  
-  temp[[4]] <- rbind(Est_Sorensen, Est_Jaccard)
-  rownames(temp[[4]]) <- c("1-C0N(q=0,Sorensen)","1-U0N(q=0,Jaccard)") 
-  temp[[5]] <- rbind(Est_ew_Horn, Est_ew_C22, Est_ew_U22, Est_ew_Gst)
-  rownames(temp[[5]]) <- c("1-C1N=1-U1N(q=1,Horn)","1-C2N(q=2,Morisita)","1-U2N(q=2,Regional overlap)","Gst")  
-  temp[[6]] <- t(as.matrix(Est_Ee_Horn))
-  rownames(temp[[6]]) <- c("Horn size weighted(q=1)")  
-  temp <- lapply(temp, FUN = function(x){
-    colnames(x) <- c("Estimate", "s.e.", "95%.LCL", "95%.UCL") 
-    return(x)
-  })
-  if(q == 0){
-    temp_PC <- rep(0, N*(N-1)/2)
-    C02=matrix(0,choose(no.community,2),4)
-    U02=matrix(0,choose(no.community,2),4)
-    C_SM_1=matrix(1,N,N)
-    C_SM_2=matrix(1,N,N)
-    k=1
-    for(i in 1:(N-1)){  
-      for(j in (i+1):N){
-        if(sum( X[,i]>0 & X[,j]>0)==0){
-          mat <- rbind(c(0, 0), c(0 ,0))
-        }else{
-          mat <- Cq2_est_equ(X[,c(i,j)], q, nboot, method='equal effort')
-        }
-        C02[k,] <- plus_CI(c(1-mat[1, 1],mat[1, 2]))
-        U02[k,] <- plus_CI(c(1-mat[2, 1],mat[2, 2]))
-        temp_PC[k] <- paste("1-C",q,"2(",i,",",j,")", sep="")
-        C_SM_1[i,j] <- C_SM_1[j,i] <- C02[k,1]
-        C_SM_2[i,j] <- C_SM_2[j,i] <- U02[k,1]
-        k <- k+1
-      }
-    }
-    Cqn_PC <- list("C02"=C02, "U02"=U02)
-    C_SM <- list("C02"=C_SM_1, "U02"=C_SM_2)
-  }
-  if(q == 1){
-    temp_PC <- rep(0, N*(N-1)/2)
-    C12=matrix(0,choose(no.community,2),4)
-    Horn=matrix(0,choose(no.community,2),4)
-    C_SM_1=matrix(0,N,N)
-    C_SM_2=matrix(0,N,N)
-    k=1
-    for(i in 1:(N-1)){  
-      for(j in (i+1):N){
-        mat <- Cq2_est_equ(X[,c(i,j)], q, nboot, method='equal weight')
-        mat2 <-  Cq2_est_equ(X[,c(i,j)], q, nboot, method='equal effort')
-        C12[k,] <- plus_CI(c(1-mat[1, 1],mat[1, 2]))
-        Horn[k,] <- plus_CI(c(1-mat2[2, 1],mat2[2, 2]))
-        temp_PC[k] <- paste("1-C",q,"2(",i,",",j,")", sep="")
-        C_SM_1[i,j] <- C_SM_1[j,i] <- C12[k,1]
-        C_SM_2[i,j] <- C_SM_2[j,i] <- Horn[k,1]
-        k <- k+1
-      }
-    }
-    Cqn_PC <- list("C12"=C12, "Horn"=Horn)
-    C_SM <- list("C12"=C_SM_1, "Horn"=C_SM_2)
-  }
-  if(q == 2){
-    temp_PC <- rep(0, N*(N-1)/2)
-    C22=matrix(0,choose(no.community,2),4)
-    U22=matrix(0,choose(no.community,2),4)
-    C_SM_1=matrix(0,N,N)
-    C_SM_2=matrix(0,N,N)
-    k=1
-    for(i in 1:(N-1)){  
-      for(j in (i+1):N){
-        mat <- Cq2_est_equ(X[,c(i,j)], q, nboot, method='equal weight')
-        C22[k,] <- plus_CI(c(1-mat[1, 1],mat[1, 2]))
-        U22[k,] <- plus_CI(c(1-mat[2, 1],mat[2, 2]))
-        temp_PC[k] <- paste("1-C",q,"2(",i,",",j,")", sep="")
-        C_SM_1[i,j] <- C_SM_1[j,i] <- C22[k,1]
-        C_SM_2[i,j] <- C_SM_2[j,i] <- U22[k,1]
-        k <- k+1
-      }
-    }
-    Cqn_PC <- list("C22"=C22, "U22"=U22)
-    C_SM <- list("C22"=C_SM_1,"U22"=C_SM_2)
-  }
-  Cqn_PC <- lapply(Cqn_PC, function(x){
-    colnames(x) <- c("Estimate", "s.e.", "95%.LCL", "95%.UCL") ; rownames(x) <- temp_PC
-    return(x)
-  })
-  
-  z <- list("info"=info, "Empirical_richness"=temp[[1]], "Empirical_relative"=temp[[2]], "Empirical_WtRelative"=temp[[3]],
-            "estimated_richness"=temp[[4]], "estimated_relative"=temp[[5]], "estimated_WtRelative"=temp[[6]], "pairwise"=Cqn_PC, "dissimilarity_matrix"=C_SM, "q"=q)
-  class(z) <- c("spadeGenetic")
-  z
-}
+# 
+# Genetics=function(X,q=2,nboot=200)
+# { 
+#   type <- "abundance"
+#   N <- no.community <- ncol(X)
+#   temp <- c("N"=ncol(X), "S.total"=sum(rowSums(X)>0))
+#   n <- apply(X,2,sum)
+#   D <- apply(X,2,function(x)sum(x>0))
+#   
+#   if(N > 2){
+#     temp1 <- temp2 <- rep(0, N*(N-1)/2)
+#     k <- 1
+#     for(i in 1:(N-1)){     
+#       for(j in (i+1):N){
+#         temp1[k] <- paste('D',i,j,sep="")
+#         temp2[k] <- sum(X[,i]>0 & X[,j]>0)
+#         k <- k + 1
+#       }
+#     }
+#   }
+#   names(temp2) <- temp1
+#   names(n) <- paste('n',1:N, sep="")
+#   names(D) <- paste('D',1:N, sep="")
+#   info <- c(temp, n, D, temp2)
+#   if(N == 3) info <- c(temp, n, D, temp2, D123=sum(X[,1]>0 & X[,2]>0 & X[,3]>0))
+#   info <- c(info, nboot=nboot)
+#   temp <- list()
+#   n <- apply(X = X, MARGIN = 2, FUN = sum)
+#   weight <- n/sum(n)
+#   weight <- - sum(weight*log(weight)) / log(N)
+#   plus_CI <-function(x){
+#     if(x[1] >= 1) x[1] <- 1
+#     if(x[1] <= 0) x[1] <- 0
+#     c(x, max(0,x[1]-1.96*x[2]), min(1,x[1]+1.96*x[2]))
+#   }
+#   mat2 <- GST_se_equ(X,nboot)
+#   MLE_ew_Gst <- mat2[1, ]
+#   Est_ew_Gst <- mat2[2, ]
+#   mat <- SimilarityMul(X,0,nboot,method="unequal weight")
+#   MLE_Jaccard <- plus_CI(c(1-mat$UqN[1, 1],mat$UqN[1, 2]))
+#   Est_Jaccard <- plus_CI(c(1-mat$UqN[2, 1],mat$UqN[2, 2]))
+#   MLE_Sorensen <- plus_CI(c(1-mat$CqN[1, 1],mat$CqN[1, 2]))
+#   Est_Sorensen <- plus_CI(c(1-mat$CqN[2, 1],mat$CqN[2, 2]))
+#   mat3 <- Horn_Multi_equ(X, datatype="abundance", nboot, method=c("unequal"))
+#   MLE_Ee_Horn <- mat3$mle
+#   MLE_Ee_Horn <- plus_CI(c(1-MLE_Ee_Horn[1],MLE_Ee_Horn[2])) 
+#   Est_Ee_Horn <- mat3$est
+#   Est_Ee_Horn <- plus_CI(c(1-Est_Ee_Horn[1],Est_Ee_Horn[2])) 
+#   mat4 <- SimilarityMul(X,2,nboot,method="equal weight")
+#   mat5 <- Horn_Multi_equ(X, datatype="abundance", nboot, method=c("equal"))
+#   MLE_ew_Horn <- mat5$mle
+#   Est_ew_Horn <- mat5$est
+#   MLE_ew_Horn <- plus_CI(c(1-MLE_ew_Horn[1],MLE_ew_Horn[2]))
+#   Est_ew_Horn <- plus_CI(c(1-Est_ew_Horn[1],Est_ew_Horn[2]))
+#   MLE_ew_C22 <- plus_CI(c(1-mat4$CqN[1, 1],mat4$CqN[1, 2]))
+#   Est_ew_C22 <- plus_CI(c(1-mat4$CqN[2, 1],mat4$CqN[2, 2]))
+#   MLE_ew_U22 <- plus_CI(c(1-mat4$UqN[1, 1],mat4$UqN[1, 2]))
+#   Est_ew_U22 <- plus_CI(c(1-mat4$UqN[2, 1],mat4$UqN[2, 2]))
+#   temp[[1]] <- rbind(MLE_Sorensen, MLE_Jaccard)
+#   rownames(temp[[1]]) <- c("1-C0N(q=0,Sorensen)","1-U0N(q=0,Jaccard)") 
+#   temp[[2]] <- rbind(MLE_ew_Horn, MLE_ew_C22, MLE_ew_U22,MLE_ew_Gst)
+#   rownames(temp[[2]]) <- c("1-C1N=1-U1N(q=1,Horn)","1-C2N(q=2,Morisita)","1-U2N(q=2,Regional overlap)","Gst")  
+#   temp[[3]] <- t(as.matrix(MLE_Ee_Horn))
+#   rownames(temp[[3]]) <- c("Horn size weighted(q=1)")  
+#   temp[[4]] <- rbind(Est_Sorensen, Est_Jaccard)
+#   rownames(temp[[4]]) <- c("1-C0N(q=0,Sorensen)","1-U0N(q=0,Jaccard)") 
+#   temp[[5]] <- rbind(Est_ew_Horn, Est_ew_C22, Est_ew_U22, Est_ew_Gst)
+#   rownames(temp[[5]]) <- c("1-C1N=1-U1N(q=1,Horn)","1-C2N(q=2,Morisita)","1-U2N(q=2,Regional overlap)","Gst")  
+#   temp[[6]] <- t(as.matrix(Est_Ee_Horn))
+#   rownames(temp[[6]]) <- c("Horn size weighted(q=1)")  
+#   temp <- lapply(temp, FUN = function(x){
+#     colnames(x) <- c("Estimate", "s.e.", "95%.LCL", "95%.UCL") 
+#     return(x)
+#   })
+#   if(q == 0){
+#     temp_PC <- rep(0, N*(N-1)/2)
+#     C02=matrix(0,choose(no.community,2),4)
+#     U02=matrix(0,choose(no.community,2),4)
+#     C_SM_1=matrix(1,N,N)
+#     C_SM_2=matrix(1,N,N)
+#     k=1
+#     for(i in 1:(N-1)){  
+#       for(j in (i+1):N){
+#         if(sum( X[,i]>0 & X[,j]>0)==0){
+#           mat <- rbind(c(0, 0), c(0 ,0))
+#         }else{
+#           mat <- Cq2_est_equ(X[,c(i,j)], q, nboot, method='equal effort')
+#         }
+#         C02[k,] <- plus_CI(c(1-mat[1, 1],mat[1, 2]))
+#         U02[k,] <- plus_CI(c(1-mat[2, 1],mat[2, 2]))
+#         temp_PC[k] <- paste("1-C",q,"2(",i,",",j,")", sep="")
+#         C_SM_1[i,j] <- C_SM_1[j,i] <- C02[k,1]
+#         C_SM_2[i,j] <- C_SM_2[j,i] <- U02[k,1]
+#         k <- k+1
+#       }
+#     }
+#     Cqn_PC <- list("C02"=C02, "U02"=U02)
+#     C_SM <- list("C02"=C_SM_1, "U02"=C_SM_2)
+#   }
+#   if(q == 1){
+#     temp_PC <- rep(0, N*(N-1)/2)
+#     C12=matrix(0,choose(no.community,2),4)
+#     Horn=matrix(0,choose(no.community,2),4)
+#     C_SM_1=matrix(0,N,N)
+#     C_SM_2=matrix(0,N,N)
+#     k=1
+#     for(i in 1:(N-1)){  
+#       for(j in (i+1):N){
+#         mat <- Cq2_est_equ(X[,c(i,j)], q, nboot, method='equal weight')
+#         mat2 <-  Cq2_est_equ(X[,c(i,j)], q, nboot, method='equal effort')
+#         C12[k,] <- plus_CI(c(1-mat[1, 1],mat[1, 2]))
+#         Horn[k,] <- plus_CI(c(1-mat2[2, 1],mat2[2, 2]))
+#         temp_PC[k] <- paste("1-C",q,"2(",i,",",j,")", sep="")
+#         C_SM_1[i,j] <- C_SM_1[j,i] <- C12[k,1]
+#         C_SM_2[i,j] <- C_SM_2[j,i] <- Horn[k,1]
+#         k <- k+1
+#       }
+#     }
+#     Cqn_PC <- list("C12"=C12, "Horn"=Horn)
+#     C_SM <- list("C12"=C_SM_1, "Horn"=C_SM_2)
+#   }
+#   if(q == 2){
+#     temp_PC <- rep(0, N*(N-1)/2)
+#     C22=matrix(0,choose(no.community,2),4)
+#     U22=matrix(0,choose(no.community,2),4)
+#     C_SM_1=matrix(0,N,N)
+#     C_SM_2=matrix(0,N,N)
+#     k=1
+#     for(i in 1:(N-1)){  
+#       for(j in (i+1):N){
+#         mat <- Cq2_est_equ(X[,c(i,j)], q, nboot, method='equal weight')
+#         C22[k,] <- plus_CI(c(1-mat[1, 1],mat[1, 2]))
+#         U22[k,] <- plus_CI(c(1-mat[2, 1],mat[2, 2]))
+#         temp_PC[k] <- paste("1-C",q,"2(",i,",",j,")", sep="")
+#         C_SM_1[i,j] <- C_SM_1[j,i] <- C22[k,1]
+#         C_SM_2[i,j] <- C_SM_2[j,i] <- U22[k,1]
+#         k <- k+1
+#       }
+#     }
+#     Cqn_PC <- list("C22"=C22, "U22"=U22)
+#     C_SM <- list("C22"=C_SM_1,"U22"=C_SM_2)
+#   }
+#   Cqn_PC <- lapply(Cqn_PC, function(x){
+#     colnames(x) <- c("Estimate", "s.e.", "95%.LCL", "95%.UCL") ; rownames(x) <- temp_PC
+#     return(x)
+#   })
+#   
+#   z <- list("info"=info, "Empirical_richness"=temp[[1]], "Empirical_relative"=temp[[2]], "Empirical_WtRelative"=temp[[3]],
+#             "estimated_richness"=temp[[4]], "estimated_relative"=temp[[5]], "estimated_WtRelative"=temp[[6]], "pairwise"=Cqn_PC, "dissimilarity_matrix"=C_SM, "q"=q)
+#   class(z) <- c("spadeGenetic")
+#   z
+# }

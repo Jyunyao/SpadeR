@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2024-05-02" />
+<meta name="date" content="2024-06-13" />
 
 <title>An Introduction to SpadeR via Examples</title>
 
@@ -338,7 +338,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">An Introduction to SpadeR via Examples</h1>
-<h4 class="date">2024-05-02</h4>
+<h4 class="date">2024-06-13</h4>
 
 
 
@@ -752,10 +752,10 @@ example.</p>
 #&gt; (3a) SHANNON ENTROPY:
 #&gt; 
 #&gt;                         Estimate  s.e. 95%Lower 95%Upper
-#&gt;      MLE                   3.193 0.059    3.078    3.308
-#&gt;      Jackknife             3.280 0.062    3.159    3.401
-#&gt;      Chao &amp; Shen           3.308 0.062    3.185    3.430
-#&gt;      Chao et al. (2013)    3.293 0.063    3.170    3.416
+#&gt;      MLE                   3.193 0.070    3.056    3.331
+#&gt;      Jackknife             3.280 0.072    3.138    3.422
+#&gt;      Chao &amp; Shen           3.308 0.071    3.168    3.448
+#&gt;      Chao et al. (2013)    3.293 0.072    3.152    3.434
 #&gt; 
 #&gt;         MLE: empirical or observed entropy.
 #&gt;         Jackknife: see Zahl (1977).
@@ -767,16 +767,16 @@ example.</p>
 #&gt; (3b) SHANNON DIVERSITY (EXPONENTIAL OF SHANNON ENTROPY):
 #&gt; 
 #&gt;                         Estimate  s.e. 95%Lower 95%Upper
-#&gt;      MLE                  24.372 1.377   21.673   27.071
-#&gt;      Jackknife            26.573 1.579   23.478   29.668
-#&gt;      Chao &amp; Shen          27.320 1.650   24.086   30.554
-#&gt;      Chao et al. (2013)   26.917 1.611   23.759   30.075
+#&gt;      MLE                  24.372 1.647   21.144   27.599
+#&gt;      Jackknife            26.573 1.849   22.949   30.197
+#&gt;      Chao &amp; Shen          27.320 1.887   23.621   31.019
+#&gt;      Chao et al. (2013)   26.917 1.846   23.299   30.535
 #&gt; 
 #&gt; (4a) SIMPSON CONCENTRATION INDEX:
 #&gt; 
 #&gt;           Estimate    s.e. 95%Lower 95%Upper
-#&gt;      MVUE  0.08328 0.00692  0.06972  0.09685
-#&gt;      MLE   0.08493 0.00691  0.07139  0.09847
+#&gt;      MVUE  0.08328 0.00672  0.07011  0.09645
+#&gt;      MLE   0.08493 0.00671  0.07178  0.09807
 #&gt; 
 #&gt;         MVUE: minimum variance unbiased estimator; see Eq. (2.27) of Magurran (1988).
 #&gt;         MLE: maximum likelihood estimator or empirical index; see Eq. (2.26) of Magurran (1988).
@@ -784,22 +784,22 @@ example.</p>
 #&gt; (4b) SIMPSON DIVERSITY (INVERSE OF SIMPSON CONCENTRATION):
 #&gt; 
 #&gt;           Estimate    s.e. 95%Lower 95%Upper
-#&gt;      MVUE 12.00729 0.97127 10.10360 13.91097
-#&gt;      MLE  11.77460 0.93316  9.94562 13.60359
+#&gt;      MVUE 12.00729 1.00037 10.04656 13.96802
+#&gt;      MLE  11.77460 0.96120  9.89066 13.65855
 #&gt; 
 #&gt; (5) CHAO AND JOST (2015) ESTIMATES OF HILL NUMBERS 
 #&gt; 
 #&gt;          q ChaoJost 95%Lower 95%Upper Empirical 95%Lower 95%Upper
-#&gt;      1 0.0  104.935   54.473  155.397    69.000   60.786   77.214
-#&gt;      2 0.5   53.093   42.846   63.340    41.565   36.975   46.155
-#&gt;      3 1.0   26.917   23.571   30.263    24.372   21.450   27.294
-#&gt;      4 1.5   16.411   14.104   18.718    15.806   13.642   17.970
-#&gt;      5 2.0   12.007   10.216   13.798    11.775   10.054   13.496
+#&gt;      1 0.0  104.935   78.230  131.640    69.000   63.240   74.760
+#&gt;      2 0.5   53.093   46.466   59.720    41.565   37.659   45.471
+#&gt;      3 1.0   26.917   23.540   30.294    24.372   21.273   27.471
+#&gt;      4 1.5   16.411   13.820   19.002    15.806   13.368   18.244
+#&gt;      5 2.0   12.007    9.965   14.049    11.775    9.815   13.735
 #&gt; 
 #&gt;         ChaoJost: diversity profile estimator derived by Chao and Jost (2015).
 #&gt;          Empirical: maximum likelihood estimator (observed index).
 #&gt; </code></pre>
-<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
 <p>The above output is divided into five parts:</p>
 <p>The <strong>first part Output(1)</strong> summarizes basic data
 information, including the sample size, observed species richness,
@@ -1051,7 +1051,7 @@ datatype.</p>
 <p>And following we only show the output of abundance data as example.
 (Notice that only “abundance”, “incidence_freq” or “incidence_raw” data
 can use function <code>SimilarityPair</code>.)</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityPair</span>(SimilarityPairData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>,<span class="at">nboot=</span><span class="dv">200</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityPair</span>(SimilarityPairData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>,<span class="at">nboot=</span><span class="dv">200</span>, <span class="at">weight_type=</span><span class="st">&quot;Size Weight&quot;</span>)</span></code></pre></div>
 <pre><code>#&gt; (1) BASIC DATA INFORMATION:
 #&gt; 
 #&gt;     The loaded set includes abundance/incidence data from 2 communities
@@ -1070,64 +1070,48 @@ can use function <code>SimilarityPair</code>.)</p>
 #&gt; (2) EMPIRICAL SIMILARITY INDICES: 
 #&gt; 
 #&gt;                                        Estimate       s.e.       95%Lower     95%Upper
-#&gt;     (a) Classic richness-based similarity
+#&gt;     (a) Measures for comparing species absolute abundances
 #&gt; 
 #&gt;         C02 (q=0, Sorensen)             0.4643       0.0386       0.3886       0.5400 
 #&gt;         U02 (q=0, Jaccard)              0.3023       0.0292       0.2451       0.3595 
-#&gt; 
-#&gt;     (b) Measures for comparing species relative abundances
-#&gt; 
-#&gt;         C12=U12 (q=1, Horn)             0.5502       0.0281       0.4951       0.6054 
-#&gt; 
-#&gt;         C22 (q=2, Morisita-Horn)        0.7442       0.0391       0.6675       0.8208 
-#&gt;         U22 (q=2, Regional overlap)     0.8533       0.0265       0.8014       0.9052 
-#&gt; 
-#&gt;         ChaoJaccard-abundance           0.4040       0.0239       0.3572       0.4508 
-#&gt;         ChaoSorensen-abundance          0.5755       0.0260       0.5245       0.6265 
-#&gt; 
-#&gt;     (c) Measures for comparing size-weighted species relative abundances
-#&gt; 
-#&gt;         Horn size-weighted (q=1)        0.6002       0.0320       0.5375       0.6628 
-#&gt; 
-#&gt;     (d) Measures for comparing species absolute abundances
 #&gt; 
 #&gt;         C12=U12 (q=1)                   0.3894       0.0320       0.3268       0.4521 
 #&gt; 
 #&gt;         C22 (Morisita-Horn)             0.3039       0.0371       0.2312       0.3765 
 #&gt;         U22 (Regional overlap)          0.4661       0.0444       0.3792       0.5531 
 #&gt; 
-#&gt;         Bray-Curtis                     0.2425       0.0165       0.2101       0.2749 
+#&gt;     (b) Measures for comparing species relative abundances
+#&gt; 
+#&gt;         Size-weighted Sorenson (q=0)           0.5767       0.1937       0.1970       0.9563 
+#&gt;         Size-weighted Jaccard  (q=0)           0.4367       0.3021       0.0000       1.0000 
+#&gt; 
+#&gt;         Horn size-weighted (q=1)               0.7586       0.0823       0.5973       0.9199 
+#&gt; 
+#&gt;         Size-weighted Morisita-Horn (q=2)      0.7865       0.0363       0.7153       0.8576 
+#&gt;         Size-weighted regional-overlap (q=2)   0.8371       0.0346       0.7693       0.9049 
 #&gt; 
 #&gt; (3) ESTIMATED SIMILARITY INDICES: 
 #&gt; 
 #&gt;                                        Estimate       s.e.       95%Lower     95%Upper
-#&gt;     (a) Classic richness-based similarity:
+#&gt;     (a) Measures for comparing species absolute abundances
 #&gt; 
 #&gt;         C02 (q=0, Sorensen)             0.4966       0.1274       0.2469       0.7463 
 #&gt;         U02 (q=0, Jaccard)              0.3303       0.1168       0.1014       0.5592 
 #&gt; 
-#&gt;     (b) Measures for comparing species relative abundances
-#&gt; 
-#&gt;         C12=U12 (q=1, Horn)             0.6763       0.0666       0.5458       0.8069 
-#&gt; 
-#&gt;         C22 (q=2, Morisita-Horn)        0.7868       0.0392       0.7099       0.8637 
-#&gt;         U22 (q=2, Regional overlap)     0.8807       0.0254       0.8310       0.9304 
-#&gt; 
-#&gt;         ChaoJaccard-abundance           0.4845       0.0794       0.3289       0.6401 
-#&gt;         ChaoSorensen-abundance          0.6527       0.0711       0.5133       0.7921 
-#&gt; 
-#&gt;     (c) Measures for comparing size-weighted species relative abundances
-#&gt; 
-#&gt;         Horn size-weighted (q=1)        0.7586       0.0823       0.5973       0.9199 
-#&gt; 
-#&gt;     (d) Measures for comparing species absolute abundances
-#&gt; 
-#&gt;         C12=U12 (q=1)                   0.4922       0.0823       0.3309       0.6535 
+#&gt;         C12=U12 (q=1)                   0.6763       0.0666       0.5458       0.8069 
 #&gt; 
 #&gt;         C22 (q=2, Morisita-Horn)        0.3114       0.0380       0.2369       0.3859 
 #&gt;         U22 (q=2, Regional overlap)     0.4749       0.0450       0.3867       0.5632 
 #&gt; 
-#&gt;         Bray-Curtis                     0.2725       0.0384       0.1972       0.3477 
+#&gt;     (b) Measures for comparing species relative abundances
+#&gt; 
+#&gt;         Size-weighted Sorenson (q=0)             0.5494       0.0557       0.4404       0.6585 
+#&gt;         Size-weighted Jaccard  (q=0)             0.4132       0.0568       0.3020       0.5245 
+#&gt; 
+#&gt;         Horn size-weighted (q=1)                 0.6002       0.0320       0.5375       0.6628 
+#&gt; 
+#&gt;         Size-weighted Morisita-Horn (q=2)        0.7442       0.0380       0.6697       0.8187 
+#&gt;         Size-weighted regional-overlap (q=2)     0.8038       0.0322       0.7406       0.8670 
 #&gt; 
 #&gt;         NOTE: If an estimate is greater than 1, it is replaced by 1.</code></pre>
 <p>The above output is divided into three parts:</p>
@@ -1150,7 +1134,7 @@ intervals.</p>
 <h2>MAIN FUNCTION 5: SimilarityMult()</h2>
 <p>Here we describe the main function <code>SimilarityMult()</code> with
 default arguments:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(X, datatype, units, <span class="at">q =</span> <span class="dv">2</span>, <span class="at">nboot =</span> <span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(X, datatype, units, <span class="at">q =</span> <span class="dv">2</span>, <span class="at">nboot =</span> <span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>, <span class="at">weight_type=</span><span class="st">&quot;Size Weight&quot;</span>)</span></code></pre></div>
 <p>The arguments of this function are briefly described below, and will
 be explained in more details by illustrative examples in later text.</p>
 <table style="width:100%;">
@@ -1244,17 +1228,17 @@ datatype.</p>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(SimilarityMultData)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (1) abundance data </span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>,<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>,<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>, <span class="at">weight_type=</span><span class="st">&quot;Size Weight&quot;</span>)</span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2) incidence-frequency data </span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Inci,<span class="st">&quot;incidence_freq&quot;</span>,<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Inci,<span class="st">&quot;incidence_freq&quot;</span>,<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>, <span class="at">weight_type=</span><span class="st">&quot;Size Weight&quot;</span>)</span>
 <span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Type (2B) incidence-raw data </span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Inci_raw,<span class="st">&quot;incidence_raw&quot;</span>, <span class="at">units=</span><span class="fu">c</span>(<span class="dv">19</span>,<span class="dv">17</span>,<span class="dv">15</span>),<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>)</span></code></pre></div>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Inci_raw,<span class="st">&quot;incidence_raw&quot;</span>, <span class="at">units=</span><span class="fu">c</span>(<span class="dv">19</span>,<span class="dv">17</span>,<span class="dv">15</span>),<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>, <span class="at">goal =</span> <span class="st">&quot;relative&quot;</span>, <span class="at">weight_type=</span><span class="st">&quot;Size Weight&quot;</span>)</span></code></pre></div>
 <p>And following we only show the output of abundance data as example.
 (Notice that only “abundance”, “incidence_freq” or “incidence_raw” data
 can use function <code>SimilarityMult</code>.)</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>,<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>,<span class="st">&quot;relative&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SimilarityMult</span>(SimilarityMultData<span class="sc">$</span>Abu,<span class="st">&quot;abundance&quot;</span>,<span class="at">q=</span><span class="dv">2</span>,<span class="at">nboot=</span><span class="dv">200</span>,<span class="st">&quot;relative&quot;</span>, <span class="at">weight_type=</span><span class="st">&quot;Size Weight&quot;</span>)</span></code></pre></div>
 <pre><code>#&gt; 
 #&gt; (1) BASIC DATA INFORMATION:
 #&gt; 
@@ -1280,94 +1264,84 @@ can use function <code>SimilarityMult</code>.)</p>
 #&gt; (2) EMPIRICAL SIMILARITY INDICES: 
 #&gt; 
 #&gt;                                        Estimate       s.e.       95%Lower     95%Upper
-#&gt;     (a) Classic richness-based similarity
+#&gt;     (a) Measures for comparing species absolute abundances
 #&gt; 
-#&gt;         C03 (q=0, Sorensen)             0.6589       0.0238       0.6122       0.7055 
-#&gt;         U03 (q=0, Jaccard)              0.3917       0.0242       0.3442       0.4392 
+#&gt;         C03 (q=0, Sorensen)             0.6589       0.0228       0.6143       0.7035 
+#&gt;         U03 (q=0, Jaccard)              0.3917       0.0230       0.3466       0.4367 
+#&gt; 
+#&gt;         C13=U13 (q=1)                   0.5686       0.0171       0.5351       0.6021 
+#&gt; 
+#&gt;         C23 (Morisita-Horn)             0.4069       0.0273       0.3534       0.4603 
+#&gt;         U23 (Regional overlap)          0.6730       0.0257       0.6225       0.7234 
 #&gt; 
 #&gt;     (b) Measures for comparing species relative abundances
 #&gt; 
-#&gt;         C13=U13 (q=1, Horn)             0.6521       0.0178       0.6173       0.6869 
+#&gt;         Size-weighted Sorenson (q=0)           0.7239       0.0244       0.6762       0.7717 
+#&gt;         Size-weighted Jaccard  (q=0)           0.5077       0.0285       0.4518       0.5636 
 #&gt; 
-#&gt;         C23 (q=2, Morisita-Horn)        0.5802       0.0274       0.5264       0.6340 
-#&gt;         U23 (q=2, Regional overlap)     0.8057       0.0185       0.7695       0.8419 
+#&gt;         Horn size-weighted (q=1)               0.6885       0.0171       0.6550       0.7220 
 #&gt; 
-#&gt;     (c) Measures for comparing size-weighted species relative abundances
-#&gt; 
-#&gt;         Horn size-weighted (q=1)        0.6885       0.0155       0.6582       0.7188 
-#&gt; 
-#&gt;     (d) Measures for comparing species absolute abundances
-#&gt; 
-#&gt;         C13=U13 (q=1)                   0.5686       0.0155       0.5383       0.5989 
-#&gt; 
-#&gt;         C23 (Morisita-Horn)             0.4069       0.0252       0.3576       0.4562 
-#&gt;         U23 (Regional overlap)          0.6730       0.0237       0.6266       0.7194 
-#&gt; 
-#&gt;         Bray-Curtis                     0.3962       0.0141       0.3687       0.4238 
+#&gt;         Size-weighted Morisita-Horn (q=2)      0.5055       0.0307       0.4454       0.5655 
+#&gt;         Size-weighted regional-overlap (q=2)   0.7273       0.0262       0.6760       0.7787 
 #&gt; 
 #&gt; (3) ESTIMATED SIMILARITY INDICES: 
 #&gt; 
 #&gt;                                        Estimate       s.e.       95%Lower     95%Upper
-#&gt;     (a) Classic richness-based similarity
+#&gt;     (a) Measures for comparing species absolute abundances
 #&gt; 
-#&gt;         C03 (q=0, Sorensen)             0.8235       0.0607       0.7044       0.9425 
-#&gt;         U03 (q=0, Jaccard)              0.6086       0.0918       0.4287       0.7886 
+#&gt;         C03 (q=0, Sorensen)             0.8235       0.0639       0.6983       0.9487 
+#&gt;         U03 (q=0, Jaccard)              0.6086       0.0995       0.4136       0.8037 
+#&gt; 
+#&gt;         C13=U13 (q=1)                   0.7036       0.0239       0.6566       0.7505 
+#&gt; 
+#&gt;         C23 (q=2, Morisita-Horn)        0.4213       0.0284       0.3656       0.4770 
+#&gt;         U23 (q=2, Regional overlap)     0.6859       0.0260       0.6349       0.7369 
 #&gt; 
 #&gt;     (b) Measures for comparing species relative abundances
 #&gt; 
-#&gt;         C13=U13 (q=1, Horn)             0.7036       0.0245       0.6556       0.7516 
+#&gt;         Size-weighted Sorenson (q=0)             0.8803       0.0674       0.7483       1.0000 
+#&gt;         Size-weighted Jaccard  (q=0)             0.7347       0.1193       0.5010       0.9684 
 #&gt; 
-#&gt;         C23 (q=2, Morisita-Horn)        0.6134       0.0298       0.5549       0.6719 
-#&gt;         U23 (q=2, Regional overlap)     0.8264       0.0190       0.7891       0.8636 
+#&gt;         Horn size-weighted (q=1)                 0.7430       0.0232       0.6976       0.7885 
 #&gt; 
-#&gt;     (c) Measures for comparing size-weighted species relative abundances
-#&gt; 
-#&gt;         Horn size-weighted (q=1)        0.7430       0.0236       0.6968       0.7893 
-#&gt; 
-#&gt;     (d) Measures for comparing species absolute abundances
-#&gt; 
-#&gt;         C13=U13 (q=1)                   0.6136       0.0236       0.5673       0.6599 
-#&gt; 
-#&gt;         C23 (Morisita-Horn)             0.4213       0.0261       0.3701       0.4725 
-#&gt;         U23 (Regional overlap)          0.6859       0.0239       0.6392       0.7327 
-#&gt; 
-#&gt;         Bray-Curtis                     0.4287       0.0180       0.3934       0.4640 
+#&gt;         Size-weighted Morisita-Horn (q=2)        0.5259       0.0343       0.4587       0.5931 
+#&gt;         Size-weighted regional-overlap (q=2)     0.7424       0.0238       0.6958       0.7890 
 #&gt; 
 #&gt; (4) ESTIMATED PAIRWISE SIMILARITY:
 #&gt; 
-#&gt;     -------------------------Measure C22---------------------------
+#&gt;     -------------------------Measure Size-weighted Morisita-Horn---------------------------
 #&gt; 
-#&gt;     Estimator      Estimate      s.e.        95% Confidence Interval
+#&gt;     Estimator                              Estimate      s.e.        95% Confidence Interval
 #&gt; 
-#&gt;     C22(1,2)       0.471         0.042         ( 0.389 , 0.553 )
-#&gt;     C22(1,3)       0.787         0.039         ( 0.711 , 0.863 )
-#&gt;     C22(2,3)       0.483         0.069         ( 0.348 , 0.619 )
+#&gt;     Size-weighted Morisita-Horn(1,2)       0.471         0.039         ( 0.394 , 0.548 )
+#&gt;     Size-weighted Morisita-Horn(1,3)       0.786         0.042         ( 0.703 , 0.870 )
+#&gt;     Size-weighted Morisita-Horn(2,3)       0.483         0.072         ( 0.342 , 0.623 )
 #&gt; 
 #&gt;     Average pairwise similarity= 0.580 
 #&gt; 
 #&gt;     Pairwise similarity matrix: 
 #&gt; 
-#&gt;     C22(i,j)  1       2       3       
-#&gt;        1      1.000   0.471   0.787   
-#&gt;        2              1.000   0.483   
-#&gt;        3                      1.000   
+#&gt;     Size-weighted Morisita-Horn(i,j)  1       2       3       
+#&gt;        1                              1.000   0.471   0.786   
+#&gt;        2                                      1.000   0.483   
+#&gt;        3                                              1.000   
 #&gt; 
-#&gt;     -------------------------Measure U22---------------------------
+#&gt;     -------------------------Measure Size-weighted regional-overlap---------------------------
 #&gt; 
-#&gt;     Estimator      Estimate      s.e.        95% Confidence Interval
+#&gt;     Estimator                                 Estimate      s.e.        95% Confidence Interval
 #&gt; 
-#&gt;     U22(1,2)       0.641         0.039         ( 0.564 , 0.718 )
-#&gt;     U22(1,3)       0.881         0.025         ( 0.831 , 0.931 )
-#&gt;     U22(2,3)       0.652         0.066         ( 0.523 , 0.780 )
+#&gt;     Size-weighted regional-overlap(1,2)       0.655         0.040         ( 0.576 , 0.733 )
+#&gt;     Size-weighted regional-overlap(1,3)       0.837         0.034         ( 0.770 , 0.904 )
+#&gt;     Size-weighted regional-overlap(2,3)       0.608         0.060         ( 0.490 , 0.727 )
 #&gt; 
-#&gt;     Average pairwise similarity = 0.724 
+#&gt;     Average pairwise similarity = 0.700 
 #&gt; 
 #&gt;     Pairwise similarity matrix: 
 #&gt; 
-#&gt;     U22(i,j)  1       2       3       
-#&gt;        1      1.000   0.641   0.881   
-#&gt;        2              1.000   0.652   
-#&gt;        3                      1.000   
+#&gt;     Size-weighted regional-overlap(i,j)  1       2       3       
+#&gt;        1                                 1.000   0.655   0.837   
+#&gt;        2                                         1.000   0.608   
+#&gt;        3                                                 1.000   
 #&gt; 
 #&gt;     NOTE: Any estimate greater than 1 is replaced by 1; any estimate less than 0 is replaced by 0.</code></pre>
 <p>The above output is divided into four parts:</p>

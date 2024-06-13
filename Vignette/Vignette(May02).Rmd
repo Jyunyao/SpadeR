@@ -420,12 +420,12 @@ SimilarityPair(SimilarityPairData$Inci_raw,"incidence_raw",units=c(19,17),nboot=
 And following we only show the output of abundance data as example. (Notice that only "abundance", "incidence_freq" or "incidence_raw" data can use function <code>SimilarityPair</code>.)   
  
 ```{r, eval=FALSE}
-SimilarityPair(SimilarityPairData$Abu,"abundance",nboot=200)
+SimilarityPair(SimilarityPairData$Abu,"abundance",nboot=200, weight_type="Size Weight")
 ``` 
  
 ```{r, echo=FALSE}
 data(SimilarityPairData)
-SimilarityPair(SimilarityPairData$Abu,"abundance",nboot=200)
+SimilarityPair(SimilarityPairData$Abu,"abundance",nboot=200, weight_type="Size Weight")
 ```
 
 The above output is divided into three parts: 
@@ -441,7 +441,7 @@ The **third part Output(3)** lists estimated value of similarity indices for fou
 Here we describe the main function `SimilarityMult()` with default arguments: 
 
 ```{r eval=FALSE}
-SimilarityMult(X, datatype, units, q = 2, nboot = 200, goal = "relative")
+SimilarityMult(X, datatype, units, q = 2, nboot = 200, goal = "relative", weight_type="Size Weight")
 ```
 
 The arguments of this function are briefly described below, and will be explained in more details by illustrative examples in later text. 
@@ -502,24 +502,24 @@ Following codes show the examples for this function using on each datatype.
 data(SimilarityMultData)
 
 # Type (1) abundance data 
-SimilarityMult(SimilarityMultData$Abu,"abundance",q=2,nboot=200, goal = "relative")
+SimilarityMult(SimilarityMultData$Abu,"abundance",q=2,nboot=200, goal = "relative", weight_type="Size Weight")
 
 # Type (2) incidence-frequency data 
-SimilarityMult(SimilarityMultData$Inci,"incidence_freq",q=2,nboot=200, goal = "relative")
+SimilarityMult(SimilarityMultData$Inci,"incidence_freq",q=2,nboot=200, goal = "relative", weight_type="Size Weight")
 
 # Type (2B) incidence-raw data 
-SimilarityMult(SimilarityMultData$Inci_raw,"incidence_raw", units=c(19,17,15),q=2,nboot=200, goal = "relative")
+SimilarityMult(SimilarityMultData$Inci_raw,"incidence_raw", units=c(19,17,15),q=2,nboot=200, goal = "relative", weight_type="Size Weight")
 ```
 
 And following we only show the output of abundance data as example. (Notice that only "abundance", "incidence_freq" or "incidence_raw" data can use function <code>SimilarityMult</code>.)   
  
 ```{r, eval=FALSE}
-SimilarityMult(SimilarityMultData$Abu,"abundance",q=2,nboot=200,"relative")
+SimilarityMult(SimilarityMultData$Abu,"abundance",q=2,nboot=200,"relative", weight_type="Size Weight")
 ``` 
  
 ```{r, echo=FALSE}
 data(SimilarityMultData)
-SimilarityMult(SimilarityMultData$Abu,"abundance",q=2,nboot=200,"relative")
+SimilarityMult(SimilarityMultData$Abu,"abundance",q=2,nboot=200,"relative", weight_type="Size Weight")
 ```
 
 The above output is divided into four parts: 

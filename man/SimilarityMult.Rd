@@ -5,60 +5,60 @@
 \title{Estimation of multiple-community similarity measures}
 \usage{
 SimilarityMult(
-  X,
+  data,
   datatype = c("abundance", "incidence_freq", "incidence_raw"),
   units,
   q = 2,
   nboot = 200,
-  goal = "relative"
+  goal = "relative",
+  weight_type = c("Size Weight", "Equal Weight", "Others"),
+  weight
 )
 }
 \arguments{
-\item{X}{a matrix/data.frame of species abundances/incidences.\cr}
+\item{data}{a data.frame of species abundances/incidences.\cr}
 
 \item{datatype}{type of input data, "abundance", "incidence_freq" or "incidence_raw". \cr}
 
 \item{units}{number of sampling units in each community. For \code{datatype = "incidence_raw"}, users must specify the number of sampling units taken from each community. This argument is not needed for "abundance" and "incidence_freq" data. \cr}
 
-\item{q}{a specified order to use to compute pairwise similarity measures. If \code{q = 0}, this function computes the estimated pairwise richness-based Jaccard and
-Sorensen similarity indices.
-If \code{q = 1} and \code{goal=relative}, this function computes the estimated pairwise equal-weighted and size-weighted Horn indices based on Shannon entropy;
-If \code{q = 1} and \code{goal=absolute}, this function computes the estimated pairwise Shannon-entropy-based measure for comparing absolute abundances. If \code{q = 2} and \code{goal=relative}, 
-this function computes the estimated pairwise Morisita-Horn and regional species-overlap indices based on species relative abundances.
-If \code{q = 2} and \code{goal=absolute}, 
-this function computes the estimated pairwise Morisita-Horn and regional species-overlap indices based on species absolute abundances.}
+\item{q}{a specified order to use to compute pairwise similarity measures.}
 
 \item{nboot}{an integer specifying the number of bootstrap replications.}
 
 \item{goal}{a specified estimating goal to use to compute pairwise similarity measures:comparing species relative abundances (\code{goal=relative}) or comparing species absolute abundances (\code{goal=absolute}). \cr\cr}
+
+\item{weight_type}{choose type of weight for comparing relative abundance, \code{Size Weight} for using sample size of each community as weight, \code{Equal Weight} 
+for using same weight for each community, \code{Others} for using the weight user specified.}
+
+\item{weight}{only needed when \code{weight_type=Others}, users must specify the weight for each community.}
 }
 \value{
-a list of fourteen objects: \cr\cr
+a list of ten objects: \cr\cr
 \code{$datatype} for showing the specified data types (abundance or incidence).\cr\cr
 \code{$info} for summarizing data information.\cr\cr 
-\code{$Empirical_richness} for showing the observed values of the richness-based similarity indices
-include the classic \eqn{N}-community Jaccard and Sorensen indices. \cr\cr
-\code{$Empirical_relative} for showing the observed values of the equal-weighted similarity indices
-for comparing species relative abundances including Horn, Morisita-Horn and regional overlap measures. \cr \cr
-\code{$Empirical_WtRelative} for showing the observed value of the Horn similarity index for comparing
-size-weighted species relative abundances based on Shannon entropy under equal-effort sampling. \cr\cr
-\code{$Empirical_absolute} for showing the observed values of the similarity indices for comparing
-absolute abundances. These measures include the Shannon-entropy-based measure, Morisita-Horn and the regional species-overlap measures based on species absolute abundance, as well as the \eqn{N}-community Bray-Curtis index.
-All measures are valid only under equal-effort sampling. \cr\cr
-The corresponding four objects for showing the estimated similarity indices are:
-\code{$estimated_richness}, \code{$estimated_relative}, \code{$estimated_WtRelative} and \code{$estimated_absolute}. \cr\cr
+\code{$Empirical_absolute} for showing the observed values of the absolute abundance-based similarity indices 
+include the richness-based Jaccard and Sorensen, Horn, Morisita-Horn, regional-overlap indices. \cr\cr
+\code{$Empirical_relative} for showing the observed values of the relative abundance-based similarity indices
+include the size-weighted Sorenson and Jaccard, size-weighted Horn, size-weighted Morisita-Horn, size-weighted regional-overlap. \cr \cr
+\code{$Estimated_absolute} for showing the estimaed values of the absolute abundance-based similarity indices 
+include the richness-based Jaccard and Sorensen, Horn, Morisita-Horn, regional-overlap indices. \cr\cr
+\code{$Estimated_relative} for showing the estimated values of the relative abundance-based similarity indices
+include the size-weighted Sorenson and Jaccard, size-weighted Horn, size-weighted Morisita-Horn, size-weighted regional-overlap. \cr\cr
 \code{$pairwise} and \code{$similarity.matrix} for showing respectively the pairwise dis-similarity
 estimates (with related statistics) and the similarity matrix for various measures depending on the
-diversity order \code{q} and the \code{goal} aspecified in the function arguments. \cr\cr
+diversity order \code{q} and the \code{goal} specified in the function arguments. \cr\cr
 \code{$goal} for showing the goal specified in the argument goal (absolute or relative) used to compute pairwise similarity.\cr\cr
-\code{$q} for showing which diversity order \code{q} specified to compute pairwise similarity. \cr\cr
+\code{$q} for showing which order \code{q} specified to compute pairwise similarity. \cr\cr
 }
 \description{
-\code{SimilarityMult}: Estimation various \eqn{N}-community similarity indices. The richness-based indices
-include the classic \eqn{N}-community Jaccard and Sorensen indices; the abundance-based indices include the Horn, Morisita-Horn, regional species-overlap, and the \eqn{N}-community Bray-Curtis indices.
-Three types of data are supported: Type (1) abundance data (datatype="abundance"), Type (2)
-incidence-frequency data (datatype="incidence_freq"), and Type (2B) incidence-raw data
-(datatype="incidence_raw"); see \code{SpadeR-package} details for data input formats.
+\code{SimilarityMult}: Estimation various \eqn{N}-community similarity indices. The absolute abundance-based
+indices include the richness-based Jaccard and Sorensen, Horn, Morisita-Horn, regional-overlap indices. The relative-based indices include 
+the size-weighted Sorenson and Jaccard, size-weighted Horn, size-weighted Morisita-Horn, size-weighted regional-overlap. 
+Three types of data are supported: Type (1)
+abundance data (datatype="abundance"), Type (2) incidence-frequency data
+(datatype="incidence_freq"), and Type (2B) incidence-raw data (datatype="incidence_raw"); see
+\code{SpadeR-package} details for data input formats.
 }
 \examples{
 \dontrun{
