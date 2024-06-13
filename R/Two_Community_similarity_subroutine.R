@@ -2283,7 +2283,7 @@ print.spadeTwo <- function(x, ...){
     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
     cat('    (a) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
+    temp <- apply(as.matrix(x$Estimated_absolute), 2, as.numeric)
     if(temp[1,1]>1) {cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[1,1]<=1){cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
@@ -2295,7 +2295,7 @@ print.spadeTwo <- function(x, ...){
     if(temp[5,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
     if(temp[5,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
     cat('    (b) Measures for comparing species relative abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
+    temp <- apply(as.matrix(x$Estimated_relative), 2, as.numeric)
     if(temp[1,1]>1) {cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[1,1]<=1){cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
@@ -2405,7 +2405,7 @@ print.spadeTwo <- function(x, ...){
     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
     cat('    (a) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
+    temp <- apply(as.matrix(x$Estimated_absolute), 2, as.numeric)
     if(temp[1,1]>1) {cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[1,1]<=1){cat('        C02 (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        U02 (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
@@ -2417,7 +2417,7 @@ print.spadeTwo <- function(x, ...){
     if(temp[5,1]>1) {cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
     if(temp[5,1]<=1){cat('        U22 (q=2, Regional overlap)    ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')}
     cat('    (b) Measures for comparing species relative abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
+    temp <- apply(as.matrix(x$Estimated_relative), 2, as.numeric)
     if(temp[1,1]>1) {cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[1,1]<=1){cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
