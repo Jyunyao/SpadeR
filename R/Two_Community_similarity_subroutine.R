@@ -2300,8 +2300,8 @@ print.spadeTwo <- function(x, ...){
     if(temp[1,1]<=1){cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
     if(temp[2,1]<=1){cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
-    if(temp[3,1]>1) {cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[3,1]<=1){cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[3,1]>1) {cat('        Size-weighted Horn (q=1)                ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[3,1]<=1){cat('        Size-weighted Horn (q=1)                ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
     if(temp[4,1]>1) {cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[4,1]<=1){cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
     if(temp[5,1]>1) {cat('        Size-weighted regional-overlap (q=2)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
@@ -2399,7 +2399,7 @@ print.spadeTwo <- function(x, ...){
     temp <- apply(as.matrix(x$Empirical_relative), 2, as.numeric)
     cat('        Size-weighted Sorenson (q=0)          ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')
     cat('        Size-weighted Jaccard  (q=0)          ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')
-    cat('        Horn size-weighted (q=1)              ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
+    cat('        Size-weighted Horn (q=1)              ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')
     cat('        Size-weighted Morisita-Horn (q=2)     ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')
     cat('        Size-weighted regional-overlap (q=2)  ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",temp[5,4]),'\n\n')
     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
@@ -2422,8 +2422,8 @@ print.spadeTwo <- function(x, ...){
     if(temp[1,1]<=1){cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
     if(temp[2,1]<=1){cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",temp[2,1]),'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",temp[2,4]),'\n\n')}
-    if(temp[3,1]>1) {cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
-    if(temp[3,1]<=1){cat('        Horn size-weighted (q=1)                ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
+    if(temp[3,1]>1) {cat('        Size-weighted Horn (q=1)                ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",1),'\n\n')}
+    if(temp[3,1]<=1){cat('        Size-weighted Horn (q=1)                ',sprintf("%.4f",temp[3,1]),'     ',sprintf("%.4f",temp[3,2]),'     ',sprintf("%.4f",temp[3,3]),'     ',sprintf("%.4f",temp[3,4]),'\n\n')}
     if(temp[4,1]>1) {cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[4,1]<=1){cat('        Size-weighted Morisita-Horn (q=2)       ',sprintf("%.4f",temp[4,1]),'     ',sprintf("%.4f",temp[4,2]),'     ',sprintf("%.4f",temp[4,3]),'     ',sprintf("%.4f",temp[4,4]),'\n')}
     if(temp[5,1]>1) {cat('        Size-weighted regional-overlap (q=2)    ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[5,2]),'     ',sprintf("%.4f",temp[5,3]),'     ',sprintf("%.4f",1),'\n\n')}
