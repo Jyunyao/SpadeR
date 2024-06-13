@@ -1475,7 +1475,7 @@ SimilarityMult=function(data,datatype=c("abundance","incidence_freq", "incidence
       rownames(Cqn_PC[[2]])=temp_PU
     }
     
-    z <- list("datatype"=datatype,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[4]],"Estimated_absolute"=temp[[2]], "Estimated_relative"=temp[[3]], "pairwise"=Cqn_PC, "similarity.matrix"=C_SM, "goal"=method, "q"=q)
+    z <- list("datatype"=datatype,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[4]],"estimated_absolute"=temp[[2]], "estimated_relative"=temp[[3]], "pairwise"=Cqn_PC, "similarity.matrix"=C_SM, "goal"=method, "q"=q)
   }
   class(z) <- c("spadeMult")
   z
