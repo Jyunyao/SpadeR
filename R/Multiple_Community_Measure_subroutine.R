@@ -1936,7 +1936,7 @@ print.spadeMult <- function(x, ...){
     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
     cat('    (a) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
+    temp <- apply(as.matrix(x$Estimated_absolute), 2, as.numeric)
     if(temp[1,1]>1) {cat('        C0');cat(N);cat( ' (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[1,1]<=1){cat('        C0');cat(N);cat( ' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        U0');cat(N);cat( ' (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
@@ -1953,7 +1953,7 @@ print.spadeMult <- function(x, ...){
     
     #cat('      Lennon et al (2001)             ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'\n\n')
     cat('    (b) Measures for comparing species relative abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
+    temp <- apply(as.matrix(x$Estimated_relative), 2, as.numeric)
     if(temp[1,1]>1) {cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[1,1]<=1){cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
@@ -2110,7 +2110,7 @@ print.spadeMult <- function(x, ...){
     cat('(3) ESTIMATED SIMILARITY INDICES: \n\n')
     cat('                                       Estimate       s.e.       95%Lower     95%Upper\n')
     cat('    (a) Measures for comparing species absolute abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_absolute), 2, as.numeric)
+    temp <- apply(as.matrix(x$Estimated_absolute), 2, as.numeric)
     if(temp[1,1]>1) {cat('        C0');cat(N);cat( ' (q=0, Sorensen)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[1,1]<=1){cat('        C0');cat(N);cat( ' (q=0, Sorensen)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        U0');cat(N);cat( ' (q=0, Jaccard)             ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
@@ -2127,7 +2127,7 @@ print.spadeMult <- function(x, ...){
     
     #cat('      Lennon et al (2001)             ',sprintf("%.4f",temp[5,1]),'     ',sprintf("%.4f",temp[5,2]),'\n\n')
     cat('    (b) Measures for comparing species relative abundances\n\n')
-    temp <- apply(as.matrix(x$estimated_relative), 2, as.numeric)
+    temp <- apply(as.matrix(x$Estimated_relative), 2, as.numeric)
     if(temp[1,1]>1) {cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",1),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",1),'\n')}
     if(temp[1,1]<=1){cat('        Size-weighted Sorenson (q=0)            ',sprintf("%.4f",temp[1,1]),'     ',sprintf("%.4f",temp[1,2]),'     ',sprintf("%.4f",temp[1,3]),'     ',sprintf("%.4f",temp[1,4]),'\n')}
     if(temp[2,1]>1) {cat('        Size-weighted Jaccard  (q=0)            ',sprintf("%.4f",1) ,'     ',sprintf("%.4f",temp[2,2]),'     ',sprintf("%.4f",temp[2,3]),'     ',sprintf("%.4f",1),'\n\n')}
@@ -2238,7 +2238,7 @@ print.spadeMult <- function(x, ...){
     cat('\n')
   }
   if(q == 0 & x$goal=="relative"){
-    cat('    -------------------------Measure Size-weighted Sorenson---------------------------\n\n')
+    cat('    -------------------------Measure Size-weighted Sorenson (q=0)---------------------------\n\n')
     cat('    Estimator','                        Estimate','     s.e.','       95% Confidence Interval\n\n')
     Cqn_PC <- x$pairwise$`Size-weighted Sorenson`
     no.temp=1
@@ -2285,7 +2285,7 @@ print.spadeMult <- function(x, ...){
       cat('\n')
     }
     cat('\n')
-    cat('    -------------------------Measure Size-weighted Jaccard---------------------------\n\n')
+    cat('    -------------------------Measure Size-weighted Jaccard (q=0)---------------------------\n\n')
     cat('    Estimator','                       Estimate','     s.e.','       95% Confidence Interval\n\n')
     Cqn_PC <- x$pairwise$`Size-weighted Jaccard`
     no.temp=1
@@ -2385,7 +2385,7 @@ print.spadeMult <- function(x, ...){
     cat('\n')
   }
   if(q == 1 & x$goal=="relative"){
-    cat('    ----------------------Measure Horn size weighted------------------------\n\n')
+    cat('    ----------------------Measure Horn size weighted (q=1)------------------------\n\n')
     cat('    Estimator','                    Estimate','     s.e.','       95% Confidence Interval\n\n')
     ###################################################CqN_ Equal weight
     Cqn_PC <- x$pairwise$`Horn size weighted`
@@ -2533,7 +2533,7 @@ print.spadeMult <- function(x, ...){
   }
   
   if(q == 2 & x$goal=="relative"){
-    cat('    -------------------------Measure Size-weighted Morisita-Horn---------------------------\n\n')
+    cat('    -------------------------Measure Size-weighted Morisita-Horn (q=2)---------------------------\n\n')
     cat('    Estimator','                             Estimate','     s.e.','       95% Confidence Interval\n\n')
     Cqn_PC <- x$pairwise$`Size-weighted Morisita-Horn`
     no.temp=1
@@ -2581,7 +2581,7 @@ print.spadeMult <- function(x, ...){
     }
     cat('\n')
     ###################################################UqN_ Equal weight
-    cat('    -------------------------Measure Size-weighted regional-overlap---------------------------\n\n')
+    cat('    -------------------------Measure Size-weighted regional-overlap (q=2)---------------------------\n\n')
     cat('    Estimator','                                Estimate','     s.e.','       95% Confidence Interval\n\n')
     Cqn_PC <- x$pairwise$`Size-weighted regional-overlap`
     no.temp=1
