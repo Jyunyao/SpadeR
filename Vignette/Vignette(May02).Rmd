@@ -425,7 +425,7 @@ SimilarityPair(SimilarityPairData$Abu,"abundance",nboot=200, weight_type="Size W
  
 ```{r, echo=FALSE}
 data(SimilarityPairData)
-SimilarityPair(SimilarityPairData$Abu,"abundance",nboot=200, weight_type="Size Weight")
+SimilarityPair(as.data.frame(SimilarityPairData$Abu),"abundance",nboot=200, weight_type="Size Weight")
 ```
 
 The above output is divided into three parts: 
