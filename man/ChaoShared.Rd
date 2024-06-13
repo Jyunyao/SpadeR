@@ -14,7 +14,7 @@ ChaoShared(
 )
 }
 \arguments{
-\item{data}{a matrix/data.frame of species abundances/incidences.\cr}
+\item{data}{a data.frame of species abundances/incidences.\cr}
 
 \item{datatype}{type of input data, "abundance", "incidence_freq" or "incidence_raw". \cr}
 

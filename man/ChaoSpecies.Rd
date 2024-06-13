@@ -13,7 +13,7 @@ ChaoSpecies(
 )
 }
 \arguments{
-\item{data}{a matrix/data.frame of species abundances/incidences.\cr}
+\item{data}{a data.frame of species abundances/incidences.\cr}
 
 \item{datatype}{type of input data, "abundance", "abundance_freq_count", "incidence_freq", "incidence_freq_count" or "incidence_raw". \cr}
 
