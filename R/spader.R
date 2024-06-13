@@ -703,7 +703,7 @@ SimilarityPair=function(data, datatype = c("abundance","incidence_freq", "incide
     
     
     # rownames(temp[[8]]) <- c("C12=U12(q=1)","C22(Morisita)", "U22(Regional overlap)","Bray-Curtis")  
-    z <- list("datatype"=type,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[3]],"estimated_absolute"=temp[[2]], "estimated_relative"=temp[[4]]) 
+    z <- list("datatype"=type,"info"=info, "Empirical_absolute"=temp[[1]], "Empirical_relative"=temp[[3]],"Estimated_absolute"=temp[[2]], "Estimated_relative"=temp[[4]]) 
   }      
   ##---------------------------------------------------------------
   if(datatype=="incidence_raw"){
